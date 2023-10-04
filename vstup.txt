@@ -1,0 +1,11 @@
+// lol
+////
+/**/
+//*
+/* ahoj /**/*/
+/*a/*b/*c/*d*/e*/f*/g*/
+cus
+ahoj
+let b = 10
+var a = 5
+a = b

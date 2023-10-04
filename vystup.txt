@@ -1,0 +1,10 @@
+Identifikátor: cus
+Identifikátor: ahoj
+Klíčové slovo: let
+Identifikátor: b
+Konstanta: 10
+Klíčové slovo: var
+Identifikátor: a
+Konstanta: 5
+Identifikátor: a
+Identifikátor: b
