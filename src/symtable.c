@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <SYMTABLE.H>
+
+#include "symtable.h"
 
 
 #ifndef SYMTABLE.C

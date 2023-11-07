@@ -12,6 +12,9 @@ OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 # The final executable
 TARGET = compiler
 
+stack: src/stack.c
+	$(CC) $(CFLAGS) -o $@ $<
+
 all: $(TARGET)
 
 $(TARGET): $(OBJ_FILES)

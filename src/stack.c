@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <STRUCT.H>
+
+#include "struct.h"
 
 #define MAX_SIZE 100
 

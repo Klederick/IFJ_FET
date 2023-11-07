@@ -4,7 +4,6 @@
 #ifndef STRUCT.H
 #define STRUCT.H
 
-
 /*STACK.C*/
 typedef struct {
     int data[MAX_SIZE];
