@@ -15,6 +15,9 @@ TARGET = compiler
 stack: src/stack.c
 	$(CC) $(CFLAGS) -o $@ $<
 
+remove:
+	rm -f stack
+
 all: $(TARGET)
 
 $(TARGET): $(OBJ_FILES)
