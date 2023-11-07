@@ -174,7 +174,6 @@ int main() {
     symtabInsert(&root, "varE", 2);
     symtabInsert(&root, "varF", 2);
     symtabInsert(&root, "varG", 2);
-    symtabInsert(&root, "varH", 2);
 
     printf("Inorder Traversal:\n");
     symtabInorder(root);
