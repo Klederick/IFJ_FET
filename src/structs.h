@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef STRUCTS.H
-#define STRUCTS.H
-
 /*STACK.C*/
 
 #define MAX_SIZE 100
@@ -13,7 +10,7 @@ typedef struct {
     int top;
 } Stack;
 
-void initializeStack(Stack *stack);
+/*void initializeStack(Stack *stack);
 
 int isFull(Stack *stack);
 
@@ -23,7 +20,7 @@ void push(Stack *stack, int value);
 
 int pop(Stack *stack);
 
-int peek(Stack *stack);
+int peek(Stack *stack);*/
 
 
 /*SYMTABLE.C*/
@@ -35,6 +32,7 @@ typedef struct tNode {
     struct tNode *rptr;
 } *tNode_t;
 
+/*
 int max(int a, int b);
 
 int height(tNode_t node);
@@ -62,6 +60,4 @@ void symtabPreorder(tNode_t tree);
 void destroyTree(tNode_t tree);
 
 tNode_t initializeTree();
-
-
-#endif
+*/

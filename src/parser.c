@@ -1,4 +1,4 @@
-#include "IFJScanner.c"
+#include "scanner.c"
 #include "structs.h"
 
 

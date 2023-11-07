@@ -18,6 +18,12 @@ stack: src/stack.c
 remove:
 	rm -f stack
 
+main: src/main.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+remove:
+	rm -f main
+
 all: $(TARGET)
 
 $(TARGET): $(OBJ_FILES)

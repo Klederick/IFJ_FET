@@ -18,9 +18,6 @@ nelze odvodit od použitého výrazu.
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef ERROR_C
-#define ERROR_C
-
 void handleExit(int errorCode) {
     exit(errorCode);
 }
@@ -75,5 +72,3 @@ void ThrowError(int errorCode) {
     fprintf(stderr, "\n");
     handleExit(errorCode);
 }
-
-#endif

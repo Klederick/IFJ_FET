@@ -3,11 +3,6 @@
 
 #include "structs.h"
 
-#define MAX_SIZE 100
-
-#ifndef STACK.C
-#define STACK.C
-
 void initializeStack(Stack *stack) {
     stack->top = -1;
 }
@@ -43,7 +38,7 @@ int peek(Stack *stack) {
     }
     return stack->data[stack->top];
 }
-
+/*
 int main() {
     Stack stack;
     initializeStack(&stack);
@@ -65,5 +60,4 @@ int main() {
 
     return 0;
 }
-
-#endif
+*/

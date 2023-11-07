@@ -4,10 +4,6 @@
 
 #include "structs.h"
 
-
-#ifndef SYMTABLE.C
-#define SYMTABLE.C
-
 int max(int a, int b) {
     return (a > b) ? a : b;
 }
@@ -159,7 +155,7 @@ void destroyTree(tNode_t tree) {
 tNode_t initializeTree() {
     return NULL; // Vracíme prázdný strom
 }
-
+/*
 int main() {
     tNode_t root = initializeTree();
 
@@ -190,6 +186,4 @@ int main() {
 
     destroyTree(root);
     return 0;
-}
-
-#endif
+}*/
