@@ -22,3 +22,15 @@ void push(Stack *stack, int value)
 int pop(Stack *stack)
 
 int peek(Stack *stack)
+
+
+/*SYMTABLE.C*/
+typedef struct tNode {
+    char *key;
+    int nodeType;
+    int height;
+    struct tNode *lptr;
+    struct tNode *rptr;
+} *tNode_t;
+
+#endif

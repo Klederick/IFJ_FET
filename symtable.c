@@ -1,14 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <SYMTABLE.H>
 
-typedef struct tNode {
-    char *key;
-    int nodeType;
-    int height;
-    struct tNode *lptr;
-    struct tNode *rptr;
-} *tNode_t;
+
+#ifndef SYMTABLE.C
+#define SYMTABLE.C
 
 int max(int a, int b) {
     return (a > b) ? a : b;
@@ -193,3 +190,5 @@ int main() {
     destroyTree(root);
     return 0;
 }
+
+#endif

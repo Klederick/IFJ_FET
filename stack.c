@@ -4,6 +4,9 @@
 
 #define MAX_SIZE 100
 
+#ifndef STACK.C
+#define STACK.C
+
 void initializeStack(Stack *stack) {
     stack->top = -1;
 }
@@ -57,3 +60,5 @@ int main() {
 
     return 0;
 }
+
+#endif
