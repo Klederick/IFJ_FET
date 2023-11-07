@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "symtable.h"
+#include "structs.h"
 
 
 #ifndef SYMTABLE.C

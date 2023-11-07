@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef STRUCT.H
-#define STRUCT.H
+#ifndef STRUCTS.H
+#define STRUCTS.H
 
 /*STACK.C*/
 typedef struct {

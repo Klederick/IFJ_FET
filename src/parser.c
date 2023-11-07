@@ -1,5 +1,5 @@
 #include "IFJScanner.c"
-#include "struct.h"
+#include "structs.h"
 
 
 int main(){
