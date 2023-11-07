@@ -60,7 +60,9 @@ int main() {
     printf("Is stack empty? %s\n", isEmpty(&stack) ? "Yes" : "No");
 
     printf("Top element: %d\n", peek(&stack));
-    
+    push(&stack, 5);
+    printf("Top element: %d\n", peek(&stack));
+
     return 0;
 }
 
