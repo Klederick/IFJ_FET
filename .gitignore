@@ -1,0 +1,14 @@
+# Exclude .o files
+*.o
+
+# Exclude .txt files
+*.txt
+
+# Exclude .exe files
+*.exe
+
+# Exclude .elf files
+*.elf
+
+# Exclude .out files
+*.out

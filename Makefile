@@ -24,6 +24,12 @@ main: src/main.c
 remove:
 	rm -f main
 
+dynamic: src/dynamic.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+rdynamic:
+	rm -f dynamic
+
 all: $(TARGET)
 
 $(TARGET): $(OBJ_FILES)

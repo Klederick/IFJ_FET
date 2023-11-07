@@ -1,17 +1,2 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-
-# Exclude .o files
-*.o binary
-
-# Exclude .txt files
-*.txt binary
-
-# Exclude .exe files
-*.exe binary
-
-# Exclude .elf files
-*.elf binary
-
-# Exclude .out files
-*.out binary
