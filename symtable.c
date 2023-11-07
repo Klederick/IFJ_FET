@@ -129,6 +129,22 @@ void symtabInorder(tNode_t tree) {
     }
 }
 
+void symtabPostorder(tNode_t tree) {
+    if (tree != NULL) {
+        symtabPostorder(tree->lptr);
+        symtabPostorder(tree->rptr);
+        printf("Key: %s, NodeType: %d\n", tree->key, tree->nodeType);
+    }
+}
+
+void symtabPreorder(tNode_t tree) {
+    if (tree != NULL) {
+        printf("Key: %s, NodeType: %d\n", tree->key, tree->nodeType);
+        symtabPreorder(tree->lptr);
+        symtabPreorder(tree->rptr);
+    }
+}
+
 void destroyTree(tNode_t tree) {
     if (tree == NULL) {
         return;
