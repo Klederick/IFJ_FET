@@ -7,6 +7,9 @@
 // to the next guy: 
 //  
 // total_hours_wasted_here = 42 
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -220,6 +223,7 @@ struct Token getToken(FILE* src){
         default: 
                 if(c >= '0' && c <= '9'){
                     //int / double
+                    assignAndRealloc(&seekCounter,c,&token, &letterCounter);
                     getChar(&seekCounter,&c, src, &letterCounter);
                     while(c >= '0' && c <= '9'){
                             assignAndRealloc(&seekCounter,c,&token, &letterCounter);
@@ -307,4 +311,5 @@ int main(int argc, char* argv[]){
         printf("%s\n",temp.symbol);
     }
     fclose(file);
+    return 0;
 }
