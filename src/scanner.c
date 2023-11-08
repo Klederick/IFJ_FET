@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "stack.c"
 #define NUM_OF_KEYWORDS 11
 
 struct Token {
@@ -211,8 +213,46 @@ struct Token getToken(FILE* src){
             nextChar(&seekCounter,&c,&token,&letterCounter,src,'>');
                 break;
         case '/':
-            //comments
-                break;
+            if ((c = fgetc(src)) == '/') {
+                while (c != '\n' && c != -1) {
+                    //fprintf(stdout, "%c\n", c);
+                        c = fgetc(src);
+                    }
+                token.ID = -1;
+                
+                //free(token.symbol); /*WARNING FREE*/
+            //}
+            }
+            else if (c == '*') {
+               // Stack* commentStack = (Stack *) malloc (sizeof(Stack));
+                Stack *commentStack;
+                initializeStack(commentStack);
+
+                int openingComment = 1;
+                push(commentStack, openingComment);
+                while(!isEmpty(commentStack)) {
+                    if ((c = fgetc(src)) != EOF) {
+                        if (c == '/') {
+                            if ((c = fgetc(src)) == '*') {
+                                push(commentStack, openingComment);
+                            }
+                        }
+                        else if (c == '*') {
+                            if ((c = fgetc(src)) == '/') {
+                                pop(commentStack);
+
+                                                        
+                            }
+                        }
+                    }
+                    else {
+                        fprintf(stderr, "Unterminated multi-line comment\n");
+                        exit(1);
+                    }
+                }
+                token.ID = -2;
+            }
+            break;
         case '(':
            break;
         case ')':
