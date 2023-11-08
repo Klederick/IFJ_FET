@@ -98,21 +98,23 @@ void readEmptyLine(FILE* src){
     }else if(isWhiteSpace(c)){
         readEmptyLine(src);
     }else{
-        fprintf(stderr,"Invalid character used after \"\"\", The line should be empty because we are waiting for a String");
+        fprintf(stderr,"Invalid character used after \"\"\", The line should be empty because we are waiting for a String!");
         exit(1);
     }
 }
 char* stringanoff(FILE* src, int condition){
     int numbers = 0;
     int seekOffset = 0;
-    char* text = (char*)malloc(2);
-    text = "";
+    char* text = (char*)malloc(2); text[0] = '\0';
     char c;
     while((c = getc(src)) != '\"'){
+        printf("Character c before big switch: %c\n",c);
         seekOffset++;
+        printf("Character c before big switch: %c\n",c);
         if(c == -1 || c == EOF){ break; }
         if(c == '\\'){
             char temp = '\\';
+            c = getc(src);
             seekOffset++;
             switch(c){
                 case '\"': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\"", 1); break;
@@ -121,16 +123,21 @@ char* stringanoff(FILE* src, int condition){
                 case 't': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\t", 1); break;
                 case '\\': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\\", 1); break;
                 case 'u': 
-                    if(getc(src) == '{'){
+                    if( (c = getc(src)) == '{'){
                         char hex[8];
                         for(int i = 0; i < 8; i++){
                             //Get all numbers
                             c = getc(src);
-                            if((c < 0) || (c > 9 && c < 'A') || (c > 'F' && c < 'a') || (c > 'f')){ hex[i] = -1; break; }
+                            if((c < '0') || (c > '9' && c < 'A') || (c > 'F' && c < 'a') || (c > 'f')){ ungetc(c,src); hex[i] = -1; break; }
                             hex[i] = c; numbers++;
 
                         }
                         c = getc(src);
+                        printf("GOT HERE %c, HEX = ",c);
+                        for(int i = 0; i < numbers+1; i++){
+                            printf("%d, ",hex[i]);
+                        }
+                        printf("\n");
                         if(c == '}'){
                             //sprav cislo
                             char decnumber = hexToDec(hex);
@@ -142,11 +149,14 @@ char* stringanoff(FILE* src, int condition){
                     }
                 
                 break;
-                default: strncat(text, &temp, 1); strncat(text, &c, 1); break;
+                default: printf("Adding a character to the string (temp and c): %c, %c\n",temp,c); text = (char*)realloc(text,strlen(text)+2); strncat(text, &temp, 1); strncat(text, &c, 1); break;
             }
         }else{
-            if((c > 31 && c < 256) || condition == 1){
-                printf("RETURNING TEXT: %s\n",text);
+            //if everything is okay do this:
+            printf("Adding a character to the string (c): %c\n",c); 
+            printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
+            if((c > 31 && c < 256) || condition == 0){
+                printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
                 (char*)realloc(text,strlen(text)+2); strncat(text, &c, 1);
             }else{
                 fprintf(stderr,"STRING ERROR: Invalid character used %c",c);
@@ -158,9 +168,10 @@ char* stringanoff(FILE* src, int condition){
     printf("RETURNING TEXT: %s\n",text);
     return text;
 }
+
 struct Token getToken(FILE* src){
     //Vars for special cases
-    
+    //GOTO FROM COMMENTS HERE 
     int letterCounter = 0;
     int seekCounter = 0;
     int seek = 1;
@@ -179,12 +190,10 @@ struct Token getToken(FILE* src){
     token.symbol = (char *)malloc(letterCounter+1);
     token.symbol[letterCounter-1] = c; token.symbol[letterCounter] = '\0';
     //get operands, if no operands -> go default for a term
-    
     switch(c){
         case '\"':
-                c = fgetc(src); if(c != '\"'){ fseek(src,0,SEEK_CUR); token.symbol = stringanoff(src, 0); }
-                c = fgetc(src); if(c != '\"'){ fseek(src,-1,SEEK_CUR); token.symbol = stringanoff(src, 0); }else{ readEmptyLine(src); token.symbol = stringanoff(src, 1); }
-                
+                c = fgetc(src); if(c != '\"'){ fseek(src,-1,SEEK_CUR); token.symbol = stringanoff(src, 0);  }
+                c = fgetc(src); if(c != '\"'){ fseek(src,-2,SEEK_CUR); /*vrat prazdny string*/ return token; }else{ readEmptyLine(src); token.symbol = stringanoff(src, 1); }
                 break;
         //'='
         case '=':
