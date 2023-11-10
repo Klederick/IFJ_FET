@@ -35,7 +35,8 @@ int main(int argc, char* argv[]){
                 //komentar, runni while again
                 break;
             }
-    }
+        }
+    printf("Scanning Token %d\n",counter);    
     scannedToken = getToken(file);
     }
 
