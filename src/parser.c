@@ -40,7 +40,7 @@ int main(int argc, char* argv[]){
     scannedToken = getToken(file);
     }
 
-
+    printf("Closing parser.\n");
     fclose(file);
     return 0;
 }

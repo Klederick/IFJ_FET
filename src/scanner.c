@@ -196,7 +196,7 @@ struct Token getToken(FILE* src){
     int term = 0;
 
     char c = fgetc(src);
-    if(c == EOF){
+    if(c == EOF || c == -1){
         seek = 0;
     }
     
@@ -205,6 +205,11 @@ struct Token getToken(FILE* src){
     token.symbol = (char *)malloc(letterCounter+1);
     token.symbol[letterCounter-1] = c; token.symbol[letterCounter] = '\0';
     token.spacesBehind = 0;
+
+    if(c == EOF || c == -1){
+        seek = 0;
+        return token;
+    }
 
     while(isWhiteSpace(c) == 1){ c = fgetc(src); token.spacesBehind++; }
     letterCounter++;
