@@ -15,10 +15,10 @@ int main(int argc, char* argv[]){
     }
     struct Token scannedToken;
     int counter = 0; 
-    printf("PRASKLEJ HRNICEK");;
     scannedToken = getToken(file);
     while(scannedToken.ID != 0){
         printf("Token %d: %s\n",counter,scannedToken.symbol);    
+        counter++;
         switch(scannedToken.ID){
         case 0: break;
         case 1: break;

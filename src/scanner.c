@@ -11,6 +11,7 @@
 #include <string.h>
 #include "stack.c"
 #define NUM_OF_KEYWORDS 11
+const char* keywords[][11] = {"Double\0","else\0","func\0","if\0","Int\0","let\0","nil\0","return\0","String\0","var\0","while\0"};
 
 
 //Checks for all whitespaces based on the swift manual
@@ -165,14 +166,12 @@ char* stringanoff(FILE* src, int condition){
 }
 
 struct Token getToken(FILE* src){
-      printf("PRASKLEJ HRNICEK");;
     //Vars for special cases
     //GOTO FROM COMMENTS HERE 
     int letterCounter = 0;
     int seekCounter = 0;
     int seek = 1;
     int term = 0;
-    const char* keywords[][11] = {"Double\0","else\0","func\0","if\0","Int\0","let\0","nil\0","return\0","String\0","var\0","while\0"};
 
     char c = fgetc(src);
     if(c == EOF){
@@ -267,20 +266,56 @@ struct Token getToken(FILE* src){
             }
             break;
         case '(':
+                token.ID = 4;
+                token.symbol = "("; 
            break;
         case ')':
+                token.ID = 4;
+                token.symbol = ")"; 
            break;
         case '{':
+                token.ID = 5;
+                token.symbol = "{"; 
            break;
         case '}':
+                token.ID = 5;
+                token.symbol = "}"; 
            break;
+        case '<':
+            if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3) == 1){
+                token.symbol = "<=";
+            }else{
+                token.ID = 3;
+                token.symbol = "<";
+            }
+            break;
+        case '>':
+            if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3) == 1){
+                token.symbol = ">=";
+            }else{
+                token.ID = 3;
+                token.symbol = ">";
+            }
+            break;
+        case '_':
+
         case '!':
             //!= case
-            nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3);
+            if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3) == 1){
+                //token is !=
+            }else{
+                token.ID = 6;
+                token.symbol = "!";
+            }
                break;
         case '?':
             //?? CASE
-            nextChar(&seekCounter,&c,&token,&letterCounter,src,'?',2);
+            if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'?',2) == 1){
+                //token is ??
+            }else{
+                token.ID = 6;
+                token.symbol = "?";
+            }
                break;
         default: 
                 if(c >= '0' && c <= '9'){
@@ -311,13 +346,16 @@ struct Token getToken(FILE* src){
                             getChar(&seekCounter,&c, src, &letterCounter);
                             }
                     }
-
+                token.ID = 11;
                 }else if(c == '_')
                     getChar(&seekCounter,&c,src,&letterCounter);
                     if(isWhiteSpace(c)){
                     //_ used in functions to skip argument name 
+                        token.ID = 7;
+                        token.symbol = "_";
                     break;
                     }else{
+                        token.ID = 12;
                         assignAndRealloc(&seekCounter,c,&token,&letterCounter);    // toto by sa malo dat spravit mudrejsie
                         term = 1;
                     }
@@ -346,10 +384,22 @@ struct Token getToken(FILE* src){
                 //printf("KEYWORD!!");
                 //Is a Keyword
                 //printf("Compared %s to %s",token.symbol,keywords[0][i]);
+                if(i == 6){
+                    //is nil
+                    token.ID = 9;
+                    strcpy(token.symbol,keywords[0][i]);
+                }else if(i == 0 || i == 4 || i == 8){
+                    //is datatype
+                    token.ID = 8;
+                    strcpy(token.symbol,keywords[0][i]);
+                }else{
+                    //is keyword
+                    token.ID = 10;
+                    strcpy(token.symbol,keywords[0][i]);
+                }
             }
         }
     }
-      printf("PRASKLEJ HRNICEK %d, %s",token.ID,token.symbol);;
     return token;
     free(token.symbol);
 }
