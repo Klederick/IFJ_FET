@@ -165,6 +165,7 @@ char* stringanoff(FILE* src, int condition){
 }
 
 struct Token getToken(FILE* src){
+      printf("PRASKLEJ HRNICEK");;
     //Vars for special cases
     //GOTO FROM COMMENTS HERE 
     int letterCounter = 0;
@@ -348,6 +349,7 @@ struct Token getToken(FILE* src){
             }
         }
     }
+      printf("PRASKLEJ HRNICEK %d, %s",token.ID,token.symbol);;
     return token;
     free(token.symbol);
 }

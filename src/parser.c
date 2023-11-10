@@ -13,11 +13,13 @@ int main(int argc, char* argv[]){
         fprintf(stderr,"Error \n");
         return -1; 
     }
-    struct Token* scannedToken;
+    struct Token scannedToken;
     int counter = 0; 
-    while((scannedToken->ID = getToken(file).ID) != 0){
-        printf("Token %d: %s\n",counter,scannedToken->symbol);    
-        switch(scannedToken->ID){
+    printf("PRASKLEJ HRNICEK");;
+    scannedToken = getToken(file);
+    while(scannedToken.ID != 0){
+        printf("Token %d: %s\n",counter,scannedToken.symbol);    
+        switch(scannedToken.ID){
         case 0: break;
         case 1: break;
         case 2: break;
@@ -29,11 +31,12 @@ int main(int argc, char* argv[]){
         case 8: break;
         case 9: break;
         default: 
-            if(scannedToken->ID < 0){
+            if(scannedToken.ID < 0){
                 //komentar, runni while again
                 break;
             }
     }
+    scannedToken = getToken(file);
     }
 
 
