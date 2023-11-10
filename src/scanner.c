@@ -8,19 +8,11 @@
 //  
 // total_hours_wasted_here = 42 
 
-
-
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
 #include "stack.c"
 #define NUM_OF_KEYWORDS 11
 
-struct Token {
-    char ID;
-    char *symbol;
-};
+
 //Checks for all whitespaces based on the swift manual
 char isWhiteSpace(char c){
     if(c == 32 || c == 9 || c == 10 || c == 13 || c == 11 || c == 12 || c == 0){
@@ -30,7 +22,7 @@ char isWhiteSpace(char c){
     }
 }
 //adds a next char to a token if it meets a certain condition
-char nextChar(int* seekcounter, char* c,struct Token *token, int *letterCounter, FILE *src, char condition) {
+char nextChar(int* seekcounter, char* c,struct Token *token, int *letterCounter, FILE *src, char condition, int condID) {
     if((*c) != EOF){
     (*c) = fgetc(src);
     (*letterCounter)++;
@@ -40,6 +32,7 @@ char nextChar(int* seekcounter, char* c,struct Token *token, int *letterCounter,
         token->symbol[(*letterCounter) - 1] = (*c);
         token->symbol[(*letterCounter)] = '\0';
         (*seekcounter)--;
+        token->ID = condID;
         return 1;
     }
     }else{
@@ -200,17 +193,32 @@ struct Token getToken(FILE* src){
         //'='
         case '=':
                 //== case
-                nextChar(&seekCounter,&c,&token,&letterCounter,src,'=');
+                if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3) == 1){
+                    //token je ==
+                }else{
+                    token.ID = 1;
+                    token.symbol = "=";
+                };
+                
                 break;
         case ':':
+                token.ID = 1;
+                token.symbol = ":";
                 break;
         case '*':
                 break;
         case '+':
+                token.ID = 2;
+                token.symbol = "+";
                 break;
         case '-':
             //-> case
-            nextChar(&seekCounter,&c,&token,&letterCounter,src,'>');
+            if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'>',7) == 1){
+                //is -> token
+            }else{
+                token.ID = 2;
+                token.symbol = "-";
+            };
                 break;
         case '/':
             if ((c = fgetc(src)) == '/') {
@@ -251,6 +259,9 @@ struct Token getToken(FILE* src){
                     }
                 }
                 token.ID = -2;
+            }else{
+                token.ID = 2;
+                token.symbol = "/";
             }
             break;
         case '(':
@@ -263,11 +274,11 @@ struct Token getToken(FILE* src){
            break;
         case '!':
             //!= case
-            nextChar(&seekCounter,&c,&token,&letterCounter,src,'=');
+            nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3);
                break;
         case '?':
             //?? CASE
-            nextChar(&seekCounter,&c,&token,&letterCounter,src,'?');
+            nextChar(&seekCounter,&c,&token,&letterCounter,src,'?',2);
                break;
         default: 
                 if(c >= '0' && c <= '9'){
@@ -340,7 +351,7 @@ struct Token getToken(FILE* src){
     free(token.symbol);
 }
 
-int main(int argc, char* argv[]){
+/*int main(int argc, char* argv[]){
     //Check arguments
     if (argc != 2) {
         fprintf(stderr,"Pouzitie: %s <filename>\n", argv[0]);
@@ -362,3 +373,4 @@ int main(int argc, char* argv[]){
     fclose(file);
     return 0;
 }
+*/

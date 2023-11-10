@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 /*STACK.C*/
 
 #define MAX_SIZE 100
+
+struct Token {
+    char ID;
+    char *symbol;
+};
 
 typedef struct {
     int data[MAX_SIZE];
