@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
     int counter = 0; 
     scannedToken = getToken(file);
     while(scannedToken.ID != 0){
-        printf("Token %d: %s\n",counter,scannedToken.symbol);    
+        printf("Token %d: %s (spaces behind: %d)\n",counter,scannedToken.symbol,scannedToken.spacesBehind);    
         counter++;
         switch(scannedToken.ID){
         case 0: break;
