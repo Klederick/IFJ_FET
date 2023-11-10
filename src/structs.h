@@ -2,6 +2,8 @@
 #include <stdlib.h>
 /*STACK.C*/
 
+#ifndef STRUCTS_H
+#define STRUCTS_H
 #define MAX_SIZE 100
 
 struct Token {
@@ -66,3 +68,4 @@ void destroyTree(tNode_t tree);
 
 tNode_t initializeTree();
 */
+#endif // STRUCTS_H
