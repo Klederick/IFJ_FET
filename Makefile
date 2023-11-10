@@ -24,6 +24,12 @@ main: src/main.c
 remove:
 	rm -f main
 
+expression: src/expression.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+remove_ex:
+	rm -f expression
+
 dynamic: src/dynamic.c
 	$(CC) $(CFLAGS) -o $@ $<
 
