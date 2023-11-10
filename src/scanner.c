@@ -199,13 +199,16 @@ struct Token getToken(FILE* src){
     if(c == EOF){
         seek = 0;
     }
-    while(isWhiteSpace(c) == 1){ c = fgetc(src); }
-    letterCounter++;
-
+    
     struct Token token;
     token.ID = 0;
     token.symbol = (char *)malloc(letterCounter+1);
     token.symbol[letterCounter-1] = c; token.symbol[letterCounter] = '\0';
+    token.spacesBehind = 0;
+
+    while(isWhiteSpace(c) == 1){ c = fgetc(src); token.spacesBehind++; }
+    letterCounter++;
+
     //get operands, if no operands -> go default for a term
     switch(c){
         case '\"':
