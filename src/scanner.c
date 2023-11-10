@@ -22,7 +22,7 @@ char isWhiteSpace(char c){
         return 0;
     }
 }
-//adds a next char to a token if it meets a certain condition
+//adds a next char to a token if it meets a certain condition, then assigns
 char nextChar(int* seekcounter, char* c,struct Token *token, int *letterCounter, FILE *src, char condition, int condID) {
     if((*c) != EOF){
     (*c) = fgetc(src);
@@ -41,6 +41,7 @@ char nextChar(int* seekcounter, char* c,struct Token *token, int *letterCounter,
     }
     return 0;
 }
+//get char with helping flags, seek is for looking ahead for operators that require multiple symbols
 char getChar(int* seekcounter,char *c, FILE *src, int *letterCounter){
     if((*c) != EOF){
         (*c) = fgetc(src); (*letterCounter)++; (*seekcounter)++;
@@ -49,6 +50,7 @@ char getChar(int* seekcounter,char *c, FILE *src, int *letterCounter){
     }
     return 0;
 }
+//is number || is letter || is '_'
 char isValidTerm(char c){
     if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_') || (c >= '0' && c <= '9')){
         return 1;
@@ -56,12 +58,14 @@ char isValidTerm(char c){
         return 0;
     }
 }
+
 void assignAndRealloc(int* seekcounter,char c, struct Token *token, int* letterCounter){
     token->symbol = (char *)realloc(token->symbol, (*letterCounter) + 1);
     token->symbol[(*letterCounter) - 1] = c;
     token->symbol[(*letterCounter)] = '\0';
     (*seekcounter)--;
 }
+//used in /u{} cases
 unsigned int hexToDec(const char *hex) {
     int dec = 0;
 
@@ -86,7 +90,7 @@ unsigned int hexToDec(const char *hex) {
 
     return dec;
 }
-
+//is the line after multiline string empty?
 void readEmptyLine(FILE* src){
     char c = fgetc(src);
     if(c == '\n'){
@@ -98,6 +102,7 @@ void readEmptyLine(FILE* src){
         exit(1);
     }
 }
+//parse through string, resolve special cases 
 char* stringanoff(FILE* src, int condition){
     int numbers = 0;
     int seekOffset = 0;
@@ -164,6 +169,23 @@ char* stringanoff(FILE* src, int condition){
     printf("RETURNING TEXT: %s\n",text);
     return text;
 }
+
+
+/*
+ID:
+:,=			                                    1
++,-,*,/,??		                                2
+==,!=,<,>,<=,>=		                            3
+(,)			                                    4
+{,}			                                    5
+?,!			                                    6
+_,->,			                                7
+String, Int, Double	                            8
+nil			                                    9
+else, func, if, let, return, var, while	        10
+termnumber				                        11
+termstring				                        12
+*/
 
 struct Token getToken(FILE* src){
     //Vars for special cases
@@ -399,6 +421,9 @@ struct Token getToken(FILE* src){
                 }
             }
         }
+    }
+    if(token.ID < 0){
+        token.symbol = "";
     }
     return token;
     free(token.symbol);
