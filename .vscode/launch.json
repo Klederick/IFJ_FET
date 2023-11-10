@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/micha/OneDrive/Plocha/IFJ_2023/IFJ_FET",
-      "program": "c:/Users/micha/OneDrive/Plocha/IFJ_2023/IFJ_FET/build/Debug/outDebug",
+      "cwd": "c:/Users/micha/OneDrive/Plocha/IFJ_2023/IFJ_FET/src",
+      "program": "c:/Users/micha/OneDrive/Plocha/IFJ_2023/IFJ_FET/src/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
