@@ -222,33 +222,34 @@ struct Token getToken(FILE* src){
                 break;
         case '/':
             if ((c = fgetc(src)) == '/') {
-                while (c != '\n' && c != -1) {
+                while ((c = fgetc(src) ) != '\n' && c != -1) {
                     //fprintf(stdout, "%c\n", c);
-                        c = fgetc(src);
+                        ;
                     }
                 token.ID = -1;
+                break;
                 
                 //free(token.symbol); /*WARNING FREE*/
             //}
             }
             else if (c == '*') {
                // Stack* commentStack = (Stack *) malloc (sizeof(Stack));
-                Stack *commentStack;
-                initializeStack(commentStack);
+                Stack commentStack;
+                initializeStack(&commentStack);
 
                 int openingComment = 1;
-                push(commentStack, openingComment);
-                while(!isEmpty(commentStack)) {
+                push(&commentStack, openingComment);
+                while(!isEmpty(&commentStack)) {
                     if ((c = fgetc(src)) != EOF) {
                         if (c == '/') {
                             if ((c = fgetc(src)) == '*') {
-                                push(commentStack, openingComment);
+                                push(&commentStack, openingComment);
                             }
                         }
                         else if (c == '*') {
                             if ((c = fgetc(src)) == '/') {
-                                pop(commentStack);
-
+                                pop(&commentStack);
+                                
                                                         
                             }
                         }
@@ -258,7 +259,7 @@ struct Token getToken(FILE* src){
                         exit(1);
                     }
                 }
-                token.ID = -2;
+                token.ID = -2;        
             }else{
                 token.ID = 2;
                 token.symbol = "/";
