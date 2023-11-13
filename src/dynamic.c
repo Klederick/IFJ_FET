@@ -1,6 +1,19 @@
+/*
+* This file contains implementation of linked list modified for storing information about allocated dynamic structures.
+* Dynamic structures needs to be initialized and deleted via this functions. Other operations with dynamic structures are completely free.
+* dataType values:
+* 1) stack
+* 2) symtable
+* EXAMPLE:
+* Stack *stc = CreateDynamic(dynAllocated, 1); <- stack will be initialized automatically
+* DeleteDynamic(dynAllocated, stc); <- stack will be automatically freed by it's destructor
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "structs.h"
+#include "stack.c"
+#include "symtable.c"
 
 // Define the structure for a node
 struct Dynamic {
@@ -22,10 +35,22 @@ struct Dynamic* CreateNode(int dataType) {
     switch(dataType)
     {
         case 1:{
-
+            Stack* stc = (Stack*)malloc(sizeof(Stack));
+            if (stc == NULL) {
+                free(newNode);
+                return NULL;
+            }
+            initializeStack(stc);
+            newNode->genericPtr = stc;
         }break;
         case 2:{
-
+            tNode_t* root = (tNode_t*)malloc(sizeof(tNode_t));
+            if (root == NULL) {
+                free(newNode);
+                return NULL;
+            }
+            root = initializeTree();
+            newNode->genericPtr = root;
         }break;
         default: newNode->genericPtr = NULL;
     }
@@ -67,10 +92,11 @@ void DynamicDestructor(int dataType, void* Ptr){
     switch(dataType)
     {
         case 1:{
-
+            freestack(Ptr);
+            free(Ptr);
         }break;
         case 2:{
-
+            destroyTree(Ptr);
         }break;
     }
 }
@@ -107,15 +133,24 @@ bool DeleteDynamic(struct Dynamic** head, void* Ptr) {
     return false;
 }
 
-/*// Function to print the linked list
-void printList(struct Node* head) {
-    struct Node* current = head;
+/*
+*   --USER-- Function to update node somewhere in the list.
+*   Input -> old pointer to dynamic structure and new pointer to dynamic structure
+*   If success -> true
+*   If failure -> false
+*/
+bool UpdateDynamic(struct Dynamic** head, void* PtrOld, void* PtrNew) {
+    if(PtrOld == NULL || PtrNew == NULL) return false;
+    struct Dynamic* current = head;
     while (current != NULL) {
-        printf("%d -> ", current->data);
+        if(current->genericPtr == PtrOld){
+            current->genericPtr = PtrNew;
+            return true;
+        }
         current = current->next;
     }
-    printf("NULL\n");
-}*/
+    return false;
+}
 
 /*
 *   --USER-- Function to initialize dynamic structure (pointer).
@@ -123,15 +158,19 @@ void printList(struct Node* head) {
 struct Dynamic* InitDynamic(){
     return NULL;
 }
-// Function to free the memory used by the linked list
-/*void freeList(struct Node* head) {
-    struct Node* current = head;
+/*
+* --USER-- Function to free the memory used by the dynamic structure.
+*   Input -> pointer to dynamic structure
+*/
+void DeleteDynamicStructure(struct Node* head) {
+    struct Dynamic* current = head;
     while (current != NULL) {
-        struct Node* temp = current;
+        struct Dynamic* temp = current;
         current = current->next;
+        DynamicDestructor(temp->dataType, temp->genericPtr);
         free(temp);
     }
-}*/
+}
 
 int main() {
     struct Dynamic* head = InitDynamic();

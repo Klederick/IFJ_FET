@@ -38,6 +38,12 @@ int peek(Stack *stack) {
     }
     return stack->data[stack->top];
 }
+
+void freestack(Stack* stack){
+    while(stack->top > -1){
+        pop(stack);
+    }
+}
 /*
 int main() {
     Stack stack;

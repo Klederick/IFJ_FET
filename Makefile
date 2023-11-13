@@ -15,13 +15,13 @@ TARGET = compiler
 stack: src/stack.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-remove:
+remove_st:
 	rm -f stack
 
 main: src/main.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-remove:
+remove_ma:
 	rm -f main
 
 expression: src/expression.c
@@ -33,7 +33,7 @@ remove_ex:
 dynamic: src/dynamic.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-rdynamic:
+remove_dy:
 	rm -f dynamic
 
 all: $(TARGET)
