@@ -155,7 +155,6 @@ char* stringanoff(FILE* src, int condition){
         }else{
             //if everything is okay do this:
             printf("Adding a character to the string (c): %c\n",c); 
-            printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
             if((c > 31 && c < 256) || condition == 0){
                 printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
                 text = (char*)realloc(text,strlen(text)+2); strncat(text, &c, 1);
@@ -164,6 +163,7 @@ char* stringanoff(FILE* src, int condition){
                         exit(1);
                 ///////////////////////////////////////////STRING ERRROR
             }
+            printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
         }
     }
     text[strlen(text)-1] = '\0';
@@ -196,8 +196,6 @@ struct Token getToken(FILE* src){
     int seek = 1;
     int term = 0;
 
-    printf("First\n");
-
     char c = fgetc(src);
     if(c == EOF || c == -1){
         seek = 0;
@@ -218,11 +216,10 @@ struct Token getToken(FILE* src){
     letterCounter++;
 
     //get operands, if no operands -> go default for a term
-    
     switch(c){
         case '\"':
-                c = fgetc(src); if(c != '\"'){ fseek(src,-1,SEEK_CUR); token.symbol = stringanoff(src, 0);  }
-                c = fgetc(src); if(c != '\"'){ fseek(src,-2,SEEK_CUR); /*vrat prazdny string*/ return token; }else{ readEmptyLine(src); token.symbol = stringanoff(src, 1); }
+                c = fgetc(src); if(c != '\"'){ fseek(src,-1,SEEK_CUR); token.symbol = stringanoff(src, 0); token.ID = 12;  }
+                c = fgetc(src); if(c != '\"'){ fseek(src,-2,SEEK_CUR); /*vrat prazdny string*/ return token; }else{ readEmptyLine(src); token.symbol = stringanoff(src, 1); token.ID = 12; }
                 break;
         //'='
         case '=':
@@ -381,7 +378,7 @@ struct Token getToken(FILE* src){
                             }
                     }
                 token.ID = 11;
-                }else if(c == '_') {
+                }else if(c == '_')
                     getChar(&seekCounter,&c,src,&letterCounter);
                     if(isWhiteSpace(c)){
                     //_ used in functions to skip argument name 
@@ -393,17 +390,12 @@ struct Token getToken(FILE* src){
                         assignAndRealloc(&seekCounter,c,&token,&letterCounter);    // toto by sa malo dat spravit mudrejsie
                         term = 1;
                     }
-                }
+                
                 if(isValidTerm(c)){
                         term = 1;
                         getChar(&seekCounter,&c,src,&letterCounter);
                         while(isValidTerm(c)){
-                            printf("Last\n");
-                            printf("seekC %d, nacitany %c, cislo charu:%d, LC %d\n", seekCounter, c, c, letterCounter);
-                            printf("token symb %s\n", token.symbol);
                             assignAndRealloc(&seekCounter,c,&token,&letterCounter);
-                            printf("Last2\n");
-                            
                             getChar(&seekCounter,&c,src,&letterCounter);
                         }
                 }else{
@@ -414,7 +406,6 @@ struct Token getToken(FILE* src){
                 }
                 break;
     }
-    
     if(seek = 1){
     fseek(src,-seekCounter,SEEK_CUR);
     }
@@ -443,7 +434,6 @@ struct Token getToken(FILE* src){
     if(token.ID < 0){
         token.symbol = "";
     }
-    
     return token;
     free(token.symbol);
 }
