@@ -108,12 +108,36 @@ char* stringanoff(FILE* src, int condition){
     int seekOffset = 0;
     char* text = (char*)malloc(2); text[0] = '\0';
     char c;
-    while((c = fgetc(src)) != '\"'){
+    int whileCondition = 1;
+    if(condition == 0){
+        if((c = fgetc(src)) != '\"'){
+            whileCondition = 1;
+        }else{
+            whileCondition = 0;
+        }
+    }else{
+        if((c = fgetc(src)) == '\"'){
+                seekOffset++;
+            if((c = fgetc(src)) == '\"'){
+                    seekOffset++;
+                if((c = fgetc(src)) == '\"'){
+                    seekOffset++;
+                    //whileCondition = 0;
+                }}}
+        if(seekOffset < 3)
+        {
+            fseek(src,-seekOffset,SEEK_CUR);
+            whileCondition = 1;
+        }else{
+            whileCondition = 0;
+        }
+    }
+    while(whileCondition){
         printf("Character c before big switch: %c\n",c);
         seekOffset++;
         printf("Character c before big switch: %c\n",c);
         if(c == -1 || c == EOF){ break; }
-        if(c == '\\'){
+        if(c == '\\' && condition == 0){
             char temp = '\\';
             c = fgetc(src);
             seekOffset++;
@@ -155,7 +179,7 @@ char* stringanoff(FILE* src, int condition){
         }else{
             //if everything is okay do this:
             printf("Adding a character to the string (c): %c\n",c); 
-            if((c > 31 && c < 256) || condition == 0){
+            if((c > 31 && c < 256) || condition == 1){
                 printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
                 text = (char*)realloc(text,strlen(text)+2); strncat(text, &c, 1);
             }else{
@@ -164,6 +188,30 @@ char* stringanoff(FILE* src, int condition){
                 ///////////////////////////////////////////STRING ERRROR
             }
             printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
+        }
+        //reset condition
+            if(condition == 0){
+        if((c = fgetc(src)) != '\"'){
+            whileCondition = 1;
+        }else{
+            whileCondition = 0;
+        }
+    }else{
+        if((c = fgetc(src)) == '\"'){
+                seekOffset++;
+            if((c = fgetc(src)) == '\"'){
+                    seekOffset++;
+                if((c = fgetc(src)) == '\"'){
+                    seekOffset++;
+                    //whileCondition = 0;
+                }}}
+        if(seekOffset < 3)
+        {
+            fseek(src,-seekOffset,SEEK_CUR);
+            whileCondition = 1;
+        }else{
+            whileCondition = 0;
+        }
         }
     }
     text[strlen(text)] = '\0';
