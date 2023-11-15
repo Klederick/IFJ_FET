@@ -108,14 +108,14 @@ char* stringanoff(FILE* src, int condition){
     int seekOffset = 0;
     char* text = (char*)malloc(2); text[0] = '\0';
     char c;
-    while((c = getc(src)) != '\"'){
+    while((c = fgetc(src)) != '\"'){
         printf("Character c before big switch: %c\n",c);
         seekOffset++;
         printf("Character c before big switch: %c\n",c);
         if(c == -1 || c == EOF){ break; }
         if(c == '\\'){
             char temp = '\\';
-            c = getc(src);
+            c = fgetc(src);
             seekOffset++;
             switch(c){
                 case '\"': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\"", 1); break;
@@ -124,16 +124,16 @@ char* stringanoff(FILE* src, int condition){
                 case 't': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\t", 1); break;
                 case '\\': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\\", 1); break;
                 case 'u': 
-                    if( (c = getc(src)) == '{'){
+                    if( (c = fgetc(src)) == '{'){
                         char hex[8];
                         for(int i = 0; i < 8; i++){
                             //Get all numbers
-                            c = getc(src);
+                            c = fgetc(src);
                             if((c < '0') || (c > '9' && c < 'A') || (c > 'F' && c < 'a') || (c > 'f')){ ungetc(c,src); hex[i] = -1; break; }
                             hex[i] = c; numbers++;
 
                         }
-                        c = getc(src);
+                        c = fgetc(src);
                         printf("GOT HERE %c, HEX = ",c);
                         for(int i = 0; i < numbers+1; i++){
                             printf("%d, ",hex[i]);
@@ -166,8 +166,9 @@ char* stringanoff(FILE* src, int condition){
             printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
         }
     }
-    text[strlen(text)-1] = '\0';
+    text[strlen(text)] = '\0';
     printf("RETURNING TEXT: %s\n",text);
+    fseek(src, 2, SEEK_CUR);
     return text;
 }
 
@@ -186,6 +187,7 @@ nil			                                    9
 else, func, if, let, return, var, while	        10
 termnumber				                        11
 termstring				                        12
+identif                                         13
 */
 
 struct Token getToken(FILE* src){
@@ -197,6 +199,7 @@ struct Token getToken(FILE* src){
     int term = 0;
 
     char c = fgetc(src);
+    printf("First char of token: %c\n",c);
     if(c == EOF || c == -1){
         seek = 0;
     }
@@ -394,6 +397,7 @@ struct Token getToken(FILE* src){
                 if(isValidTerm(c)){
                         term = 1;
                         getChar(&seekCounter,&c,src,&letterCounter);
+                        token.ID = 13;
                         while(isValidTerm(c)){
                             assignAndRealloc(&seekCounter,c,&token,&letterCounter);
                             getChar(&seekCounter,&c,src,&letterCounter);
@@ -407,6 +411,7 @@ struct Token getToken(FILE* src){
                 break;
     }
     if(seek = 1){
+    printf("Seek: %d",seekCounter);
     fseek(src,-seekCounter,SEEK_CUR);
     }
     if(term == 1){
