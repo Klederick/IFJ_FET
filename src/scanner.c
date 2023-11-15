@@ -179,14 +179,9 @@ char* stringanoff(FILE* src, int condition){
         }else{
             //if everything is okay do this:
             printf("Adding a character to the string (c): %c\n",c); 
-<<<<<<< Updated upstream
-            if((c > 31 && c < 256) || condition == 1){
-                printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
-=======
             printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
             if((c > 31 && c < 256) || condition == 1){
                 printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
->>>>>>> Stashed changes
                 text = (char*)realloc(text,strlen(text)+2); strncat(text, &c, 1);
             }else{
                 fprintf(stderr,"STRING ERROR: Invalid character used %c",c);
@@ -471,13 +466,8 @@ struct Token getToken(FILE* src){
                 }
                 break;
     }
-<<<<<<< Updated upstream
-    if(seek = 1){
-    printf("Seek: %d",seekCounter);
-=======
     
     if(seek == 1){
->>>>>>> Stashed changes
     fseek(src,-seekCounter,SEEK_CUR);
     }
     if(term == 1){
