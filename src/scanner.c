@@ -168,7 +168,7 @@ char* stringanoff(FILE* src, int condition){
     }
     text[strlen(text)] = '\0';
     printf("RETURNING TEXT: %s\n",text);
-    fseek(src, 2, SEEK_CUR);
+    fseek(src, 1, SEEK_CUR);
     return text;
 }
 
@@ -219,10 +219,17 @@ struct Token getToken(FILE* src){
     letterCounter++;
 
     //get operands, if no operands -> go default for a term
+    char opening[3]; 
     switch(c){
         case '\"':
-                c = fgetc(src); if(c != '\"'){ fseek(src,-1,SEEK_CUR); token.symbol = stringanoff(src, 0); token.ID = 12;  }
-                c = fgetc(src); if(c != '\"'){ fseek(src,-2,SEEK_CUR); /*vrat prazdny string*/ return token; }else{ readEmptyLine(src); token.symbol = stringanoff(src, 1); token.ID = 12; }
+                opening[0] = '\"';
+                c = fgetc(src); if(c != '\"'){ fseek(src,-1,SEEK_CUR); token.symbol = stringanoff(src, 0); token.ID = 12; return token;  }else{ opening[1] = '\"'; }
+                c = fgetc(src); if(c != '\"'){ fseek(src,-2,SEEK_CUR); /*vrat prazdny string*/ token.ID = 12; return token; }else{ opening[2] = '\"'; }
+                if(strcmp(opening,"\"\"\"\0")){
+                    readEmptyLine(src); token.symbol = stringanoff(src, 1); token.ID = 12;
+                }else{
+                    fprintf(stderr,"Wrong string declaration, use \"string\" or \"\"\"\nstring\n\"\"\"\n");
+                }
                 break;
         //'='
         case '=':
