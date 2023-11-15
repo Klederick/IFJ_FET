@@ -11,7 +11,7 @@
 #include <string.h>
 #include "stack.c"
 #define NUM_OF_KEYWORDS 11
-const char* keywords[][11] = {"Double\0","else\0","func\0","if\0","Int\0","let\0","nil\0","return\0","String\0","var\0","while\0"};
+const char* keywords[][11] = {{"Double\0","else\0","func\0","if\0","Int\0","let\0","nil\0","return\0","String\0","var\0","while\0"}};
 
 
 //Checks for all whitespaces based on the swift manual
@@ -142,11 +142,11 @@ char* stringanoff(FILE* src, int condition){
             c = fgetc(src);
             seekOffset++;
             switch(c){
-                case '\"': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\"", 1); break;
-                case 'n': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\n", 1); break;
-                case 'r': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\r", 1); break;
-                case 't': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\t", 1); break;
-                case '\\': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\\", 1); break;
+                case '\"': text = (char*)realloc(text,strlen(text)+3); strncat(text, "\"", 2); break;
+                case 'n': text = (char*)realloc(text,strlen(text)+3); strncat(text, "\n", 2); break;
+                case 'r': text = (char*)realloc(text,strlen(text)+3); strncat(text, "\r", 2); break;
+                case 't': text = (char*)realloc(text,strlen(text)+3); strncat(text, "\t", 2); break;
+                case '\\': text = (char*)realloc(text,strlen(text)+3); strncat(text, "\\", 2); break;
                 case 'u': 
                     if( (c = fgetc(src)) == '{'){
                         char hex[8];
@@ -168,8 +168,8 @@ char* stringanoff(FILE* src, int condition){
                             char decnumber = hexToDec(hex);
                             text = (char*)realloc(text,strlen(text)+2); strncat(text, &decnumber, 1);
                         }else{
-                            text = (char*)realloc(text,strlen(text)+numbers+3);
-                            strncat(text, "\\",1); strncat(text,"u",1); strncat(text,"{",1); strncat(text,hex,numbers); 
+                            text = (char*)realloc(text,strlen(text)+numbers+5);
+                            strncat(text, "\\u{",4); strncat(text,hex,numbers); 
                         }
                     }
                 
@@ -179,8 +179,14 @@ char* stringanoff(FILE* src, int condition){
         }else{
             //if everything is okay do this:
             printf("Adding a character to the string (c): %c\n",c); 
+<<<<<<< Updated upstream
             if((c > 31 && c < 256) || condition == 1){
                 printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
+=======
+            printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
+            if((c > 31 && c < 256) || condition == 1){
+                printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
+>>>>>>> Stashed changes
                 text = (char*)realloc(text,strlen(text)+2); strncat(text, &c, 1);
             }else{
                 fprintf(stderr,"STRING ERROR: Invalid character used %c",c);
@@ -465,8 +471,13 @@ struct Token getToken(FILE* src){
                 }
                 break;
     }
+<<<<<<< Updated upstream
     if(seek = 1){
     printf("Seek: %d",seekCounter);
+=======
+    
+    if(seek == 1){
+>>>>>>> Stashed changes
     fseek(src,-seekCounter,SEEK_CUR);
     }
     if(term == 1){
@@ -498,7 +509,7 @@ struct Token getToken(FILE* src){
     free(token.symbol);
 }
 
-/*int main(int argc, char* argv[]){
+int main(int argc, char* argv[]){
     //Check arguments
     if (argc != 2) {
         fprintf(stderr,"Pouzitie: %s <filename>\n", argv[0]);
@@ -515,9 +526,8 @@ struct Token getToken(FILE* src){
     while(fgetc(file) != -1){
         fseek(file,-1,SEEK_CUR);
         temp = getToken(file);
-        printf("%s\n",temp.symbol);
+        printf("end: %s\n",temp.symbol);
     }
     fclose(file);
     return 0;
 }
-*/
