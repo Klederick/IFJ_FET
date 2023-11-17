@@ -68,4 +68,13 @@ void destroyTree(tNode_t tree);
 
 tNode_t initializeTree();
 */
+
+/*dynamic.c*/
+// Define the structure for a node
+struct Dynamic {
+    int dataType;
+    void* genericPtr;
+    struct Dynamic* next;
+};
+
 #endif // STRUCTS_H

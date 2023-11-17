@@ -16,11 +16,11 @@
 #include "symtable.c"
 
 // Define the structure for a node
-struct Dynamic {
+/*struct Dynamic {
     int dataType;
     void* genericPtr;
     struct Dynamic* next;
-};
+};*/
 
 /*
 *   --HELP-- Function to create a new node with the given data.
@@ -176,7 +176,7 @@ void DeleteDynamicStructure(struct Dynamic* head) {
         free(temp);
     }
 }
-
+/*
 int main() {
     struct Dynamic* head = InitDynamic();
     DeleteDynamicStructure(head);
@@ -208,4 +208,4 @@ int main() {
     Stack* s4 = CreateDynamic(&head, 1);
     DeleteDynamicStructure(head);
     return 0;
-}
+}*/
