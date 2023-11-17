@@ -11,7 +11,7 @@
 #include <string.h>
 #include "stack.c"
 #define NUM_OF_KEYWORDS 11
-const char* keywords[][11] = {"Double\0","else\0","func\0","if\0","Int\0","let\0","nil\0","return\0","String\0","var\0","while\0"};
+const char* keywords[][11] = {{"Double\0","else\0","func\0","if\0","Int\0","let\0","nil\0","return\0","String\0","var\0","while\0"}};
 
 
 //Checks for all whitespaces based on the swift manual
@@ -108,32 +108,56 @@ char* stringanoff(FILE* src, int condition){
     int seekOffset = 0;
     char* text = (char*)malloc(2); text[0] = '\0';
     char c;
-    while((c = getc(src)) != '\"'){
+    int whileCondition = 1;
+    if(condition == 0){
+        if((c = fgetc(src)) != '\"'){
+            whileCondition = 1;
+        }else{
+            whileCondition = 0;
+        }
+    }else{
+        if((c = fgetc(src)) == '\"'){
+                seekOffset++;
+            if((c = fgetc(src)) == '\"'){
+                    seekOffset++;
+                if((c = fgetc(src)) == '\"'){
+                    seekOffset++;
+                    //whileCondition = 0;
+                }}}
+        if(seekOffset < 3)
+        {
+            fseek(src,-seekOffset,SEEK_CUR);
+            whileCondition = 1;
+        }else{
+            whileCondition = 0;
+        }
+    }
+    while(whileCondition){
+        seekOffset = 0;
         printf("Character c before big switch: %c\n",c);
         seekOffset++;
-        printf("Character c before big switch: %c\n",c);
         if(c == -1 || c == EOF){ break; }
-        if(c == '\\'){
+        if(c == '\\' && condition == 0){
             char temp = '\\';
-            c = getc(src);
+            c = fgetc(src);
             seekOffset++;
             switch(c){
-                case '\"': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\"", 1); break;
-                case 'n': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\n", 1); break;
-                case 'r': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\r", 1); break;
-                case 't': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\t", 1); break;
-                case '\\': text = (char*)realloc(text,strlen(text)+2); strncat(text, "\\", 1); break;
+                case '\"': text = (char*)realloc(text,strlen(text)+3); strncat(text, "\"", 2); break;
+                case 'n': text = (char*)realloc(text,strlen(text)+3); strncat(text, "\n", 2); break;
+                case 'r': text = (char*)realloc(text,strlen(text)+3); strncat(text, "\r", 2); break;
+                case 't': text = (char*)realloc(text,strlen(text)+3); strncat(text, "\t", 2); break;
+                case '\\': text = (char*)realloc(text,strlen(text)+3); strncat(text, "\\", 2); break;
                 case 'u': 
-                    if( (c = getc(src)) == '{'){
+                    if( (c = fgetc(src)) == '{'){
                         char hex[8];
                         for(int i = 0; i < 8; i++){
                             //Get all numbers
-                            c = getc(src);
+                            c = fgetc(src);
                             if((c < '0') || (c > '9' && c < 'A') || (c > 'F' && c < 'a') || (c > 'f')){ ungetc(c,src); hex[i] = -1; break; }
                             hex[i] = c; numbers++;
 
                         }
-                        c = getc(src);
+                        c = fgetc(src);
                         printf("GOT HERE %c, HEX = ",c);
                         for(int i = 0; i < numbers+1; i++){
                             printf("%d, ",hex[i]);
@@ -144,8 +168,8 @@ char* stringanoff(FILE* src, int condition){
                             char decnumber = hexToDec(hex);
                             text = (char*)realloc(text,strlen(text)+2); strncat(text, &decnumber, 1);
                         }else{
-                            text = (char*)realloc(text,strlen(text)+numbers+3);
-                            strncat(text, "\\",1); strncat(text,"u",1); strncat(text,"{",1); strncat(text,hex,numbers); 
+                            text = (char*)realloc(text,strlen(text)+numbers+5);
+                            strncat(text, "\\u{",4); strncat(text,hex,numbers); 
                         }
                     }
                 
@@ -154,20 +178,48 @@ char* stringanoff(FILE* src, int condition){
             }
         }else{
             //if everything is okay do this:
-            printf("Adding a character to the string (c): %c\n",c); 
-            printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
-            if((c > 31 && c < 256) || condition == 0){
-                printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
+            printf("Adding a character to the string (c): %c\n",c);
+            if((c > 31 && c != 127) || condition == 1){
                 text = (char*)realloc(text,strlen(text)+2); strncat(text, &c, 1);
             }else{
                 fprintf(stderr,"STRING ERROR: Invalid character used %c",c);
                         exit(1);
                 ///////////////////////////////////////////STRING ERRROR
             }
+            printf("RETURNING TEXT: %s , %lu - its length\n",text, strlen(text));
+        }
+        //reset condition
+        seekOffset = 0;
+            if(condition == 0){
+        if((c = fgetc(src)) != '\"'){
+            whileCondition = 1;
+        }else{
+            whileCondition = 0;
+        }
+    }else{
+        if((c = fgetc(src)) == '\"'){
+                seekOffset++;
+            if((c = fgetc(src)) == '\"'){
+                    seekOffset++;
+                if((c = fgetc(src)) == '\"'){
+                    seekOffset++;
+                    //whileCondition = 0;
+                }}}
+        if(seekOffset < 3)
+        {
+            fseek(src,-seekOffset,SEEK_CUR);
+            whileCondition = 1;
+        }else{
+            if(text[strlen(text)-1] == '\n'){
+                text[strlen(text)-1] = '\0';
+            }
+            whileCondition = 0;
+        }
         }
     }
-    text[strlen(text)-1] = '\0';
+    text[strlen(text)] = '\0';
     printf("RETURNING TEXT: %s\n",text);
+    fseek(src, 0, SEEK_CUR);
     return text;
 }
 
@@ -186,6 +238,7 @@ nil			                                    9
 else, func, if, let, return, var, while	        10
 termnumber				                        11
 termstring				                        12
+identif                                         13
 */
 
 struct Token getToken(FILE* src){
@@ -196,9 +249,8 @@ struct Token getToken(FILE* src){
     int seek = 1;
     int term = 0;
 
-    printf("First\n");
-
     char c = fgetc(src);
+    printf("First char of token: %c\n",c);
     if(c == EOF || c == -1){
         seek = 0;
     }
@@ -218,11 +270,17 @@ struct Token getToken(FILE* src){
     letterCounter++;
 
     //get operands, if no operands -> go default for a term
-    
+    char opening[3]; 
     switch(c){
         case '\"':
-                c = fgetc(src); if(c != '\"'){ fseek(src,-1,SEEK_CUR); token.symbol = stringanoff(src, 0);  }
-                c = fgetc(src); if(c != '\"'){ fseek(src,-2,SEEK_CUR); /*vrat prazdny string*/ return token; }else{ readEmptyLine(src); token.symbol = stringanoff(src, 1); }
+                opening[0] = '\"';
+                c = fgetc(src); if(c != '\"'){ fseek(src,-1,SEEK_CUR); token.symbol = stringanoff(src, 0); token.ID = 12; return token;  }else{ opening[1] = '\"'; }
+                c = fgetc(src); if(c != '\"'){ fseek(src,-2,SEEK_CUR); /*vrat prazdny string*/ token.ID = 12; return token; }else{ opening[2] = '\"'; }
+                if(strcmp(opening,"\"\"\"\0")){
+                    readEmptyLine(src); token.symbol = stringanoff(src, 1); token.ID = 12;
+                }else{
+                    fprintf(stderr,"Wrong string declaration, use \"string\" or \"\"\"\nstring\n\"\"\"\n");
+                }
                 break;
         //'='
         case '=':
@@ -381,7 +439,7 @@ struct Token getToken(FILE* src){
                             }
                     }
                 token.ID = 11;
-                }else if(c == '_') {
+                }else if(c == '_')
                     getChar(&seekCounter,&c,src,&letterCounter);
                     if(isWhiteSpace(c)){
                     //_ used in functions to skip argument name 
@@ -393,17 +451,13 @@ struct Token getToken(FILE* src){
                         assignAndRealloc(&seekCounter,c,&token,&letterCounter);    // toto by sa malo dat spravit mudrejsie
                         term = 1;
                     }
-                }
+                
                 if(isValidTerm(c)){
                         term = 1;
                         getChar(&seekCounter,&c,src,&letterCounter);
+                        token.ID = 13;
                         while(isValidTerm(c)){
-                            printf("Last\n");
-                            printf("seekC %d, nacitany %c, cislo charu:%d, LC %d\n", seekCounter, c, c, letterCounter);
-                            printf("token symb %s\n", token.symbol);
                             assignAndRealloc(&seekCounter,c,&token,&letterCounter);
-                            printf("Last2\n");
-                            
                             getChar(&seekCounter,&c,src,&letterCounter);
                         }
                 }else{
@@ -415,7 +469,7 @@ struct Token getToken(FILE* src){
                 break;
     }
     
-    if(seek = 1){
+    if(seek == 1){
     fseek(src,-seekCounter,SEEK_CUR);
     }
     if(term == 1){
@@ -443,12 +497,11 @@ struct Token getToken(FILE* src){
     if(token.ID < 0){
         token.symbol = "";
     }
-    
     return token;
     free(token.symbol);
 }
-
-/*int main(int argc, char* argv[]){
+/*
+int main(int argc, char* argv[]){
     //Check arguments
     if (argc != 2) {
         fprintf(stderr,"Pouzitie: %s <filename>\n", argv[0]);
@@ -465,9 +518,8 @@ struct Token getToken(FILE* src){
     while(fgetc(file) != -1){
         fseek(file,-1,SEEK_CUR);
         temp = getToken(file);
-        printf("%s\n",temp.symbol);
+        printf("end: %s\n",temp.symbol);
     }
     fclose(file);
     return 0;
-}
-*/
+}*/ //OLD MAIN
