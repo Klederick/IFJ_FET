@@ -133,9 +133,9 @@ char* stringanoff(FILE* src, int condition){
         }
     }
     while(whileCondition){
+        seekOffset = 0;
         printf("Character c before big switch: %c\n",c);
         seekOffset++;
-        printf("Character c before big switch: %c\n",c);
         if(c == -1 || c == EOF){ break; }
         if(c == '\\' && condition == 0){
             char temp = '\\';
@@ -178,19 +178,18 @@ char* stringanoff(FILE* src, int condition){
             }
         }else{
             //if everything is okay do this:
-            printf("Adding a character to the string (c): %c\n",c); 
-            printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
-            if((c > 31 && c < 256) || condition == 1){
-                printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
+            printf("Adding a character to the string (c): %c\n",c);
+            if((c > 31 && c != 127) || condition == 1){
                 text = (char*)realloc(text,strlen(text)+2); strncat(text, &c, 1);
             }else{
                 fprintf(stderr,"STRING ERROR: Invalid character used %c",c);
                         exit(1);
                 ///////////////////////////////////////////STRING ERRROR
             }
-            printf("RETURNING TEXT: %s , %d - its length\n",text, strlen(text));
+            printf("RETURNING TEXT: %s , %lu - its length\n",text, strlen(text));
         }
         //reset condition
+        seekOffset = 0;
             if(condition == 0){
         if((c = fgetc(src)) != '\"'){
             whileCondition = 1;
@@ -211,13 +210,16 @@ char* stringanoff(FILE* src, int condition){
             fseek(src,-seekOffset,SEEK_CUR);
             whileCondition = 1;
         }else{
+            if(text[strlen(text)-1] == '\n'){
+                text[strlen(text)-1] = '\0';
+            }
             whileCondition = 0;
         }
         }
     }
     text[strlen(text)] = '\0';
     printf("RETURNING TEXT: %s\n",text);
-    fseek(src, 1, SEEK_CUR);
+    fseek(src, 0, SEEK_CUR);
     return text;
 }
 
@@ -498,7 +500,7 @@ struct Token getToken(FILE* src){
     return token;
     free(token.symbol);
 }
-
+/*
 int main(int argc, char* argv[]){
     //Check arguments
     if (argc != 2) {
@@ -520,4 +522,4 @@ int main(int argc, char* argv[]){
     }
     fclose(file);
     return 0;
-}
+}*/ //OLD MAIN
