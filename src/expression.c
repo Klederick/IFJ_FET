@@ -1,4 +1,4 @@
-
+//
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -123,10 +123,10 @@ void reduce(StringStack* expr_stack, const char* a, bool E, StringStack* vstupni
         // Check for "("
         if(E){
             printf("MAME TU ECKO\n");
-
-            strcpy(c, peekString(expr_stack));
+            strcpy(b, peekString(expr_stack));
             popString(expr_stack);
-
+            popString(expr_stack);
+            strcpy(c, peekString(expr_stack));
             if (strcmp(c,"(") != 0) {
                 printf("Chybi zavorka\n");
             }
@@ -170,8 +170,8 @@ void reduce(StringStack* expr_stack, const char* a, bool E, StringStack* vstupni
         popString(expr_stack);
         printf("Redukce podle pravidla 6\n");
         pushString(expr_stack, "E");
-
     }
+    
 }
 void equal(StringStack* expr_stack, const char* a){
     pushString(expr_stack, a);
@@ -189,11 +189,11 @@ int main() {
     pushString(&vstupni_stack, "$");
     pushString(&vstupni_stack, "i");
     pushString(&vstupni_stack, "+");
-    pushString(&vstupni_stack, ")");
     pushString(&vstupni_stack, "i");
     pushString(&vstupni_stack, "*");
     pushString(&vstupni_stack, "i");
-    pushString(&vstupni_stack, "(");
+    pushString(&vstupni_stack, "+");
+    pushString(&vstupni_stack, "i");
 
     StringStack temp_stack;
     initializeStringStack(&temp_stack);
@@ -205,6 +205,7 @@ int main() {
     printf("Is string stack empty? %s\n", isStringStackEmpty(&vstupni_stack) ? "Yes" : "No");
     */
     char b[MAX_STRING_LENGTH];
+    char d[MAX_STRING_LENGTH];
     strcpy(b, peekString(&expr_stack));
 
     if(strcmp(b, "$") == 0){
@@ -216,13 +217,15 @@ int main() {
             char b[MAX_STRING_LENGTH];
             strcpy(b, peekString(&expr_stack));
             if(strcmp(a, "$") == 0){
-                popString(&expr_stack);
                 strcpy(c, peekString(&expr_stack));
+                popString(&expr_stack);
                 if(strcmp(c, "$") == 0){
-                    //printf("konec expression");
+                    printf("konec expression");
                     break;
                 }
-                pushString(&expr_stack, c);
+                else{
+                    pushString(&expr_stack, c);
+                }
             }
             if(strcmp(b, "E") == 0){
                 E = true;
@@ -232,6 +235,7 @@ int main() {
                 pushString(&expr_stack, c);
                 if (strcmp(b,"+") == 0 || strcmp(b,"-") == 0 || strcmp(b,"*") == 0 || strcmp(b,"/") == 0){
                     reduce(&expr_stack, b, E, &vstupni_stack);
+
                     printf("BLLBBL\n");            
                     printf("Obsah zásobníku expr_stack:\n");
                     while (!isStringStackEmpty(&expr_stack)) {
@@ -248,7 +252,22 @@ int main() {
                     printf("\n");
                     printf("BLLBBL\n\n");            
                 }
+                if(strcmp(a, ")") == 0){
+                    equal(&expr_stack, a);
+                }
             }
+            if(strcmp(a, "$") == 0){
+                        strcpy(d, peekString(&expr_stack));
+                        popString(&expr_stack);
+                        strcpy(c, peekString(&expr_stack));
+                        if(strcmp(c, "$") == 0){
+                            printf("konec expression\n");
+                            break;
+                        }
+                        else{
+                            pushString(&expr_stack, d);
+                        }
+                    }
             int positionx = findStringInColumn(a);
             int positiony = findStringInRow(b);
             char* symbol = getStringFromCoordinates(positionx, positiony);
