@@ -178,15 +178,26 @@ char* stringanoff(FILE* src, int condition){
             }
         }else{
             //if everything is okay do this:
+<<<<<<< Updated upstream
             printf("Adding a character to the string (c): %c\n",c);
             if((c > 31 && c != 127) || condition == 1){
+=======
+            printf("Adding a character to the string (c): %c\n",c); 
+            printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
+            if((c > 31 && c != 127) || condition == 1){
+                printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
+>>>>>>> Stashed changes
                 text = (char*)realloc(text,strlen(text)+2); strncat(text, &c, 1);
             }else{
                 fprintf(stderr,"STRING ERROR: Invalid character used %c",c);
                         exit(1);
                 ///////////////////////////////////////////STRING ERRROR
             }
+<<<<<<< Updated upstream
             printf("RETURNING TEXT: %s , %lu - its length\n",text, strlen(text));
+=======
+            printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
+>>>>>>> Stashed changes
         }
         //reset condition
         seekOffset = 0;
@@ -250,23 +261,20 @@ struct Token getToken(FILE* src){
     int term = 0;
 
     char c = fgetc(src);
-    printf("First char of token: %c\n",c);
-    if(c == EOF || c == -1){
-        seek = 0;
-    }
+    printf("First char of token: %d\n",c);
     
     struct Token token;
     token.ID = 0;
     token.symbol = (char *)malloc(letterCounter+1);
-    token.symbol[letterCounter-1] = c; token.symbol[letterCounter] = '\0';
+    token.symbol[letterCounter] = c; token.symbol[letterCounter+1] = '\0';
     token.spacesBehind = 0;
 
-    if(c == EOF || c == -1){
+    if(c == EOF){
         seek = 0;
         return token;
     }
 
-    while(isWhiteSpace(c) == 1){ c = fgetc(src); token.spacesBehind++; }
+    while(isWhiteSpace(c)){ c = fgetc(src); token.spacesBehind++; }
     letterCounter++;
 
     //get operands, if no operands -> go default for a term
@@ -346,10 +354,12 @@ struct Token getToken(FILE* src){
                             }
                         }
                     }
+                    
                     else {
                         fprintf(stderr, "Unterminated multi-line comment\n");
                         exit(1);
                     }
+                    seekCounter++;
                 }
                 token.ID = -2;        
             }else{
@@ -410,9 +420,13 @@ struct Token getToken(FILE* src){
             }
                break;
         default: 
+        printf("Ciselny znak: %d\n", c);
                 if(c >= '0' && c <= '9'){
                     //int / double
+                    printf("pred %d, %c, %d Assign\n", seekCounter, c, letterCounter);
                     assignAndRealloc(&seekCounter,c,&token, &letterCounter);
+                    printf("po Assign\n");
+
                     getChar(&seekCounter,&c, src, &letterCounter);
                     while(c >= '0' && c <= '9'){
                             assignAndRealloc(&seekCounter,c,&token, &letterCounter);
@@ -439,7 +453,7 @@ struct Token getToken(FILE* src){
                             }
                     }
                 token.ID = 11;
-                }else if(c == '_')
+                }else if(c == '_') {
                     getChar(&seekCounter,&c,src,&letterCounter);
                     if(isWhiteSpace(c)){
                     //_ used in functions to skip argument name 
@@ -447,11 +461,11 @@ struct Token getToken(FILE* src){
                         token.symbol = "_";
                     break;
                     }else{
-                        token.ID = 12;
+                        token.ID = 13;
                         assignAndRealloc(&seekCounter,c,&token,&letterCounter);    // toto by sa malo dat spravit mudrejsie
                         term = 1;
                     }
-                
+                }
                 if(isValidTerm(c)){
                         term = 1;
                         getChar(&seekCounter,&c,src,&letterCounter);
@@ -468,7 +482,9 @@ struct Token getToken(FILE* src){
                 }
                 break;
     }
-    
+    if (token.ID == 13) {
+        seekCounter--;
+    }
     if(seek == 1){
     fseek(src,-seekCounter,SEEK_CUR);
     }
@@ -500,6 +516,10 @@ struct Token getToken(FILE* src){
     return token;
     free(token.symbol);
 }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 /*
 int main(int argc, char* argv[]){
     //Check arguments
@@ -522,4 +542,9 @@ int main(int argc, char* argv[]){
     }
     fclose(file);
     return 0;
+<<<<<<< Updated upstream
 }*/ //OLD MAIN
+=======
+}
+*/
+>>>>>>> Stashed changes
