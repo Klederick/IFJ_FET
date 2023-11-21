@@ -57,7 +57,7 @@ expressionItem peekE(ExpressionStack *stack) {
 }
 
 void dispozeStackE(ExpressionStack *stack){
-    if(!isExpressionStackEmpty){
+    if(!isExpressionStackEmpty(stack)){
         free(stack->data);
         stack->top = -1;
         stack->data = NULL;
