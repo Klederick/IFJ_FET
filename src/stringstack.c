@@ -15,16 +15,15 @@ void resize(ExpressionStack *stack) {
     }
     
     free(stack->data);
-    for (int i = 0; i < stack->top; i++) {
-        stack->data[i] = temp_arr[i];
-    }
-    stack->top = stack->size;
+    
+    stack->data[] = temp_arr;
+    stack->top = stack->size; // Aktualizace top na novou hodnotu
 }
 
 
 void initializeExpressionStack(ExpressionStack *stack) {
     stack->size = 8;
-    stack->data = malloc(stack->size*sizeof(expressionItem));
+    stack->data[] = malloc(stack->size*sizeof(expressionItem));
     stack->top = -1;
 }
 
@@ -64,7 +63,7 @@ void dispozeStackE(ExpressionStack *stack){
     if(!isExpressionStackEmpty(stack)){
         free(stack->data);
         stack->top = -1;
-        stack->data = NULL;
+        stack->data[] = NULL;
     }
     stack->top = -1;
 }
