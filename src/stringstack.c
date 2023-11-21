@@ -1,19 +1,22 @@
 #include <stdio.h>
 #include <string.h>
 
-void resize(ExpressionStack *stack){
-    stack->size = stack->size + 8;
-    expressionItem *temp_arr = malloc(stack->size*sizeof(expressionItem));
-    for(int i = 0; i < stack->size-8; i++){
-        temp_arr[i] = stack->data[i];
-    }
-    free(stack->data);
-    stack->data = *(temp_arr);
-
-    if(temp_arr == NULL){
+void resize(ExpressionStack *stack) {
+    stack->size += 8;
+    expressionItem *temp_arr = malloc(stack->size * sizeof(expressionItem));
+    
+    if (temp_arr == NULL) {
         exit(1);
     }
+    
+    for (int i = 0; i < stack->top; i++) {
+        temp_arr[i] = stack->data[i];
+    }
+    
+    free(stack->data);
+    stack->data = temp_arr;
 }
+
 
 void initializeExpressionStack(ExpressionStack *stack) {
     stack->size = 8;
