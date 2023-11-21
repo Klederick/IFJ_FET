@@ -5,8 +5,8 @@
 * 1) stack
 * 2) symtable
 * EXAMPLE:
-* Stack *stc = CreateDynamic(dynAllocated, 1); <- stack will be initialized automatically
-* DeleteDynamic(dynAllocated, stc); <- stack will be automatically freed by it's destructor
+* Stack* s1 = CreateDynamic(&head, 1); <- stack will be initialized automatically
+* DeleteDynamic(&head, s1); <- stack will be automatically freed by it's destructor
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,11 +16,11 @@
 #include "symtable.c"
 
 // Define the structure for a node
-struct Dynamic {
+/*struct Dynamic {
     int dataType;
     void* genericPtr;
     struct Dynamic* next;
-};
+};*/
 
 /*
 *   --HELP-- Function to create a new node with the given data.
@@ -49,7 +49,6 @@ struct Dynamic* CreateNode(int dataType) {
                 free(newNode);
                 return NULL;
             }
-            root = initializeTree();
             newNode->genericPtr = root;
         }break;
         default: newNode->genericPtr = NULL;
@@ -95,8 +94,13 @@ void DynamicDestructor(int dataType, void* Ptr){
             freestack(Ptr);
             free(Ptr);
         }break;
-        case 2:{
-            destroyTree(Ptr);
+        case 2:{   
+            tNode_t* destructor = Ptr;
+            tNode_t* destructor2 = Ptr;
+            symtabInsert(destructor,"dest",1);
+            destroyTree(*destructor);
+            *destructor2 = NULL;
+            free(destructor2);
         }break;
     }
 }
@@ -109,7 +113,7 @@ void DynamicDestructor(int dataType, void* Ptr){
 */
 bool DeleteDynamic(struct Dynamic** head, void* Ptr) {
     if(Ptr == NULL) return false;
-    struct Dynamic* help = *head;
+    struct Dynamic* help = *head;    
     if (help->genericPtr == Ptr) {
         *head = help->next;
         DynamicDestructor(help->dataType, help->genericPtr);
@@ -139,7 +143,7 @@ bool DeleteDynamic(struct Dynamic** head, void* Ptr) {
 *   If success -> true
 *   If failure -> false
 */
-bool UpdateDynamic(struct Dynamic** head, void* PtrOld, void* PtrNew) {
+bool UpdateDynamic(struct Dynamic* head, void* PtrOld, void* PtrNew) {
     if(PtrOld == NULL || PtrNew == NULL) return false;
     struct Dynamic* current = head;
     while (current != NULL) {
@@ -153,16 +157,17 @@ bool UpdateDynamic(struct Dynamic** head, void* PtrOld, void* PtrNew) {
 }
 
 /*
-*   --USER-- Function to initialize dynamic structure (pointer).
+*   --USER-- Function to initialize dynamic database (pointer).
 */
 struct Dynamic* InitDynamic(){
     return NULL;
 }
+
 /*
-* --USER-- Function to free the memory used by the dynamic structure.
-*   Input -> pointer to dynamic structure
+* --USER-- Function to free the memory used by the dynamic database.
+*   Input -> pointer to dynamic database
 */
-void DeleteDynamicStructure(struct Node* head) {
+void DeleteDynamicStructure(struct Dynamic* head) {
     struct Dynamic* current = head;
     while (current != NULL) {
         struct Dynamic* temp = current;
@@ -171,10 +176,36 @@ void DeleteDynamicStructure(struct Node* head) {
         free(temp);
     }
 }
-
+/*
 int main() {
     struct Dynamic* head = InitDynamic();
-    
-
+    DeleteDynamicStructure(head);
+    Stack* s1 = CreateDynamic(&head, 1);
+    Stack* s2 = CreateDynamic(&head, 1);
+    Stack* s3 = CreateDynamic(&head, 1);
+    tNode_t* n1 = CreateDynamic(&head, 2);
+    *n1 = NULL;
+    symtabInsert(n1, "func1", 1);
+    symtabInsert(n1, "func2", 1);
+    symtabInsert(n1, "varB", 2);
+    symtabInsert(n1, "varA", 2);
+    tNode_t* n2 = CreateDynamic(&head, 2);
+    *n2 = NULL;
+    symtabInsert(n2, "func1", 1);
+    symtabInsert(n2, "func2", 1);
+    symtabInsert(n2, "varB", 2);
+    symtabInsert(n2, "varA", 2);
+    if(DeleteDynamic(&head,s1)){printf("yes\n");}
+    else {printf("no\n");}
+    if(UpdateDynamic(head, n1, n1)){printf("UPDATED\n");}
+    else {printf("UPDATE_CRASH\n");}
+    if(DeleteDynamic(&head,n1)){printf("yes\n");}
+    else {printf("no\n");}
+    if(DeleteDynamic(&head,NULL)){printf("yes\n");}
+    else {printf("no\n");}
+    tNode_t* n3 = CreateDynamic(&head, 2);
+    *n3 = NULL;
+    Stack* s4 = CreateDynamic(&head, 1);
+    DeleteDynamicStructure(head);
     return 0;
-}
+}*/

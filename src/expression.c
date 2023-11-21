@@ -1,27 +1,11 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include "stack.c"
-#include "structs.h"
 #include <string.h>
-int TABLE_SIZE = 15;
-int p_table[15][15] = {
-  //{'+'   , '-'   , '*'   , '/'   , '('   , 'i'   , ')'   , '$'   , '=='  , '<='   , '>='   , '>'    , '!='  , '<'    , '??'  },
-    {'MORE', 'MORE', 'LESS', 'LESS', 'LESS', 'LESS', 'MORE', 'MORE', 'MORE', 'MORE' , 'MORE' , 'MORE' , 'MORE', 'MORE' , 'MORE'}, //'+', 
-    {'MORE', 'MORE', 'LESS', 'LESS', 'LESS', 'LESS', 'MORE', 'MORE', 'MORE', 'MORE' , 'MORE' , 'MORE' , 'MORE', 'MORE' , 'MORE'}, //'-', 
-    {'MORE', 'MORE', 'MORE', 'MORE', 'LESS', 'LESS', 'MORE', 'MORE', 'MORE', 'MORE' , 'MORE' , 'MORE' , 'MORE', 'MORE' , 'MORE'}, //'*', 
-    {'MORE', 'MORE', 'MORE', 'MORE', 'LESS', 'LESS', 'MORE', 'MORE', 'MORE', 'MORE' , 'MORE' , 'MORE' , 'MORE', 'MORE' , 'MORE'}, //'/', 
-    {'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'EQUA', 'ERRR', 'LESS', 'LESS' , 'LESS' , 'LESS' , 'LESS', 'LESS' , 'LESS'}, //'(', 
-    {'MORE', 'MORE', 'MORE', 'MORE', 'ERRR', 'ERRR', 'MORE', 'MORE', 'MORE', 'MORE' , 'MORE' , 'MORE' , 'MORE', 'MORE' , 'MORE'}, //'i', 
-    {'MORE', 'MORE', 'MORE', 'MORE', 'ERRR', 'ERRR', 'MORE', 'MORE', 'MORE', 'MORE' , 'MORE' , 'MORE' , 'MORE', 'MORE' , 'MORE'}, //')', 
-    {'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'ERRR', 'ERRR', 'LESS', 'LESS' , 'LESS' , 'LESS' , 'LESS', 'LESS' , 'LESS'}, //'$', 
-    {'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'MORE', 'MORE', 'MORE', 'MORE' , 'MORE' , 'MORE' , 'MORE', 'MORE' , 'MORE'}, //'==',
-    {'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'MORE', 'MORE', 'MORE', 'MORE' , 'MORE' , 'MORE' , 'MORE', 'MORE' , 'MORE'}, //'<=',
-    {'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'MORE', 'MORE', 'MORE', 'MORE' , 'MORE' , 'MORE' , 'MORE', 'MORE' , 'MORE'}, //'>=',
-    {'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'MORE', 'MORE', 'MORE', 'MORE' , 'MORE' , 'MORE' , 'MORE', 'MORE' , 'MORE'}, //'>', 
-    {'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'MORE', 'MORE', 'MORE', 'MORE' , 'MORE' , 'MORE' , 'MORE', 'MORE' , 'MORE'}, //'!=',
-    {'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'MORE', 'MORE', 'MORE', 'MORE' , 'MORE' , 'MORE' , 'MORE', 'MORE' , 'MORE'}, //'<', 
-    {'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'LESS', 'MORE', 'MORE', 'LESS', 'LESS' , 'LESS' , 'LESS' , 'LESS', 'LESS' , 'LESS'} //'??',
-};
+#include <stdlib.h>
+#include "stringstack.c"
+#include <stdbool.h>
+
+#define TABLE_SIZE 10
+
 // pravidla 
 /*
 1 - E -> E + E
@@ -31,140 +15,174 @@ int p_table[15][15] = {
 5 - E -> (E)
 6 - E -> i
 7 - E -> E ?? E
-8 - E -> E == E
-9- E -> E <= E
-10- E -> E >= E
-11- E -> E != E 
-12- E -> E < E
-13- E -> E > E 
-...
-var i : (E == E)
-i = 1
-i - E -> E op E
-if((i == 1) == (a == 2))
 */
 
-void LESS(Stack* expr_stack, char a) {
-    push(expr_stack, '<');
-    push(expr_stack, a);
+char* p_table[10][10] = {
+    {"x", "+", "-", "*", "/", "(", "i", ")", "$", "??"},
+    {"+", "M", "M", "L", "L", "L", "L", "M", "M", "M"}, //"+", 
+    {"-", "M", "M", "L", "L", "L", "L", "M", "M", "M"}, //"-", 
+    {"*", "M", "M", "M", "M", "L", "L", "M", "M", "M"}, //"*", 
+    {"/", "M", "M", "M", "M", "L", "L", "M", "M", "M"}, //"/", 
+    {"(", "L", "L", "L", "L", "L", "L", "Q", "R", "L"}, //"(", 
+    {"i", "M", "M", "M", "M", "R", "R", "M", "M", "M"}, //"i", 
+    {")", "M", "M", "M", "M", "R", "R", "M", "M", "M"}, //")", 
+    {"$", "L", "L", "L", "L", "L", "L", "R", "R", "L"}, //"$", 
+    {"??","L", "L", "L", "L", "L", "L", "R", "M", "L"} //"??",
+}; 
+
+int findStringInColumn(const char* a) {
+    int i, found = 0;
+
+    // Procházení prvního řádku tabulky
+    for (i = 0; i < 10; i++) {
+        if (strcmp(a, p_table[0][i]) == 0) { // Porovnání řetězce 'a' s hodnotou v tabulce
+            printf("příchozí je '%s' at position [%d][%d] in p_table\n", a, 0, i);
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("příchozí String '%s' not found in p_table\n", a);
+    }
+    return i;
 }
 
-void MORE(Stack* expr_stack, char a, bool express, char symbol) {
-    if (express) {
-        switch (symbol) {
-            case '+':
-                pop(expr_stack);
-                pop(expr_stack);
-                pop(expr_stack);
-                pop(expr_stack);
-                printf("Redukce podle pravidla 1\n");
-                push(expr_stack, 'E');
-                break;
+int findStringInRow(const char* b) {
+    int i, found = 0;
 
-            case '-':
-                pop(expr_stack);
-                printf("Redukce podle pravidla 2\n");
-                push(expr_stack, 'E');
-                break;
-
-            case '*':
-                printf("Redukce podle pravidla 3\n");
-                push(expr_stack, 'E');
-            case '/':
-                printf("Redukce podle pravidla 4\n");
-                push(expr_stack, 'E');
-            case '()':
-                printf("Redukce podle pravidla 5\n");
-                push(expr_stack, 'E');
-            case 'i':
-                printf("Redukce podle pravidla 6\n");
-                push(expr_stack, 'E');
-            case '??':
-                printf("Redukce podle pravidla 7\n");   
-                push(expr_stack, 'E');
-            case '==':
-                printf("Redukce podle pravidla 8\n");
-                push(expr_stack, 'E');
-            case '<=':
-                printf("Redukce podle pravidla 9\n");
-                push(expr_stack, 'E');
-            case '>=':
-                printf("Redukce podle pravidla 10\n");
-                push(expr_stack, 'E');
-            case '!=':
-                printf("Redukce podle pravidla 11\n");
-                push(expr_stack, 'E');
-            case '<':
-                printf("Redukce podle pravidla 12\n");
-                push(expr_stack, 'E');
-            case '>':
-                printf("Redukce podle pravidla 13\n");
-                push(expr_stack, 'E');
-            default:
-                printf("nebylo nalezeno pravidlo")
+    // Procházení řádku tabulky
+    for (i = 0; i < 10; i++) {
+        if (strcmp(b, p_table[i][0]) == 0) { // Porovnání řetězce 'a' s hodnotou v tabulce
+            printf("na expr je '%s' at position [%d][%d] in p_table\n", b, i, 0);
+            found = 1;
+            break;
         }
+    }
+
+    if (!found) {
+        printf("String '%s' not found in row of p_table\n", b);
+    }
+    return i;
+}
+
+char* getStringFromCoordinates(int col, int row) {
+    if (row >= 0 && row < 16 && col >= 0 && col < 16) { // Zkontrolování platných souřadnic
+        return p_table[row][col]; // Vrácení řetězce na dané souřadnici
+    } else {
+        return NULL; // Neplatné souřadnice
     }
 }
 
-void EQUA(Stack* expr_stack, char a) {
-    push(expr_stack, a);
+void add(StringStack* node_stack, StringStack* expr_stack, const char* a, bool E){
+    char tmp[MAX_STRING_LENGTH];
+
+    pushString(expr_stack, "<");
+    pushString(expr_stack, a);
+}
+void reduce(StringStack* node_stack, StringStack* expr_stack, const char* a, bool E){
+
+    if (strcmp(a,"+") == 0 || strcmp(a,"-") == 0 || strcmp(a,"*") == 0 || strcmp(a,"/") == 0){
+        while(strcmp(peekString(expr_stack), "<") != 0){
+            pushString(node_stack, peekString(expr_stack));
+            popString(expr_stack);
+        }
+        eNode *e_node = malloc(sizeof(eNode));
+        e_node->left = peekString(node_stack); 
+        popString(node_stack);
+        e_node->token = peekString(node_stack); 
+        popString(node_stack);
+        e_node->right = peekString(node_stack);
+        popString(node_stack);
+
+
+        popString(expr_stack);
+        pushString(expr_stack, "E");
+    }
+    else if (strcmp(a,")") == 0){
+
+    }
+    else if (strcmp(a, "??") == 0){
+
+    }
+    else if (strcmp(a, "$") == 0){
+
+    }
+    else{
+
+    }
+    
+}
+void equal(StringStack* expr_stack, const char* a){
+    
+}
+int expression(const char* a){ 
+    char tmp[MAX_STRING_LENGTH];
+    tmp = NULL;
+    char b[MAX_STRING_LENGTH];
+    bool E = false;
+
+    ExpressionStack expr_stack;
+    initializeExpressionStack(&expr_stack);
+    ExpressionStack node_stack;
+    initializeExpressionStack(&node_stack);
+
+    ExpressionStack temp_stack;
+    initializeExpressionStack(&temp_stack);
+
+    strcpy(b, peekString(&expr_stack));
+    
+    if(strcmp(b, "E")==0){
+        tmp = peekString(&expr_stack);
+        popString(&expr_stack);
+        strcpy(b, peekString(&expr_stack));
+    }
+
+    int positionx = findStringInColumn(a);
+    int positiony = findStringInRow(b);
+    char* symbol = getStringFromCoordinates(positionx, positiony);
+
+    printf("hledana operace je: %s\n", symbol);
+    if(strcmp(symbol, "L") == 0){
+        add(&node_stack, &expr_stack, a, E);
+    }
+    else if(strcmp(symbol, "M") == 0){
+        if(tmp != NULL){
+            pushString(&expr_stack, tmp);
+        }
+        reduce(&expr_stack, a, E);
+    }
+    else if(strcmp(symbol, "Q") == 0){
+        equal(&expr_stack, a);
+    }
+    else{
+        fprintf(stderr, "Nespravna kombinacia tokenov ktora vedie k errorovemu stavu\n");
+    }
+
+    strcpy(b, peekString(&expr_stack));
+    printf("Obsah zásobníku expr_stack:\n");
+    while (!isStringStackEmpty(&expr_stack)) {
+        char* item = popString(&expr_stack);
+        pushString(&temp_stack, item);
+    }
+
+    // Vrácení položek zpět na zásobník vstupni_stack
+    while (!isStringStackEmpty(&temp_stack)) {
+        char* item = popString(&temp_stack);
+        printf("%s ", item);
+        pushString(&expr_stack, item);
+    }
+    if(expr_stack.top == 0)
+    popToken(&expr_stack);
+    return 0;
 }
 
-void ERRR(a, b){
- //syntax err   
-}
 
-
-int main() {
-    bool express = false
-    Stack expr_stack;
-    initializeStack(&expr_stack);
-    push(&expr_stack, '$'); // Change: push character instead of string
-
-    Stack vstupni_stack;
-    initializeStack(&vstupni_stack);
-    push(&vstupni_stack, 'i'); // Change: push character instead of string
-    push(&vstupni_stack, '^');
-    push(&vstupni_stack, ')');
-    push(&vstupni_stack, 'i'); // Change: push character instead of string
-    push(&vstupni_stack, '*');
-    push(&vstupni_stack, 'i'); // Change: push character instead of string
-    push(&vstupni_stack, '(');
-
-    while (!isEmpty(&vstupni_stack)) {
-        char a = peek(&vstupni_stack);
-        char b = peek(&expr_stack);
-        if (b == 'E'){
-            pop(&expr_stack);
-            b = peek(&expr_stack);
-            push(&expr_stack, 'E');
-            express = true;
-        }
-        
-        int surx = -1; int sury = -1;
-        
-        for(int i = 0; i < TABLE_SIZE; i++){
-            if(strcmp(p_table[0][i],a)){
-                surx = i;
-            }
-        }
-
-        for(int i = 0; i < TABLE_SIZE; i++){
-            if(strcmp(p_table[0][i],b)){
-                sury = i;
-            }
-        }
-
-        if((sury == -1) || (surx == -1)){
-            fprintf(stderr,"Znak z expression nie je validny"); //error vypis ak nenajdem znak v tabulke
-        }
-        switch(p_table[surx][sury]){
-            case 'MORE': MORE(expr_stack, a, express, b); break;
-            case 'LESS': LESS(expr_stack, a); break;
-            case 'EQUA': EQUA(expr_stack, a); break;
-            case 'ERRR': fprintf(stderr,"Nespravna kombinacia tokenov ktora vedie k errorovemu stavu"); break; //error vypis ak nenajdem znak v tabulke
-        }
-        
-        
+main(){
+    char pole[100][100] = {"2", "+", "2", "$"};
+    int i = 0;
+    while(i < 4){
+        expression(pole[i]);
+        i++;
     }
 }

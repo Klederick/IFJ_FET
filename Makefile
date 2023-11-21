@@ -33,8 +33,14 @@ remove_ex:
 dynamic: src/dynamic.c
 	$(CC) $(CFLAGS) -o $@ $<
 
+dynamicval: src/dynamic.c
+	$(CC) $(CFLAGS) -g -o $@ $<
+
 remove_dy:
 	rm -f dynamic
+
+remove_dyval:
+	rm -f dynamicval
 
 all: $(TARGET)
 
