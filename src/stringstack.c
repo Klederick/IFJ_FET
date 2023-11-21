@@ -3,12 +3,12 @@
 
 void resize(ExpressionStack *stack){
     stack->size = stack->size + 8;
-    expressionItem temp_arr = malloc(stack->size*sizeof(expressionItem));
+    expressionItem *temp_arr = malloc(stack->size*sizeof(expressionItem));
     for(int i = 0; i < stack->size-8; i++){
         temp_arr[i] = stack->data[i];
     }
     free(stack->data);
-    stack->data = temp_arr;
+    stack->data = *(temp_arr);
 
     if(temp_arr == NULL){
         exit(1);
