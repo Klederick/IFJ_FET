@@ -114,7 +114,7 @@ void reduce(StringStack* node_stack, StringStack* expr_stack, const char* a, boo
     
 }
 void equal(StringStack* expr_stack, const char* a){
-    
+
 }
 int expression(const char* a){ 
     char tmp[MAX_STRING_LENGTH];
@@ -175,14 +175,4 @@ int expression(const char* a){
     if(expr_stack.top == 0)
     popToken(&expr_stack);
     return 0;
-}
-
-
-main(){
-    char pole[100][100] = {"2", "+", "2", "$"};
-    int i = 0;
-    while(i < 4){
-        expression(pole[i]);
-        i++;
-    }
 }
