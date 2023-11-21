@@ -1,5 +1,12 @@
 #include "scanner.c"
 //simple state machine
+ExpressionStack expr_stack;
+initializeExpressionStack(&expr_stack);
+ExpressionStack node_stack;
+initializeExpressionStack(&node_stack);
+ExpressionStack temp_stack;
+initializeExpressionStack(&temp_stack);
+
 bool goSwitch(bool arg1){
     if(arg1){
         return false;

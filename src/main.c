@@ -9,12 +9,6 @@
 #include "stack.c"
 #include "symtable.c"
 #include "structs.h"
-ExpressionStack expr_stack;
-initializeExpressionStack(&expr_stack);
-ExpressionStack node_stack;
-initializeExpressionStack(&node_stack);
-ExpressionStack temp_stack;
-initializeExpressionStack(&temp_stack);
 int main() {
     // Inicializace datových struktur nebo provádění dalších potřebných kroků
     //Stack stack;
