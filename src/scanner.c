@@ -10,6 +10,7 @@
 
 #include <string.h>
 #include "stack.c"
+#include "expression.c"
 
 #define NUM_OF_KEYWORDS 11
 const char* keywords[][11] = {{"Double\0","else\0","func\0","if\0","Int\0","let\0","nil\0","return\0","String\0","var\0","while\0"}};
