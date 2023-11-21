@@ -342,7 +342,7 @@ struct Token getToken(FILE* src){
                             if ((c = fgetc(src)) == '/') {
                                 pop(&commentStack);
                                 
-                                                        
+            
                             }
                         }
                     }
