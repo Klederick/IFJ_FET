@@ -75,11 +75,11 @@ char* getStringFromCoordinates(int col, int row) {
 }
 
 void add(ExpressionStack* expr_stack, struct Token token, struct Token tmp){
-    /*struct Token less;
-    less.symbol = "<";
+    expressionItem less;
+    less.value.token.symbol = "<";
     pushE(expr_stack, less);
     pushE(expr_stack, tmp);
-    pushE(expr_stack, token);*/
+    pushE(expr_stack, token);
 }
 void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Token token){
 /*
