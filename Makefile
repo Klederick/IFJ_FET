@@ -30,6 +30,12 @@ expression: src/expression.c
 remove_ex:
 	rm -f expression
 
+error: src/error.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+remove_er:
+	rm -f error
+
 dynamic: src/dynamic.c
 	$(CC) $(CFLAGS) -o $@ $<
 
