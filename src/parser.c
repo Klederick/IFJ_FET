@@ -14,12 +14,16 @@ void expr_Signal(){
     expression(scannedToken);
 }
 //check if it is term
-bool isterm(int id){
+bool isterm(struct Token token){
     if(id == 12 || id == 13 || id == 14){
         return true;
     }else{
-        return false;
-    }
+        if(strcmp(token.symbol,")")){
+            return true;
+        }else{
+            return false;
+        }
+        }
 }
 
 int main(int argc, char* argv[]){
@@ -110,7 +114,7 @@ int main(int argc, char* argv[]){
             exprcounter++;
             switch(scannedToken.ID){
                 case 2:
-                    if(exprcounter >= 2 && !isterm(exprList[exprcounter-2].ID)){
+                    if(exprcounter >= 2 && !isterm(exprList[exprcounter-2])){
                         fprintf(stderr,"Operand before operator is not a term\n");
                     }
                     operator = true;
