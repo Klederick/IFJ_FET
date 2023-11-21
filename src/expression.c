@@ -74,18 +74,29 @@ char* getStringFromCoordinates(int col, int row) {
     }
 }
 
-void add(StringStack* node_stack, StringStack* expr_stack, const char* a, bool E){
+void add(StringStack* expr_stack, Token token, Token tmp){
     char tmp[MAX_STRING_LENGTH];
-
-    pushString(expr_stack, "<");
-    pushString(expr_stack, a);
+    Token less.symbol = "<";
+    pushE(expr_stack, less);
+    pushE(expr_stack, tmp);
+    pushE(expr_stack, token);
 }
-void reduce(StringStack* node_stack, StringStack* expr_stack, const char* a, bool E){
+void reduce(StringStack* node_stack, StringStack* expr_stack, Token token){
 
-    if (strcmp(a,"+") == 0 || strcmp(a,"-") == 0 || strcmp(a,"*") == 0 || strcmp(a,"/") == 0){
-        while(strcmp(peekString(expr_stack), "<") != 0){
-            pushString(node_stack, peekString(expr_stack));
-            popString(expr_stack);
+    if (strcmp(token.symbol,"+") == 0 || strcmp(token.symbol,"-") == 0 || strcmp(token.symbol,"*") == 0 || strcmp(token.symbol,"/") == 0){
+        
+        while(true){
+            expression tmp = peekE(expr_stack);
+            if(tmp.type == TOKEN && (strcmp(tmp.symbol, "<")==0)){
+                popE(expr_stack);
+
+
+                return;
+            }
+            else{
+                pushE(node_stack, tmp);
+                popE(expr_stack);
+            }
         }
         eNode *e_node = malloc(sizeof(eNode));
         e_node->left = peekString(node_stack); 
@@ -94,10 +105,6 @@ void reduce(StringStack* node_stack, StringStack* expr_stack, const char* a, boo
         popString(node_stack);
         e_node->right = peekString(node_stack);
         popString(node_stack);
-
-
-        popString(expr_stack);
-        pushString(expr_stack, "E");
     }
     else if (strcmp(a,")") == 0){
 
@@ -116,63 +123,56 @@ void reduce(StringStack* node_stack, StringStack* expr_stack, const char* a, boo
 void equal(StringStack* expr_stack, const char* a){
 
 }
-int expression(const char* a){ 
-    char tmp[MAX_STRING_LENGTH];
-    tmp = NULL;
-    char b[MAX_STRING_LENGTH];
-    bool E = false;
+ExpressionStack expr_stack;
+//initializeExpressionStack(&expr_stack);
+ExpressionStack node_stack;
+//initializeExpressionStack(&node_stack);   
+ExpressionStack temp_stack;
+initializeExpressionStack(&temp_stack);
 
-    ExpressionStack expr_stack;
-    initializeExpressionStack(&expr_stack);
-    ExpressionStack node_stack;
-    initializeExpressionStack(&node_stack);
+int expression(Struct Token token){ 
 
-    ExpressionStack temp_stack;
-    initializeExpressionStack(&temp_stack);
-
-    strcpy(b, peekString(&expr_stack));
+    expressionItem b = peekE(expr_stack);
     
-    if(strcmp(b, "E")==0){
-        tmp = peekString(&expr_stack);
-        popString(&expr_stack);
-        strcpy(b, peekString(&expr_stack));
+    if(b.type == NODE){
+        expressionItem tmp = peekE(&expr_stack);
+        popE(&expr_stack);
+        b = peekE(&expr_stack);
     }
 
-    int positionx = findStringInColumn(a);
-    int positiony = findStringInRow(b);
+    int positionx = findStringInColumn(token.symbol);
+    int positiony = findStringInRow(b.value.token.symbol);
     char* symbol = getStringFromCoordinates(positionx, positiony);
 
     printf("hledana operace je: %s\n", symbol);
     if(strcmp(symbol, "L") == 0){
-        add(&node_stack, &expr_stack, a, E);
+        add(&expr_stack, token, tmp);
     }
     else if(strcmp(symbol, "M") == 0){
         if(tmp != NULL){
-            pushString(&expr_stack, tmp);
+            pushE(&expr_stack, tmp);
         }
-        reduce(&expr_stack, a, E);
+        reduce(&node_stack, &expr_stack, token);
     }
     else if(strcmp(symbol, "Q") == 0){
-        equal(&expr_stack, a);
+        equal(&expr_stack, token.symbol);
     }
     else{
         fprintf(stderr, "Nespravna kombinacia tokenov ktora vedie k errorovemu stavu\n");
     }
 
-    strcpy(b, peekString(&expr_stack));
+    strcpy(b, peekE(&expr_stack));
     printf("Obsah zásobníku expr_stack:\n");
-    while (!isStringStackEmpty(&expr_stack)) {
-        char* item = popString(&expr_stack);
-        pushString(&temp_stack, item);
+    while (!isExpressionStackEmpty(&expr_stack)) {
+        char* item = popE(&expr_stack);
+        pushE(&temp_stack, item);
     }
 
     // Vrácení položek zpět na zásobník vstupni_stack
-    while (!isStringStackEmpty(&temp_stack)) {
-        char* item = popString(&temp_stack);
+    while (!isExpressionStackEmpty(&temp_stack)) {
+        char* item = popE(&temp_stack);
         printf("%s ", item);
-        pushString(&expr_stack, item);
+        pushE(&expr_stack, item);
     }
-    if(expr_stack.top == 0)
-    popToken(&expr_stack);
     return 0;
 }

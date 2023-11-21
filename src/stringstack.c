@@ -1,19 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_SIZE 100
-
 void resize(ExpressionStack *stack){
     stack->size = stack->size + 8;
     expressionItem *temp_arr = malloc(stack->size*sizeof(expressionItem));
-    for(int = 0; i < stack->size-8; i++){
+    for(int i = 0; i < stack->size-8; i++){
         *temp_arr[i] = stack->data[i];
     }
     free(stack->data);
     stack->data = temp_arr;
 
     if(temp_arr == NULL){
-        exit();
+        exit(1);
     }
 }
 
@@ -47,7 +45,7 @@ void popE(ExpressionStack *stack) {
     stack->top--;
 }
 
-expressionItem peekToken(ExpressionStack *stack) {
+expressionItem peekE(ExpressionStack *stack) {
     if (isExpressionStackEmpty(stack)) {
         printf("Expression Stack is empty\n");
         exit(EXIT_FAILURE);
