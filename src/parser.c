@@ -13,15 +13,19 @@ void expr_Signal(){
     scannedToken.ID = 14; scannedToken.symbol = "$";
     expression(scannedToken);
 }
+//check if it is term
+bool isterm(int id){
+    if(id == 12 || id == 13 || id == 14){
+        return true;
+    }else{
+        return false;
+    }
+}
 
 int main(int argc, char* argv[]){
     bool inExpression = false;
-    int expressionType = -1;
-    /*
-    0 = int
-    1 = string
-     */
-    struct Token *tokenList = malloc(sizeof);
+    struct Token *tokenList = NULL;
+    struct Token *exprList = NULL;
     //Check arguments
     if (argc != 2) {
         fprintf(stderr,"Pouzitie: %s <filename>\n", argv[0]);
@@ -36,6 +40,8 @@ int main(int argc, char* argv[]){
     struct Token scannedToken;
     struct Token tempToken;
     int counter = 0;
+    int exprcounter = 0;
+    bool operator = false;
     scannedToken = getToken(file);
     while(scannedToken.ID != 0){
         printf("Token %d: (%d) %s (spaces behind: %d)\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind);
@@ -49,6 +55,8 @@ int main(int argc, char* argv[]){
                 expr_Signal();
                 inExpression = false;
                 expressionType = -1;
+                exprcounter = 0;
+                free(exprList);
             }
             
         }
@@ -99,44 +107,44 @@ int main(int argc, char* argv[]){
         }
         if(inExpression){
             //check if the flow of tokens is correct
+            exprcounter++;
             switch(scannedToken.ID){
                 case 2:
-                        switch(expressionType){
-                            case 0:
-                                if(tokenList[counter-2].ID == 11){
-                                    //is number
-                                }else if(tokenList[counter-2].ID == 13){
-                                 //look into indentif table and check type
-                                }else{
-                                    fprintf("Wrong datatype used in first operand of operation.\n");
-                                    return 0;
-                                }
-                            case 1:
-                                if(tokenList[counter-2].ID == 12){
-                                    //is string
-                                }else if(tokenList[counter-2].ID == 13){
-                                 //look into indentif table and check type
-                                }else{
-                                    fprintf("Wrong datatype used in first operand of operation.\n");
-                                    return 0;
-                                }
-                            default:
-                                    fprintf(stderr,"Incorrect flow of tokens in expression\n");
-                                    break;
-                        }
-                    break;
-                case 4:
+                    if(exprcounter >= 2 && !isterm(exprList[exprcounter-2].ID)){
+                        fprintf(stderr,"Operand before operator is not a term\n");
+                    }
+                    operator = true;
                     break;
                 case 11:
-                    
+                case 12:
+                case 13:
+                    if(operator == true){
+                        if(exprcounter >= 2){
+                            if(exprList[exprcounter - 2].ID == 2){
+                                //all good operator and then term
+                                operator = false;
+                            }else{
+                                int bracket = 0;
+                                while(strcmp(exprList[exprcounter - 2 - bracket].symbol,"(")){
+                                    bracket++;
+                                }
+                                if(exprList[exprcounter - 2 - bracket].ID != 2){
+                                    fprintf(stderr,"operator nie je pred cislom\n");
+                                    return 0;
+                                }
+                                operator = false;
+                            }
+                        }
                     }
-                    
+                    break;
                     
             }
+            exprList = realloc(exprList, sizeof(struct Token)*exprcounter);
+            exprList[exprcounter-1] = scannedToken;
             expression(scannedToken);
         }
         //add token to token list
-        tokenList = realloc(sizeof(struct Token)*counter);
+        tokenList = realloc(tokenList, sizeof(struct Token)*counter);
         tokenList[counter - 1] = scannedToken;
         
         printf("Scanning Token %d\n",counter);

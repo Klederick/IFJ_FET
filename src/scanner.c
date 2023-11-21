@@ -179,26 +179,16 @@ char* stringanoff(FILE* src, int condition){
             }
         }else{
             //if everything is okay do this:
-<<<<<<< Updated upstream
             printf("Adding a character to the string (c): %c\n",c);
             if((c > 31 && c != 127) || condition == 1){
-=======
-            printf("Adding a character to the string (c): %c\n",c); 
-            printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
-            if((c > 31 && c != 127) || condition == 1){
                 printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
->>>>>>> Stashed changes
                 text = (char*)realloc(text,strlen(text)+2); strncat(text, &c, 1);
             }else{
                 fprintf(stderr,"STRING ERROR: Invalid character used %c",c);
                         exit(1);
                 ///////////////////////////////////////////STRING ERRROR
             }
-<<<<<<< Updated upstream
             printf("RETURNING TEXT: %s , %lu - its length\n",text, strlen(text));
-=======
-            printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
->>>>>>> Stashed changes
         }
         //reset condition
         seekOffset = 0;
