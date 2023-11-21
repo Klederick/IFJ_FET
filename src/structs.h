@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 /*STACK.C*/
 
 #ifndef STRUCTS_H
@@ -16,6 +17,34 @@ typedef struct {
     int data[MAX_SIZE];
     int top;
 } Stack;
+
+
+// expression
+typedef struct expressionNode
+{
+    struct Token token;
+    struct expressionNode *left,*right;
+}eNode;
+
+enum ItemType
+{
+    TOKEN,
+    NODE,
+};
+
+typedef struct expressionItem{
+    enum ItemType type;
+    union {
+        eNode *e_node;
+        struct Token token;
+    } value;
+} expressionItem;
+
+typedef struct {
+    expressionItem data[MAX_SIZE];
+    int top;
+    int size;
+} ExpressionStack;
 
 /*void initializeStack(Stack *stack);
 
