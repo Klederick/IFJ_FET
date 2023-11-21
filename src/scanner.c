@@ -10,6 +10,7 @@
 
 #include <string.h>
 #include "stack.c"
+
 #define NUM_OF_KEYWORDS 11
 const char* keywords[][11] = {{"Double\0","else\0","func\0","if\0","Int\0","let\0","nil\0","return\0","String\0","var\0","while\0"}};
 
@@ -239,6 +240,7 @@ else, func, if, let, return, var, while	        10
 termnumber				                        11
 termstring				                        12
 identif                                         13
+$                                               14
 */
 
 struct Token getToken(FILE* src){
