@@ -15,14 +15,8 @@ void resize(ExpressionStack *stack) {
     }
     
     free(stack->data);
-<<<<<<< Updated upstream
     stack->data = temp_arr;
     stack->top = stack->size;
-=======
-    
-    stack->data = temp_arr;
-    stack->top = stack->size; // Aktualizace top na novou hodnotu
->>>>>>> Stashed changes
 }
 
 void initializeExpressionStack(ExpressionStack *stack) {

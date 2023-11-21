@@ -516,10 +516,6 @@ struct Token getToken(FILE* src){
     return token;
     free(token.symbol);
 }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 /*
 int main(int argc, char* argv[]){
     //Check arguments
@@ -542,9 +538,4 @@ int main(int argc, char* argv[]){
     }
     fclose(file);
     return 0;
-<<<<<<< Updated upstream
 }*/ //OLD MAIN
-=======
-}
-*/
->>>>>>> Stashed changes

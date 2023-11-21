@@ -75,14 +75,14 @@ char* getStringFromCoordinates(int col, int row) {
 }
 
 void add(ExpressionStack* expr_stack, struct Token token, struct Token tmp){
-    struct Token less;
+    /*struct Token less;
     less.symbol = "<";
     pushE(expr_stack, less);
     pushE(expr_stack, tmp);
-    pushE(expr_stack, token);
+    pushE(expr_stack, token);*/
 }
 void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Token token){
-
+/*
     if (strcmp(token.symbol,"+") == 0 || strcmp(token.symbol,"-") == 0 || strcmp(token.symbol,"*") == 0 || strcmp(token.symbol,"/") == 0){
         
         while(true){
@@ -118,7 +118,7 @@ void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Tok
     else{
 
     }
-    
+ */   
 }
 void equal(ExpressionStack* expr_stack, const char* a){
 
@@ -139,7 +139,7 @@ int expression(struct Token token){
         expressionItem tmp = peekE(&expr_stack);
         popE(&expr_stack);
         b = peekE(&expr_stack);
-        printf("token b peekE%s", token.symbol);
+        //printf("token b peekE\n%s", token.symbol);
     }
 
     int positionx = findStringInColumn(token.symbol);
@@ -162,7 +162,7 @@ int expression(struct Token token){
     else{
         fprintf(stderr, "Nespravna kombinacia tokenov ktora vedie k errorovemu stavu\n");
     }
-
+    /*
     strcpy(b, peekE(&expr_stack));
     printf("Obsah zásobníku expr_stack:\n");
     while (!isExpressionStackEmpty(&expr_stack)) {
@@ -175,6 +175,6 @@ int expression(struct Token token){
         char* item = popE(&temp_stack);
         printf("%s ", item);
         pushE(&expr_stack, item);
-    }
+    }*/
     return 0;
 }
