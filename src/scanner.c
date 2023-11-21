@@ -414,6 +414,7 @@ struct Token getToken(FILE* src){
                break;
         default: 
         printf("Ciselny znak: %d\n", c);
+            strom key nodetype
                 if(c >= '0' && c <= '9'){
                     //int / double
                     printf("pred %d, %c, %d Assign\n", seekCounter, c, letterCounter);
@@ -455,11 +456,12 @@ struct Token getToken(FILE* src){
                     break;
                     }else{
                         token.ID = 13;
-                        assignAndRealloc(&seekCounter,c,&token,&letterCounter);    // toto by sa malo dat spravit mudrejsie
+                        assignAndRealloc(&seekCounter,c,&token,&letterCounter);
+                        // toto by sa malo dat spravit mudrejsie
                         term = 1;
                     }
                 }
-                if(isValidTerm(c)){
+                if(isValidTerm(c) || term == 1){
                         term = 1;
                         getChar(&seekCounter,&c,src,&letterCounter);
                         token.ID = 13;
@@ -505,6 +507,11 @@ struct Token getToken(FILE* src){
     }
     if(token.ID < 0){
         token.symbol = "";
+    }
+    if(token.ID == 13){
+            //add to indentif when using global tree
+        //potrebujem vediet co to je predtym nez vlozim do symtable
+        symtabInsert(globaltree,token.symbol,)
     }
     return token;
     free(token.symbol);
