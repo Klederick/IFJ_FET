@@ -10,9 +10,7 @@ void resize(ExpressionStack *stack) {
         exit(1);
     }
     
-    for (int i = 0; i < stack->top; i++) {
-        temp_arr[i] = stack->data[i];
-    }
+    memcpy(temp_arr, stack->data, stack->top * sizeof(expressionItem));
     
     free(stack->data);
     stack->data = temp_arr;
