@@ -18,8 +18,8 @@ void resize(ExpressionStack *stack) {
     for (int i = 0; i < stack->top; i++) {
         stack->data[i] = temp_arr[i];
     }
+    stack->top = stack->size;
 }
-
 
 
 void initializeExpressionStack(ExpressionStack *stack) {
