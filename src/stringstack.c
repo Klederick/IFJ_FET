@@ -3,46 +3,64 @@
 #include <string.h>
 
 #define MAX_SIZE 100
-#define MAX_STRING_LENGTH 50
 
-typedef struct {
-    char strings[MAX_SIZE][MAX_STRING_LENGTH];
-    int top;
-} StringStack;
+void resize(ExpressionStack *stack){
+    stack->size = stack->size + 8;
+    expressionItem *temp_arr = malloc(stack->size*sizeof(expressionItem));
+    for(int = 0; i < stack->size-8; i++){
+        *temp_arr[i] = stack->data[i];
+    }
+    free(stack->data);
+    stack->data = temp_arr;
 
-void initializeStringStack(StringStack *stack) {
+    if(temp_arr == NULL){
+        exit();
+    }
+}
+
+void initializeExpressionStack(ExpressionStack *stack) {
+    stack->size = 8;
+    stack->data = malloc(stack->size*sizeof(expressionItem));
     stack->top = -1;
 }
 
-int isStringStackFull(StringStack *stack) {
-    return stack->top == MAX_SIZE - 1;
+int isExpressionStackFull(ExpressionStack *stack) {
+    return stack->top == stack->size - 1;
 }
 
-int isStringStackEmpty(StringStack *stack) {
+int isExpressionStackEmpty(ExpressionStack *stack) {
     return stack->top == -1;
 }
 
-void pushString(StringStack *stack, const char *value) {
-    if (isStringStackFull(stack)) {
-        printf("String Stack overflow\n");
-        exit(EXIT_FAILURE);
+void pushE(ExpressionStack *stack, expressionItem item) {
+    if (isExpressionStackFull(stack)) {
+        resize(stack);
     }
     stack->top++;
-    strcpy(stack->strings[stack->top], value);
+    stack->data[stack->top] = item;
 }
 
-char* popString(StringStack *stack) {
-    if (isStringStackEmpty(stack)) {
-        printf("String Stack underflow\n");
+void popE(ExpressionStack *stack) {
+    if (isExpressionStackEmpty(stack)) {
+        printf("Expression Stack underflow\n");
         exit(EXIT_FAILURE);
     }
-    return stack->strings[stack->top--];
+    stack->top--;
 }
 
-char* peekString(StringStack *stack) {
-    if (isStringStackEmpty(stack)) {
-        printf("String Stack is empty\n");
+expressionItem peekToken(ExpressionStack *stack) {
+    if (isExpressionStackEmpty(stack)) {
+        printf("Expression Stack is empty\n");
         exit(EXIT_FAILURE);
     }
-    return stack->strings[stack->top];
+    return stack->data[stack->top];
+}
+
+void dispozeStackE(ExpressionStack *stack){
+    if(!isExpressionStackEmpty){
+        free(stack->data);
+        stack->top = -1;
+        stack->data = NULL;
+    }
+    stack->top = -1;
 }
