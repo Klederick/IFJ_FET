@@ -9,8 +9,18 @@
 // total_hours_wasted_here = 42 
 
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
 #include "stack.c"
-#include "expression.c"
+#include "structs.h"
+#include "dynamic.c"
+#include "error.c"
+
+
+
+//#include "expression.c"
 
 #define NUM_OF_KEYWORDS 11
 const char* keywords[][11] = {{"Double\0","else\0","func\0","if\0","Int\0","let\0","nil\0","return\0","String\0","var\0","while\0"}};
@@ -414,7 +424,7 @@ struct Token getToken(FILE* src){
                break;
         default: 
         printf("Ciselny znak: %d\n", c);
-            strom key nodetype
+            //strom key nodetype
                 if(c >= '0' && c <= '9'){
                     //int / double
                     printf("pred %d, %c, %d Assign\n", seekCounter, c, letterCounter);
@@ -511,7 +521,7 @@ struct Token getToken(FILE* src){
     if(token.ID == 13){
             //add to indentif when using global tree
         //potrebujem vediet co to je predtym nez vlozim do symtable
-        symtabInsert(globaltree,token.symbol,)
+        //symtabInsert(globaltree,token.symbol,)
     }
     return token;
     free(token.symbol);

@@ -1,4 +1,10 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "scanner.c"
+#include "expression.c"
+
+
 //simple state machine
 ExpressionStack expr_stack;
 initializeExpressionStack(&expr_stack);
@@ -22,7 +28,7 @@ void expr_Signal(){
 }
 //check if it is term
 bool isterm(struct Token token){
-    if(id == 12 || id == 13 || id == 14){
+    if(token.ID == 12 || token.ID == 13 || token.ID == 14){
         return true;
     }else{
         if(strcmp(token.symbol,")")){
@@ -65,7 +71,7 @@ int main(int argc, char* argv[]){
                 //turn off expression
                 expr_Signal();
                 inExpression = false;
-                expressionType = -1;
+                //expressionType = -1;
                 exprcounter = 0;
                 free(exprList);
             }
@@ -92,7 +98,7 @@ int main(int argc, char* argv[]){
                             tempToken = getToken(file);
                         if(strcmp(tempToken.symbol,"(")){
                             counter++;
-                            tokenList = realloc(sizeof(struct Token)*counter);
+                            tokenList = realloc(tokenList ,sizeof(struct Token)*counter);
                             tokenList[counter - 1] = tempToken;
                         }else{
                             fprintf(stderr,"No brackets after while/if statement\n");

@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "stringstack.c"
 #include <stdbool.h>
+
+#include "stringstack.c"
+#include "error.c"
 
 #define TABLE_SIZE 10
 #define MAX_STRING_LENGTH 100
