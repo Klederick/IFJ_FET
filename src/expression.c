@@ -123,14 +123,14 @@ void reduce(StringStack* node_stack, StringStack* expr_stack, Token token){
 void equal(StringStack* expr_stack, const char* a){
 
 }
+
+int expression(Struct Token token){ 
 ExpressionStack expr_stack;
 //initializeExpressionStack(&expr_stack);
 ExpressionStack node_stack;
 //initializeExpressionStack(&node_stack);   
 ExpressionStack temp_stack;
 initializeExpressionStack(&temp_stack);
-
-int expression(Struct Token token){ 
 
     expressionItem b = peekE(expr_stack);
     

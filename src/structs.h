@@ -41,7 +41,7 @@ typedef struct expressionItem{
 } expressionItem;
 
 typedef struct {
-    expressionItem data[MAX_SIZE];
+    expressionItem *data;
     int top;
     int size;
 } ExpressionStack;
