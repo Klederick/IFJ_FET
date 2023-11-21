@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 #define TABLE_SIZE 10
-
+#define MAX_STRING_LENGTH 100
 // pravidla 
 /*
 1 - E -> E + E
@@ -74,19 +74,19 @@ char* getStringFromCoordinates(int col, int row) {
     }
 }
 
-void add(StringStack* expr_stack, Token token, Token tmp){
-    char tmp[MAX_STRING_LENGTH];
-    Token less.symbol = "<";
+void add(ExpressionStack* expr_stack, struct Token token, struct Token tmp){
+    struct Token less;
+    less.symbol = "<";
     pushE(expr_stack, less);
     pushE(expr_stack, tmp);
     pushE(expr_stack, token);
 }
-void reduce(StringStack* node_stack, StringStack* expr_stack, Token token){
+void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Token token){
 
     if (strcmp(token.symbol,"+") == 0 || strcmp(token.symbol,"-") == 0 || strcmp(token.symbol,"*") == 0 || strcmp(token.symbol,"/") == 0){
         
         while(true){
-            expression tmp = peekE(expr_stack);
+            expressionItem tmp = peekE(expr_stack);
             if(tmp.type == TOKEN && (strcmp(tmp.symbol, "<")==0)){
                 popE(expr_stack);
 
@@ -120,17 +120,18 @@ void reduce(StringStack* node_stack, StringStack* expr_stack, Token token){
     }
     
 }
-void equal(StringStack* expr_stack, const char* a){
+void equal(ExpressionStack* expr_stack, const char* a){
 
 }
 
-int expression(Struct Token token){ 
-ExpressionStack expr_stack;
+//ExpressionStack expr_stack;
 //initializeExpressionStack(&expr_stack);
-ExpressionStack node_stack;
+//ExpressionStack node_stack;
 //initializeExpressionStack(&node_stack);   
-ExpressionStack temp_stack;
-initializeExpressionStack(&temp_stack);
+//ExpressionStack temp_stack;
+//initializeExpressionStack(&temp_stack);
+
+int expression(struct Token token){ 
 
     expressionItem b = peekE(expr_stack);
     
@@ -138,6 +139,7 @@ initializeExpressionStack(&temp_stack);
         expressionItem tmp = peekE(&expr_stack);
         popE(&expr_stack);
         b = peekE(&expr_stack);
+        printf("token b peekE%s", token.symbol);
     }
 
     int positionx = findStringInColumn(token.symbol);

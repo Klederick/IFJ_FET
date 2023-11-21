@@ -20,14 +20,12 @@ typedef struct {
 
 
 // expression
-typedef struct expressionNode
-{
+typedef struct expressionNode{
     struct Token token;
     struct expressionNode *left,*right;
 }eNode;
 
-enum ItemType
-{
+enum ItemType{
     TOKEN,
     NODE,
 };
