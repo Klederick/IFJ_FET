@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
-#include "structs.h"
 
 int max(int a, int b) {
     return (a > b) ? a : b;

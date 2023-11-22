@@ -1,14 +1,6 @@
-<<<<<<< Updated upstream
 "string"
 "string2"
 """
 String3
 """
 "String4"
-=======
-152120
-cjjj si
-/* /*dfsd*/ */
-sef
-xdf
->>>>>>> Stashed changes

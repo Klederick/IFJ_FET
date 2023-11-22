@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 
 void resize(ExpressionStack *stack) {
     stack->size += 8;

@@ -1,18 +1,22 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
-
+#include <stdbool.h>
+#include "structs.h"
+#include "stack.c"
 #include "scanner.c"
 #include "expression.c"
-
-
+#include "symtable.c"
+#include "error.c"
 //simple state machine
+/* toto neni dobre:
 ExpressionStack expr_stack;
 initializeExpressionStack(&expr_stack);
 ExpressionStack node_stack;
 initializeExpressionStack(&node_stack);
 ExpressionStack temp_stack;
 initializeExpressionStack(&temp_stack);
-
+*/
 bool goSwitch(bool arg1){
     if(arg1){
         return false;
@@ -129,6 +133,7 @@ int main(int argc, char* argv[]){
                 case 2:
                     if(exprcounter >= 2 && !isterm(exprList[exprcounter-2])){
                         fprintf(stderr,"Operand before operator is not a term\n");
+                        //while pre nekonecno zatvoriek
                     }
                     operator = true;
                     break;

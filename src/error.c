@@ -12,9 +12,7 @@
 * 99 - interní chyba překladače tj. neovlivněná vstupním programem (např. chyba alokace paměti atd.).
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "dynamic.c"
+
 
 /*
 * --HELP-- Function to kill program.

@@ -8,15 +8,8 @@
 //  
 // total_hours_wasted_here = 42 
 
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
 
-#include "stack.c"
-#include "structs.h"
-#include "dynamic.c"
-#include "error.c"
+
 
 
 
@@ -253,6 +246,7 @@ termnumber				                        11
 termstring				                        12
 identif                                         13
 $                                               14
+true, false                                     15
 */
 
 struct Token getToken(FILE* src){

@@ -8,12 +8,6 @@
 * Stack* s1 = CreateDynamic(&head, 1); <- stack will be initialized automatically
 * DeleteDynamic(&head, s1); <- stack will be automatically freed by it's destructor
 */
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include "structs.h"
-#include "stack.c"
-#include "symtable.c"
 
 // Define the structure for a node
 /*struct Dynamic {
