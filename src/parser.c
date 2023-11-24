@@ -7,7 +7,9 @@
 #include "scanner.c"
 #include "expression.c"
 #include "symtable.c"
-#include "error.c"
+//#include "error.c"
+
+
 //simple state machine
 /* toto neni dobre:
 ExpressionStack expr_stack;

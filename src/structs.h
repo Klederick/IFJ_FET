@@ -20,7 +20,8 @@ typedef struct {
 // expression
 typedef struct expressionNode{
     struct Token token;
-    struct expressionNode *left,*right;
+    struct expressionNode *left;
+    struct expressionNode *right;
 }eNode;
 
 enum ItemType{
