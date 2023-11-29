@@ -2,7 +2,7 @@
 *.o
 
 # Exclude .txt files
-*.txt
+#*.txt
 
 # Exclude .exe files
 *.exe
