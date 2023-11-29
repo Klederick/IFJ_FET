@@ -84,6 +84,25 @@ int main(int argc, char* argv[]){
             
         }
         
+        /*
+        ID:
+        :,=			                                    1
+        +,-,*,/,??		                                2
+        ==,!=,<,>,<=,>=		                            3
+        (,)			                                    4
+        {,}			                                    5
+        ?,!			                                    6
+        _,->,			                                7
+        String, Int, Double	                            8
+        nil			                                    9
+        else, func, if, let, return, var, while	        10
+        termnumber				                        11
+        termstring				                        12
+        identif                                         13
+        $                                               14
+        true, false                                     15
+        */
+
         
         //end of state reset
         if(goSwitch(inExpression)){
