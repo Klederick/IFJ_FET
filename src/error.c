@@ -18,6 +18,9 @@
 * --HELP-- Function to kill program.
 * Input -> Error number.
 */
+
+#include <stdio.h>
+
 void handleExit(int errorCode) {
     exit(errorCode);
 }

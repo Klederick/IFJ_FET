@@ -108,6 +108,7 @@ int main(int argc, char* argv[]){
                             //TODO ERROR TO ERROR.C
                             fprintf(stderr,"No brackets after while/if statement\n");
                             fprintf(stderr,"Correct usage if/while( expression op expression    ){...\n");
+                            ThrowError(1); //lexical analysis error
                             return 0;
                         }
                     } }
