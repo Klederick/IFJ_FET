@@ -7,9 +7,7 @@
 #include "scanner.c"
 #include "expression.c"
 #include "symtable.c"
-//#include "error.c"
-
-
+#include "error.c"
 //simple state machine
 /* toto neni dobre:
 ExpressionStack expr_stack;
@@ -84,25 +82,6 @@ int main(int argc, char* argv[]){
             
         }
         
-        /*
-        ID:
-        :,=			                                    1
-        +,-,*,/,??		                                2
-        ==,!=,<,>,<=,>=		                            3
-        (,)			                                    4
-        {,}			                                    5
-        ?,!			                                    6
-        _,->,			                                7
-        String, Int, Double	                            8
-        nil			                                    9
-        else, func, if, let, return, var, while	        10
-        termnumber				                        11
-        termstring				                        12
-        identif                                         13
-        $                                               14
-        true, false                                     15
-        */
-
         
         //end of state reset
         if(goSwitch(inExpression)){
@@ -113,7 +92,7 @@ int main(int argc, char* argv[]){
                 case 3: if(!inExpression){ inExpression = true; expr_Signal(); } break;
                 case 4: break;
                 case 5: break;
-                case 6: break;
+                case 6: 
                 case 7: break;
                 case 8: break;
                 case 9: break;
@@ -126,6 +105,7 @@ int main(int argc, char* argv[]){
                             tokenList = realloc(tokenList ,sizeof(struct Token)*counter);
                             tokenList[counter - 1] = tempToken;
                         }else{
+                            //TODO ERROR TO ERROR.C
                             fprintf(stderr,"No brackets after while/if statement\n");
                             fprintf(stderr,"Correct usage if/while( expression op expression    ){...\n");
                             return 0;
@@ -153,6 +133,7 @@ int main(int argc, char* argv[]){
             switch(scannedToken.ID){
                 case 2:
                     if(exprcounter >= 2 && !isterm(exprList[exprcounter-2])){
+                        //TODO ERROR.C
                         fprintf(stderr,"Operand before operator is not a term\n");
                         //while pre nekonecno zatvoriek
                     }
@@ -172,6 +153,7 @@ int main(int argc, char* argv[]){
                                     bracket++;
                                 }
                                 if(exprList[exprcounter - 2 - bracket].ID != 2){
+                                    //TODO ERROR.C
                                     fprintf(stderr,"operator nie je pred cislom\n");
                                     return 0;
                                 }
@@ -182,11 +164,13 @@ int main(int argc, char* argv[]){
                     break;
                     
             }
+            //TODO EXPRESSION END, ADD IT TO TREE
             exprList = realloc(exprList, sizeof(struct Token)*exprcounter);
             exprList[exprcounter-1] = scannedToken;
             expression(scannedToken);
         }
-        //add token to token list
+        //add token to token list FIX: we will add tokens at the end of the case rather than at the end of the switch since we need to add multiple
+        //this will not exist after the switch is complete
         tokenList = realloc(tokenList, sizeof(struct Token)*counter);
         tokenList[counter - 1] = scannedToken;
         

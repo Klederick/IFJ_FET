@@ -139,7 +139,7 @@ char* stringanoff(FILE* src, int condition){
     }
     while(whileCondition){
         seekOffset = 0;
-        printf("Character c before big switch: %c\n",c);
+        //printf("Character c before big switch: %c\n",c);
         seekOffset++;
         if(c == -1 || c == EOF){ break; }
         if(c == '\\' && condition == 0){
@@ -160,7 +160,6 @@ char* stringanoff(FILE* src, int condition){
                             c = fgetc(src);
                             if((c < '0') || (c > '9' && c < 'A') || (c > 'F' && c < 'a') || (c > 'f')){ ungetc(c,src); hex[i] = -1; break; }
                             hex[i] = c; numbers++;
-
                         }
                         c = fgetc(src);
                         printf("GOT HERE %c, HEX = ",c);
@@ -179,20 +178,20 @@ char* stringanoff(FILE* src, int condition){
                     }
                 
                 break;
-                default: printf("Adding a character to the string (temp and c): %c, %c\n",temp,c); text = (char*)realloc(text,strlen(text)+2); strncat(text, &temp, 1); strncat(text, &c, 1); break;
+                default: /*printf("Adding a character to the string (temp and c): %c, %c\n",temp,c);*/ text = (char*)realloc(text,strlen(text)+2); strncat(text, &temp, 1); strncat(text, &c, 1); break;
             }
         }else{
             //if everything is okay do this:
-            printf("Adding a character to the string (c): %c\n",c);
+            //printf("Adding a character to the string (c): %c\n",c);
             if((c > 31 && c != 127) || condition == 1){
-                printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
+                //printf("RETURNING TEXT: %s , %ld - its length\n",text, strlen(text));
                 text = (char*)realloc(text,strlen(text)+2); strncat(text, &c, 1);
             }else{
                 fprintf(stderr,"STRING ERROR: Invalid character used %c",c);
                         exit(1);
                 ///////////////////////////////////////////STRING ERRROR
             }
-            printf("RETURNING TEXT: %s , %lu - its length\n",text, strlen(text));
+            //printf("RETURNING TEXT: %s , %lu - its length\n",text, strlen(text));
         }
         //reset condition
         seekOffset = 0;
@@ -224,7 +223,7 @@ char* stringanoff(FILE* src, int condition){
         }
     }
     text[strlen(text)] = '\0';
-    printf("RETURNING TEXT: %s\n",text);
+    //printf("RETURNING TEXT: %s\n",text);
     fseek(src, 0, SEEK_CUR);
     return text;
 }
@@ -417,13 +416,10 @@ struct Token getToken(FILE* src){
             }
                break;
         default: 
-        printf("Ciselny znak: %d\n", c);
             //strom key nodetype
                 if(c >= '0' && c <= '9'){
                     //int / double
-                    printf("pred %d, %c, %d Assign\n", seekCounter, c, letterCounter);
                     assignAndRealloc(&seekCounter,c,&token, &letterCounter);
-                    printf("po Assign\n");
 
                     getChar(&seekCounter,&c, src, &letterCounter);
                     while(c >= '0' && c <= '9'){
