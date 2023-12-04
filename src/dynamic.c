@@ -1,3 +1,10 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include "structs.h"
+#include "stack.c"
+#include "symtable.c"
+#include <string.h>
 /*
 * This file contains implementation of linked list modified for storing information about allocated dynamic structures.
 * Dynamic structures needs to be initialized and deleted via this functions. Other operations with dynamic structures are completely free.
@@ -201,5 +208,6 @@ int main() {
     *n3 = NULL;
     Stack* s4 = CreateDynamic(&head, 1);
     DeleteDynamicStructure(head);
+    printf("CODE_SUCCESS\n");
     return 0;
 }*/

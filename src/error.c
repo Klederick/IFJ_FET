@@ -1,3 +1,6 @@
+#include "structs.h"
+#include <stdlib.h>
+#include "dynamic.c"
 /*
 * This file contains functions to hande error situations and safely exit program.
 * 1 - chyba v programu v rámci lexikální analýzy (chybná struktura aktuálního lexému).
@@ -119,7 +122,7 @@ int main() {
     *n3 = NULL;
     Stack* s4 = CreateDynamic(&head, 1);
     //DeleteDynamicStructure(head);
-    ThrowErrorStructure(99, head);
+    ThrowErrorStructure(1, head);
     printf("\nCHYBA\n");
     return 0;
 }*/
