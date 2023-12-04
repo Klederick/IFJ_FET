@@ -459,6 +459,7 @@ struct Token getToken(FILE* src){
                     break;
                     }else{
                         token.ID = 13;
+                        assignAndRealloc(&seekCounter, '_', &token,&letterCounter);
                         assignAndRealloc(&seekCounter,c,&token,&letterCounter);
                         // toto by sa malo dat spravit mudrejsie
                         term = 1;
@@ -466,6 +467,7 @@ struct Token getToken(FILE* src){
                 }
                 if(isValidTerm(c) || term == 1){
                         term = 1;
+                        assignAndRealloc(&seekCounter,c,&token,&letterCounter);
                         getChar(&seekCounter,&c,src,&letterCounter);
                         token.ID = 13;
                         while(isValidTerm(c)){
@@ -485,6 +487,8 @@ struct Token getToken(FILE* src){
     }
     if(seek == 1){
     fseek(src,-seekCounter,SEEK_CUR);
+    }else{
+    fseek(src, -1, SEEK_CUR);
     }
     if(term == 1){
         for(int i = 0; i < NUM_OF_KEYWORDS; i++){
