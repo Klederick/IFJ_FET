@@ -186,7 +186,7 @@ void equal(ExpressionStack* expr_stack, struct Token token) {
     pushE(expr_stack, token_item);
 }
 
-eNode* expression(struct Token token) { 
+eNode* expression(/*ExpressionStack* expr_stack, ExpressionStack* node_stack,*/ struct Token token) { 
     ExpressionStack expr_stack;
     initializeExpressionStack(&expr_stack);
     ExpressionStack node_stack;
