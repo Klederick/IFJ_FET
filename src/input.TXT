@@ -1,12 +1,1 @@
-<<<<<<< HEAD
-let a : int 
-=======
-"string"
-"string2"
-"""
-String3
-"""
-"String4"
-
 var a: int = 1+(2-2)
->>>>>>> e46ec73a26e0e2f379500282974d72b041820321
