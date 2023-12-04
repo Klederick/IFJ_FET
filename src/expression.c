@@ -43,7 +43,7 @@ int findStringInColumn(const char* a) {
         a = "i";
     }
     for (i = 0; i < 10; i++) {
-        if (strcmp(a, p_table[0][i]) == 0){ // Porovnání řetězce 'a' s hodnotou v tabulce nebo zda je první znak číslo nebo písmeno
+        if (strcmp(a, p_table[0][i]) == 0){ // Porovnání řetězce 'a' s hodnotou v tabulce
             printf("příchozí je '%s' at position [%d][%d] in p_table\n", a, 0, i);
             found = 1;
             break;
