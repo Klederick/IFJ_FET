@@ -200,6 +200,14 @@ eNode* expression(/*ExpressionStack* expr_stack, ExpressionStack* node_stack,*/ 
 
     expressionItem b;
     expressionItem tmp;
+        // Porovnání vstupního tokenu s vrcholem zásobníku
+    if (expr_stack.top >= 1 && expr_stack.data[expr_stack.top].value.token.symbol[0] == 'E' && expr_stack.data[expr_stack.top - 1].value.token.symbol[0] == '$') {
+        //return expr_stack.data[expr_stack.top].value.e_node;
+        printf("KONEC\n\n");
+    } else {
+        //return NULL;
+    }
+
     if(isExpressionStackEmpty(&expr_stack)){
         struct Token dollar_token;
         dollar_token.ID = 14; // ID může být libovolné, co odpovídá typu tokenu
@@ -238,12 +246,6 @@ eNode* expression(/*ExpressionStack* expr_stack, ExpressionStack* node_stack,*/ 
     else{
         fprintf(stderr, "Nespravna kombinacia tokenov ktora vedie k errorovemu stavu\n");
     }
-
-    // Porovnání vstupního tokenu s vrcholem zásobníku
-    if (expr_stack.top >= 1 && expr_stack.data[expr_stack.top].value.token.symbol[0] == 'E' && expr_stack.data[expr_stack.top - 1].value.token.symbol[0] == '$') {
-        return expr_stack.data[expr_stack.top].value.e_node;
-    } else {
-        return NULL;
-    }
+    return 0;
 }
 #endif
