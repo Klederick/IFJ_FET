@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "stringstack.c"
 #include <stdbool.h>
+#include "structs.h"
 
 #define TABLE_SIZE 10
 #define MAX_STRING_LENGTH 100
@@ -138,6 +139,29 @@ void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Tok
         e_item.value.e_node = e_node;
         pushE(expr_stack, e_item);
 
+    } else if(strcmp(token.symbol, "$") == 0) {  
+        while (!isExpressionStackEmpty(expr_stack)) {
+            expressionItem top_item = peekE(expr_stack);
+
+            if (top_item.type == TOKEN && strcmp(top_item.value.token.symbol, "<") == 0) {
+                popE(expr_stack);
+            } else {
+                pushE(node_stack, top_item);
+                popE(expr_stack);
+            }
+        }
+
+        eNode* e_node = malloc(sizeof(eNode));
+        e_node->token = token;
+        e_node->right = node_stack->data[node_stack->top - 1].value.e_node;
+        popE(node_stack);
+        e_node->left = node_stack->data[node_stack->top - 1].value.e_node;
+        popE(node_stack);
+
+        expressionItem e_item;
+        e_item.type = NODE;
+        e_item.value.e_node = e_node;
+        pushE(expr_stack, e_item);
     } else {
         // Jiné tokeny (např. identifikátory nebo čísla) prostě přidá na zásobník.
         expressionItem e_item;
@@ -162,7 +186,7 @@ void equal(ExpressionStack* expr_stack, struct Token token) {
     pushE(expr_stack, token_item);
 }
 
-int expression(struct Token token){ 
+eNode* expression(struct Token token) { 
     ExpressionStack expr_stack;
     initializeExpressionStack(&expr_stack);
     ExpressionStack node_stack;
@@ -210,6 +234,12 @@ int expression(struct Token token){
     else{
         fprintf(stderr, "Nespravna kombinacia tokenov ktora vedie k errorovemu stavu\n");
     }
-    return 0;
+
+    // Porovnání vstupního tokenu s vrcholem zásobníku
+    if (expr_stack.top >= 1 && expr_stack.data[expr_stack.top].value.token.symbol[0] == 'E' && expr_stack.data[expr_stack.top - 1].value.token.symbol[0] == '$') {
+        return expr_stack.data[expr_stack.top].value.e_node;
+    } else {
+        return NULL;
+    }
 }
 #endif
