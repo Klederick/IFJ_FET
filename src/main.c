@@ -1,3 +1,6 @@
+
+
+
 #include "parser.c"
 
 //#include "error.c"
@@ -21,19 +24,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr,"Error \n");
             ThrowError(1);
         }
-    while (true) {
-        // Zde můžete provádět scanner a parser
-        // Načtení vstupního kódu, volání scanneru a parseru
-        // Kontrola, zda je statement prázdný nebo ne
-        
-
-        if (/* statement je prázdný */1) {
-            break; // Výstup ze smyčky, protože nemá smysl generovat kód
-        } else {
-            // Zde můžete spustit generátor kódu
-            // generace(&stack);
-        }
-    }
+    parse(file);
 
     return 0;
 }
