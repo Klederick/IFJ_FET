@@ -88,15 +88,16 @@ void parseConstruct(struct Token* tokenlist){
 int parse(FILE* file){
     //Stacks
     //Expression stack
-    ExpressionStack* expr_stack;
-    initializeExpressionStack(expr_stack);
+    printf("BEFORE INIT\n");
+    ExpressionStack expr_stack;
+    initializeExpressionStack(&expr_stack);
     //node stack
-    ExpressionStack* node_stack;
-    initializeExpressionStack(node_stack);
+    ExpressionStack node_stack;
+    initializeExpressionStack(&node_stack);
     //temp stack
-    ExpressionStack* temp_stack;
-    initializeExpressionStack(temp_stack);
-    
+    ExpressionStack temp_stack;
+    initializeExpressionStack(&temp_stack);
+    printf("AFTER INIT\n");
     bool inExpression = false;
     struct Token *tokenList = NULL;
     struct Token *exprList = NULL;
@@ -121,8 +122,9 @@ int parse(FILE* file){
         if(expressionReset == 1){
             inExpression = true;
             expressionReset = 0;
-            dispozeStackE(expr_stack);
-            dispozeStackE(node_stack);
+            //dispozeStackE(expr_stack);
+            //dispozeStackE(node_stack);
+
         }
         printf("Token %d: (%d) %s (spaces behind: %d)\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind);
         counter++;
