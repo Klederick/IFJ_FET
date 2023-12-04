@@ -1,6 +1,1 @@
-"string"
-"string2"
-"""
-String3
-"""
-"String4"
+let a : int 

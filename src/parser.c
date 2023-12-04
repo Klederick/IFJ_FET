@@ -47,7 +47,7 @@ bool isterm(struct Token token){
     if(token.ID == 12 || token.ID == 13 || token.ID == 14){
         return true;
     }else{
-        if(strcmp(token.symbol,")") || strcmp(token.symbol,")")){
+        if(strcmp(token.symbol,"(") == 0 || strcmp(token.symbol,")") == 0){
             return true;
         }else{
             return false;
@@ -60,7 +60,7 @@ Stack* consumeUntil(FILE* file, int ID, char* symbol){
 	struct Token token = getToken(file);
 	Stack* stack;
     initializeStack(stack);
-    while(token.ID != ID && !strcmp(token.symbol,symbol)){
+    while(token.ID != ID && strcmp(token.symbol,symbol) != 0){
         push(stack, token.ID);
 		token = getToken(file);
 	}
@@ -79,7 +79,7 @@ bool ExpectedID(int IDs[12], struct Token token){
 }
 bool ExpectedSymbol(int length,char* symbols[length], struct Token token){
     for(int i = 0; i < length; i++){
-        if(strcmp(symbols[i],token.symbol)){
+        if(strcmp(symbols[i],token.symbol) == 0){
             return true;
         }
     }
@@ -147,9 +147,9 @@ int parse(FILE* file){
         //end of state reset
         if(goSwitch(inExpression)){
             switch(scannedToken.ID){
-                case 0: if(strcmp(scannedToken.symbol,":")){
+                case 0: if(strcmp(scannedToken.symbol,":") == 0){
                             
-                        }else if(strcmp(scannedToken.symbol,"=")){
+                        }else if(strcmp(scannedToken.symbol,"=") == 0){
 
                         }else{
                             printf("Toto by sa nemalo nikdy stat ak je toto na vypise tak opakujem IFJ!\n");
@@ -166,10 +166,12 @@ int parse(FILE* file){
                 case 8: break;
                 case 9: break;
                 case 10:
-                    if(strcmp(scannedToken.symbol,"while") || strcmp(scannedToken.symbol,"if") ){         if(!inExpression){
-                            inExpression = true; expr_Signal();
+                    if(strcmp(scannedToken.symbol,"while") == 0 || strcmp(scannedToken.symbol,"if") == 0 ){   
+                        printf("IN WHILE/IF\n");      
+                        if(!inExpression){
+                            inExpression = true;
                             tempToken = getToken(file);
-                        if(strcmp(tempToken.symbol,"(")){
+                        if(strcmp(tempToken.symbol,"(") == 0){
                             counter++;
                             tokenList = realloc(tokenList ,sizeof(struct Token)*counter);
                             tokenList[counter - 1] = tempToken;
@@ -180,10 +182,12 @@ int parse(FILE* file){
                             ThrowError(1); //lexical analysis error
                             return 0;
                         }
-                    } }
-                    if(strcmp(scannedToken.symbol,"return")){
+                        }
+                    } 
+                    if(strcmp(scannedToken.symbol,"return") == 0){
+                        printf("IN RETURN\n");
                         if(!inExpression){
-                            inExpression = true; expr_Signal();
+                            inExpression = true;
                         }
                     }
                     break;
@@ -211,7 +215,7 @@ int parse(FILE* file){
                         //while pre nekonecno zatvoriek
                     }else{
                         bracket = 0;
-                        while(strcmp(exprList[exprcounter - 2 - bracket].symbol,")")){
+                        while(strcmp(exprList[exprcounter - 2 - bracket].symbol,")") == 0){
                             bracket++;
                         }
                         if(exprList[exprcounter - 2 - bracket].ID != 11 || exprList[exprcounter - 2 - bracket].ID != 12 || exprList[exprcounter - 2 - bracket].ID != 13){
@@ -233,7 +237,7 @@ int parse(FILE* file){
                                 operator = false;
                             }else{
                                 bracket = 0;
-                                while(strcmp(exprList[exprcounter - 2 - bracket].symbol,"(")){
+                                while(strcmp(exprList[exprcounter - 2 - bracket].symbol,"(") == 0){
                                     bracket++;
                                 }
                                 if(exprList[exprcounter - 2 - bracket].ID != 2){
