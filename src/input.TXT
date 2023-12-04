@@ -1,1 +1,1 @@
-var a: int = 1+(2-2)
+var a : var a : var a : var a :
