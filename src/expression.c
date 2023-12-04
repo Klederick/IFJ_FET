@@ -183,7 +183,7 @@ void equal(ExpressionStack* expr_stack, struct Token token) {
     pushE(expr_stack, token_item);
 }
 
-int expression(struct Token token){ 
+eNode* expression(struct Token token) { 
     ExpressionStack expr_stack;
     initializeExpressionStack(&expr_stack);
     ExpressionStack node_stack;
@@ -231,5 +231,12 @@ int expression(struct Token token){
     else{
         fprintf(stderr, "Nespravna kombinacia tokenov ktora vedie k errorovemu stavu\n");
     }
-    return 0;
+
+    // Porovnání vstupního tokenu s vrcholem zásobníku
+    if (expr_stack.top >= 1 && expr_stack.data[expr_stack.top].value.token.symbol[0] == 'E' && expr_stack.data[expr_stack.top - 1].value.token.symbol[0] == '$') {
+        return expr_stack.data[expr_stack.top].value.e_node;
+    } else {
+        return NULL;
+    }
 }
+
