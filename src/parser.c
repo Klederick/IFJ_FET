@@ -111,9 +111,13 @@ int parse(FILE* file){
     char* ExpectedSymbolList[10];
     int ExpectedIDsList[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
     bool finish = false;
-
+    int expressionReset = 0;
     scannedToken = getToken(file);
     while(scannedToken.ID != 0 && finish == false){
+        if(expressionReset == 1){
+            inExpression = true;
+            expressionReset = 0;
+        }
         printf("Token %d: (%d) %s (spaces behind: %d)\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind);
         counter++;
         //reset states if wrong ID
@@ -138,7 +142,7 @@ int parse(FILE* file){
             tokenList[counter - 1] = scannedToken;
         }else{
             //UNEXPECTED TOKEN
-            finish = true;
+            //finish = true;
             //send to next function to construct tree (if possible)
             parseConstruct(tokenList);
         }
@@ -156,9 +160,9 @@ int parse(FILE* file){
                             ThrowError(99);
                         };
                         break;
-                case 1: if(!inExpression){ inExpression = true; } break;
+                case 1: if(!inExpression){ if(strcmp(scannedToken.symbol,"=") == 0) {expressionReset = 1;} } break;
                 case 2: break;
-                case 3: if(!inExpression){ inExpression = true; } break;
+                case 3: if(!inExpression){expressionReset = 1;} break;
                 case 4: break;
                 case 5: break;
                 case 6: 
@@ -169,7 +173,7 @@ int parse(FILE* file){
                     if(strcmp(scannedToken.symbol,"while") == 0 || strcmp(scannedToken.symbol,"if") == 0 ){   
                         printf("IN WHILE/IF\n");      
                         if(!inExpression){
-                            inExpression = true;
+                            expressionReset = 1;
                             tempToken = getToken(file);
                         if(strcmp(tempToken.symbol,"(") == 0){
                             counter++;
@@ -187,7 +191,7 @@ int parse(FILE* file){
                     if(strcmp(scannedToken.symbol,"return") == 0){
                         printf("IN RETURN\n");
                         if(!inExpression){
-                            inExpression = true;
+                            expressionReset = 1;
                         }
                     }
                     break;
@@ -261,7 +265,7 @@ int parse(FILE* file){
         
         printf("Scanning Token %d\n",counter);
         scannedToken = getToken(file);
-        printf("new token %d %s",scannedToken.ID,scannedToken.symbol);
+        printf("new token %d %s, finished: %d\n",scannedToken.ID,scannedToken.symbol,finish);
     }
     printf("Closing parser.\n");
     fclose(file);
