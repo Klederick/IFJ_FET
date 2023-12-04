@@ -14,6 +14,10 @@ int main() {
     // Inicializace datových struktur nebo provádění dalších potřebných kroků
     //Stack stack;
     //initializeStack(&stack);
+    //ExpressionStack expr_stack;
+    //initializeExpressionStack(&expr_stack);
+    //ExpressionStack node_stack;
+    //initializeExpressionStack(&node_stack);   
 
     while (true) {
         // Zde můžete provádět scanner a parser
