@@ -1,5 +1,3 @@
-
-
 void resize(ExpressionStack *stack) {
     stack->size += 8;
     expressionItem *temp_arr = malloc(stack->size * sizeof(expressionItem));

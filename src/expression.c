@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "stringstack.c"
 #include <stdbool.h>
+#include "structs.h"
 
 #define TABLE_SIZE 10
 #define MAX_STRING_LENGTH 100
@@ -135,7 +136,7 @@ void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Tok
         e_item.value.e_node = e_node;
         pushE(expr_stack, e_item);
 
-    } else if if(strcmp(token.symbol, "$") == 0) {  
+    } else if(strcmp(token.symbol, "$") == 0) {  
         while (!isExpressionStackEmpty(expr_stack)) {
             expressionItem top_item = peekE(expr_stack);
 

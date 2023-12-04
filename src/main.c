@@ -11,6 +11,10 @@
 //#include "structs.h"
 
 int main(int argc, char* argv[]) {
+    //ExpressionStack expr_stack;
+    //initializeExpressionStack(&expr_stack);
+    //ExpressionStack node_stack;
+    //initializeExpressionStack(&node_stack);   
     // Inicializace datových struktur nebo provádění dalších potřebných kroků
     //Stack stack;
     //initializeStack(&stack);
