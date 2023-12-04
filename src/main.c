@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
     // Inicializace datových struktur nebo provádění dalších potřebných kroků
     //Stack stack;
     //initializeStack(&stack);
-    printf(stdout,".IFJcode23");
+    fprintf(stdout,".IFJcode23");
     if (argc != 2) {
         fprintf(stderr,"Pouzitie: %s <filename>\n", argv[0]);
         return -1;

@@ -8,18 +8,11 @@
 #include "expression.c"
 #include "symtable.c"
 #include "error.c"
+#include "stringstack.c"
 //simple state machine
-/*
-//Expression stack
-ExpressionStack* expr_stack;
-initializeExpressionStack(expr_stack);
-//node stack
-ExpressionStack* node_stack;
-initializeExpressionStack(node_stack);
-//temp stack
-ExpressionStack* temp_stack;
-initializeExpressionStack(temp_stack);
-*/
+
+
+
 /*
 Special cases or groups in parsing:
 function declaration
@@ -38,6 +31,7 @@ bool goSwitch(bool arg1){
 void expr_Signal(){
     struct Token scannedToken;
     scannedToken.ID = 14; scannedToken.symbol = "$";
+    printf("Ending expression with $\n");
     expression(scannedToken);
     //add to tree
 
@@ -92,6 +86,16 @@ void parseConstruct(struct Token* tokenlist){
 }
 //parse function (tokens -> tokens List to form AVH)
 int parse(FILE* file){
+    //Stacks
+    //Expression stack
+    ExpressionStack* expr_stack;
+    initializeExpressionStack(expr_stack);
+    //node stack
+    ExpressionStack* node_stack;
+    initializeExpressionStack(node_stack);
+    //temp stack
+    ExpressionStack* temp_stack;
+    initializeExpressionStack(temp_stack);
     
     bool inExpression = false;
     struct Token *tokenList = NULL;
@@ -117,6 +121,8 @@ int parse(FILE* file){
         if(expressionReset == 1){
             inExpression = true;
             expressionReset = 0;
+            dispozeStackE(expr_stack);
+            dispozeStackE(node_stack);
         }
         printf("Token %d: (%d) %s (spaces behind: %d)\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind);
         counter++;
