@@ -270,11 +270,25 @@ int parse(FILE* file){
             exprList = realloc(exprList, sizeof(struct Token)*exprcounter);
             exprList[exprcounter-1] = scannedToken;
             printf("Sending %s %d to expression.\n",scannedToken.symbol,scannedToken.ID);
-            expression(scannedToken);
+            expression(expr_stack, node_stack, scannedToken);
         }
         
         printf("Scanning Token %d\n",counter);
         scannedToken = getToken(file);
+    }
+    //expression end
+    if(inExpression){
+        if(scannedToken.ID == 2 || scannedToken.ID == 4 || scannedToken.ID == 11 || scannedToken.ID == 13 || scannedToken.ID == 12){
+                //all good
+        }else{
+                //turn off expression
+                expr_Signal();
+                inExpression = false;
+                //expressionType = -1;
+                exprcounter = 0;
+                free(exprList);
+            }
+            
     }
     printf("Closing parser.\n");
     fclose(file);
