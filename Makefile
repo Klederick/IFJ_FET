@@ -48,6 +48,12 @@ remove_dy:
 remove_dyval:
 	rm -f dynamicval
 
+gen: src/generation.c
+	$(CC) $(CFLAGS) -o -g $@ $<
+
+remove_gen:
+	rm -f generation
+
 all: $(TARGET)
 
 $(TARGET): $(OBJ_FILES)
