@@ -1,6 +1,3 @@
-#ifndef PARSER_C
-#define PARSER_C
-//  include
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -28,6 +25,8 @@ Special cases or groups in parsing:
 function declaration
 
 */
+//make 2 trees for expressions, access from parseConstruct
+
 bool goSwitch(bool arg1){
     if(arg1){
         return false;
@@ -40,6 +39,7 @@ void expr_Signal(){
     struct Token scannedToken;
     scannedToken.ID = 14; scannedToken.symbol = "$";
     expression(scannedToken);
+    //add to tree
 
 }
 //check if it is term
@@ -86,6 +86,10 @@ bool ExpectedSymbol(int length,char* symbols[length], struct Token token){
     return false;
 }
 
+void parseConstruct(struct Token* tokenlist){
+    //construct a tree from a list of tokens, send avh to generace.c
+
+}
 //parse function (tokens -> tokens List to form AVH)
 int parse(FILE* file){
     
@@ -104,7 +108,7 @@ int parse(FILE* file){
 
     //expected tables
     int symbolListLen = 0;
-    char* ExpectedSymbolList[symbolListLen];
+    char* ExpectedSymbolList[10];
     int ExpectedIDsList[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
     bool finish = false;
 
@@ -114,7 +118,7 @@ int parse(FILE* file){
         counter++;
         //reset states if wrong ID
         if(inExpression){
-            if(scannedToken.ID == 2 || scannedToken.ID == 4 || scannedToken.ID == 11 || scannedToken.ID == 13 || scannedToken.ID ){
+            if(scannedToken.ID == 2 || scannedToken.ID == 4 || scannedToken.ID == 11 || scannedToken.ID == 13 || scannedToken.ID == 12){
                 //all good
             }else{
                 //turn off expression
@@ -192,6 +196,7 @@ int parse(FILE* file){
                         break;
                     }
             }
+
         }
         if(inExpression){
             //check if the flow of tokens is correct
@@ -258,8 +263,3 @@ int parse(FILE* file){
     return 0;
 }
 
-void parseConstruct(struct Token* tokenlist){
-    //construct a tree from a list of tokens, send avh to generace.c
-
-}
-#endif
