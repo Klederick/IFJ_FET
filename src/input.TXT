@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-var a: int = i+(i-i)
-=======
-var a : var a : var a : var a :
->>>>>>> 1919b40bc915576ad20ab1910333d8790a30f81a
+var a: int =a+(i-i)
