@@ -28,11 +28,11 @@ bool goSwitch(bool arg1){
     }
 }
 //starts and ends an expression
-void expr_Signal(){
+void expr_Signal(ExpressionStack* expr_stack, ExpressionStack* node_stack){
     struct Token scannedToken;
     scannedToken.ID = 14; scannedToken.symbol = "$";
     printf("Ending expression with $\n");
-    expression(scannedToken);
+    expression(expr_stack, node_stack, scannedToken);
     //add to tree
 
 }
@@ -134,7 +134,7 @@ int parse(FILE* file){
                 //all good
             }else{
                 //turn off expression
-                expr_Signal();
+                expr_Signal(&expr_stack, &node_stack);
                 inExpression = false;
                 //expressionType = -1;
                 exprcounter = 0;
@@ -270,7 +270,7 @@ int parse(FILE* file){
             exprList = realloc(exprList, sizeof(struct Token)*exprcounter);
             exprList[exprcounter-1] = scannedToken;
             printf("Sending %s %d to expression.\n",scannedToken.symbol,scannedToken.ID);
-            expression(expr_stack, node_stack, scannedToken);
+            expression(&expr_stack, &node_stack, scannedToken);
         }
         
         printf("Scanning Token %d\n",counter);
@@ -282,7 +282,7 @@ int parse(FILE* file){
                 //all good
         }else{
                 //turn off expression
-                expr_Signal();
+                expr_Signal(&expr_stack, &node_stack);
                 inExpression = false;
                 //expressionType = -1;
                 exprcounter = 0;
