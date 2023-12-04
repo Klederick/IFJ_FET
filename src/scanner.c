@@ -260,7 +260,7 @@ struct Token getToken(FILE* src){
     int term = 0;
 
     char c = fgetc(src);
-    printf("First char of token: %d\n",c);
+    printf("First char of token: %d - %c\n",c,c);
     
     struct Token token;
     token.ID = 0;
@@ -278,6 +278,7 @@ struct Token getToken(FILE* src){
 
     //get operands, if no operands -> go default for a term
     char opening[3]; 
+    printf("Char in switch %d - %c\n",c,c);
     switch(c){
         case '\"':
                 opening[0] = '\"';
@@ -460,8 +461,6 @@ struct Token getToken(FILE* src){
                     }else{
                         token.ID = 13;
                         assignAndRealloc(&seekCounter, '_', &token,&letterCounter);
-                        assignAndRealloc(&seekCounter,c,&token,&letterCounter);
-                        // toto by sa malo dat spravit mudrejsie
                         term = 1;
                     }
                 }
@@ -474,6 +473,7 @@ struct Token getToken(FILE* src){
                             assignAndRealloc(&seekCounter,c,&token,&letterCounter);
                             getChar(&seekCounter,&c,src,&letterCounter);
                         }
+                        fseek(src,-2,SEEK_CUR);
                 }else{
                     if(c == EOF || c == -1){
                         token.ID = 0;

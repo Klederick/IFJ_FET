@@ -222,7 +222,8 @@ int parse(FILE* file){
                         while(strcmp(exprList[exprcounter - 2 - bracket].symbol,")") == 0){
                             bracket++;
                         }
-                        if(exprList[exprcounter - 2 - bracket].ID != 11 || exprList[exprcounter - 2 - bracket].ID != 12 || exprList[exprcounter - 2 - bracket].ID != 13){
+                        if(exprList[exprcounter - 2 - bracket].ID != 11 && exprList[exprcounter - 2 - bracket].ID != 12 && exprList[exprcounter - 2 - bracket].ID != 13){
+                            printf("exprlist-2: %d, %s",exprList[exprcounter-2-bracket].ID,exprList[exprcounter-2-bracket].symbol);
                             fprintf(stderr,"pred binarnym operatorom nie je cislo\n");
                             ThrowError(1);
                             //TODO: GO INTO SYMTABLE AND CHECK IF USING STRING OPERATOR WHEN USING STRING
@@ -260,12 +261,12 @@ int parse(FILE* file){
             //TODO EXPRESSION END, ADD IT TO TREE
             exprList = realloc(exprList, sizeof(struct Token)*exprcounter);
             exprList[exprcounter-1] = scannedToken;
+            printf("Sending %s %d to expression.\n",scannedToken.symbol,scannedToken.ID);
             expression(scannedToken);
         }
         
         printf("Scanning Token %d\n",counter);
         scannedToken = getToken(file);
-        printf("new token %d %s, finished: %d\n",scannedToken.ID,scannedToken.symbol,finish);
     }
     printf("Closing parser.\n");
     fclose(file);
