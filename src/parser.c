@@ -37,13 +37,14 @@ void expr_Signal(){
     struct Token scannedToken;
     scannedToken.ID = 14; scannedToken.symbol = "$";
     expression(scannedToken);
+
 }
 //check if it is term
 bool isterm(struct Token token){
     if(token.ID == 12 || token.ID == 13 || token.ID == 14){
         return true;
     }else{
-        if(strcmp(token.symbol,")")){
+        if(strcmp(token.symbol,")") || strcmp(token.symbol,")")){
             return true;
         }else{
             return false;
@@ -83,23 +84,11 @@ bool ExpectedSymbol(int length,char* symbols[length], struct Token token){
 }
 
 //parse function (tokens -> tokens List to form AVH)
-int main(int argc, char* argv[]){
+int parse(FILE* file){
     
     bool inExpression = false;
     struct Token *tokenList = NULL;
     struct Token *exprList = NULL;
-    //move to main.c, rename function to parse
-    //Check arguments
-    if (argc != 2) {
-        fprintf(stderr,"Pouzitie: %s <filename>\n", argv[0]);
-        return -1;
-    }
-    FILE *file = fopen(argv[1], "r");
-    // check if file exists
-    if (file == NULL) {
-        fprintf(stderr,"Error \n");
-        return -1;
-    }
     //parsing
     //tokens
     struct Token scannedToken;
@@ -122,7 +111,7 @@ int main(int argc, char* argv[]){
         counter++;
         //reset states if wrong ID
         if(inExpression){
-            if(scannedToken.ID == 2 || scannedToken.ID == 4 || scannedToken.ID == 11 || scannedToken.ID == 13){
+            if(scannedToken.ID == 2 || scannedToken.ID == 4 || scannedToken.ID == 11 || scannedToken.ID == 13 || scannedToken.ID ){
                 //all good
             }else{
                 //turn off expression
@@ -160,9 +149,9 @@ int main(int argc, char* argv[]){
                             ThrowError(99);
                         };
                         break;
-                case 1: if(!inExpression){ inExpression = true; expr_Signal(); } break;
+                case 1: if(!inExpression){ inExpression = true; } break;
                 case 2: break;
-                case 3: if(!inExpression){ inExpression = true; expr_Signal(); } break;
+                case 3: if(!inExpression){ inExpression = true; } break;
                 case 4: break;
                 case 5: break;
                 case 6: 
@@ -256,7 +245,6 @@ int main(int argc, char* argv[]){
             exprList = realloc(exprList, sizeof(struct Token)*exprcounter);
             exprList[exprcounter-1] = scannedToken;
             expression(scannedToken);
-            
         }
         
         printf("Scanning Token %d\n",counter);
