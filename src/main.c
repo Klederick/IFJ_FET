@@ -1,6 +1,3 @@
-
-
-
 #include "parser.c"
 
 //#include "error.c"
