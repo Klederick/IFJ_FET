@@ -261,6 +261,7 @@ int parse(FILE* file){
         
         printf("Scanning Token %d\n",counter);
         scannedToken = getToken(file);
+        printf("new token %d %s",scannedToken.ID,scannedToken.symbol);
     }
     printf("Closing parser.\n");
     fclose(file);
