@@ -49,10 +49,10 @@ remove_dyval:
 	rm -f dynamicval
 
 gen: src/generation.c
-	$(CC) $(CFLAGS) -o -g $@ $<
+	$(CC) $(CFLAGS) -o $@ $<
 
 remove_gen:
-	rm -f generation
+	rm -f gen
 
 all: $(TARGET)
 

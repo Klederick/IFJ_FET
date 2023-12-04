@@ -10,22 +10,27 @@ struct AVLNode {
     int height;             // Height of the node in the tree
 };
 
-void printStrings(const char *strings[], int length) {
-    int repeat = sizeof(*strings) / sizeof(*strings[0]);
-    for (int i = 0; i < repeat; i++) {
-        printf("%s\n", strings[i]);
+void printStrings(char *strings[]) {
+    int length = 0;
+    while (strings[length] != NULL) {
+        printf("%s", strings[length]);
+        length++;
+        if(strings[length] != NULL) printf(" ");
     }
+    printf("\n");
 }
 
 int generator() {
-    
-    const char *myStrings[] = {"Hello", "This", "Is", "A", "List", "Of", "Strings"};
-
-    int numStrings = sizeof(myStrings) / sizeof(myStrings[0]);
-
-    printStrings(myStrings, numStrings);
-    
-    
+    char *instruction[10];
+    instruction[0]="Hello";
+    instruction[1]="Bonjour";
+    instruction[2]=NULL;
+    printStrings(instruction);
+        
+    return 0;
+}
+int main(){
+    generator();
     return 0;
 }
 #endif
