@@ -4,3 +4,5 @@
 String3
 """
 "String4"
+
+var a: int = 1+(2-2)

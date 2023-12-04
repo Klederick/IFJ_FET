@@ -187,10 +187,10 @@ void equal(ExpressionStack* expr_stack, struct Token token) {
 }
 
 eNode* expression(struct Token token) { 
-    ExpressionStack expr_stack;
-    initializeExpressionStack(&expr_stack);
-    ExpressionStack node_stack;
-    initializeExpressionStack(&node_stack);   
+    //ExpressionStack expr_stack;
+    //initializeExpressionStack(&expr_stack);
+    //ExpressionStack node_stack;
+    //initializeExpressionStack(&node_stack);   
     ExpressionStack temp_stack;
     initializeExpressionStack(&temp_stack);
 
