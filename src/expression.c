@@ -7,6 +7,7 @@
 #include "stringstack.c"
 #include <stdbool.h>
 #include "structs.h"
+#include <ctype.h>
 
 #define TABLE_SIZE 10
 #define MAX_STRING_LENGTH 100
@@ -38,8 +39,11 @@ int findStringInColumn(const char* a) {
     int i, found = 0;
 
     // Procházení prvního řádku tabulky
+    if((isdigit(a[0]) || isalpha(a[0]))){
+        a = "i";
+    }
     for (i = 0; i < 10; i++) {
-        if (strcmp(a, p_table[0][i]) == 0) { // Porovnání řetězce 'a' s hodnotou v tabulce
+        if (strcmp(a, p_table[0][i]) == 0){ // Porovnání řetězce 'a' s hodnotou v tabulce
             printf("příchozí je '%s' at position [%d][%d] in p_table\n", a, 0, i);
             found = 1;
             break;
