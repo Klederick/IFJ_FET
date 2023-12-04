@@ -1,3 +1,6 @@
+#ifndef SCANNER_C
+#define SCANNER_C
+
 // 
 //	Dear maintainer: 
 //  
@@ -539,3 +542,4 @@ int main(int argc, char* argv[]){
     fclose(file);
     return 0;
 }*/ //OLD MAIN
+#endif

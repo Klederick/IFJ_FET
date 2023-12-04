@@ -1,3 +1,6 @@
+#ifndef GENERATION_C
+#define GENERATION_C
+//  include
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,3 +40,4 @@ int main() {
     
     return 0;
 }
+#endif

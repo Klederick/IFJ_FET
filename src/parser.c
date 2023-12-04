@@ -1,3 +1,6 @@
+#ifndef PARSER_C
+#define PARSER_C
+//  include
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -259,3 +262,4 @@ void parseConstruct(struct Token* tokenlist){
     //construct a tree from a list of tokens, send avh to generace.c
 
 }
+#endif

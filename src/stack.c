@@ -1,4 +1,5 @@
-
+#ifndef STACK_C
+#define STACK_C
 
 void initializeStack(Stack *stack) {
     stack->top = -1;
@@ -64,3 +65,4 @@ int main() {
     return 0;
 }
 */
+#endif

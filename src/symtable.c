@@ -1,3 +1,6 @@
+#ifndef SYMTABLE_C
+#define SYMTABLE_C
+//  include
 #include <string.h>
 
 int max(int a, int b) {
@@ -183,3 +186,4 @@ int main() {
     destroyTree(root);
     return 0;
 }*/
+#endif

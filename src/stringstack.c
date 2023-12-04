@@ -1,4 +1,5 @@
-
+#ifndef STRINGSTACK_C
+#define STRINGSTACK_C
 
 void resize(ExpressionStack *stack) {
     stack->size += 8;
@@ -63,3 +64,4 @@ void dispozeStackE(ExpressionStack *stack){
     }
     stack->top = -1;
 }
+#endif

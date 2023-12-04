@@ -1,3 +1,6 @@
+#ifndef EXPRESSION_C
+#define EXPRESSION_C
+//  include
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -209,3 +212,4 @@ int expression(struct Token token){
     }
     return 0;
 }
+#endif

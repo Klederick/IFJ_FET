@@ -1,6 +1,10 @@
+#ifndef ERROR_C
+#define ERROR_C
+// include
 #include "structs.h"
 #include <stdlib.h>
 #include "dynamic.c"
+
 /*
 * This file contains functions to hande error situations and safely exit program.
 * 1 - chyba v programu v rámci lexikální analýzy (chybná struktura aktuálního lexému).
@@ -126,3 +130,4 @@ int main() {
     printf("\nCHYBA\n");
     return 0;
 }*/
+#endif
