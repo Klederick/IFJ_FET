@@ -1,5 +1,8 @@
 #ifndef STRINGSTACK_C
 #define STRINGSTACK_C
+#include "structs.h"
+#include <stdio.h>
+#include <stdlib.h>
 void resize(ExpressionStack *stack) {
     stack->size += 8;
     expressionItem *temp_arr = malloc(stack->size * sizeof(expressionItem));
