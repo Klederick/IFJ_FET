@@ -5,7 +5,7 @@
 #include "structs.h"
 #include "stack.c"
 #include "scanner.c"
-//#include "expression.c"
+#include "expression.c"
 #include "symtable.c"
 #include "error.c"
 #include "stringstack.c"
@@ -32,7 +32,7 @@ void expr_Signal(ExpressionStack* expr_stack, ExpressionStack* node_stack){
     struct Token scannedToken;
     scannedToken.ID = 14; scannedToken.symbol = "$";
     printf("Ending expression with $\n");
-    //expression(expr_stack, node_stack, scannedToken);
+    expression(expr_stack, node_stack, scannedToken);
     //add to tree
 
 }
@@ -284,7 +284,7 @@ int parse(FILE* file){
             exprList = realloc(exprList, sizeof(struct Token)*exprcounter);
             exprList[exprcounter-1] = scannedToken;
             printf("Sending %s %d to expression.\n",scannedToken.symbol,scannedToken.ID);
-            //expression(&expr_stack, &node_stack, scannedToken);
+            expression(&expr_stack, &node_stack, scannedToken);
         }
         
         printf("Scanning Token %d\n",counter);
