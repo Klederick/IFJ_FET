@@ -5,7 +5,7 @@
 #include "structs.h"
 #include "stack.c"
 #include "scanner.c"
-#include "expression.c"
+//#include "expression.c"
 #include "symtable.c"
 #include "error.c"
 #include "stringstack.c"
@@ -32,7 +32,7 @@ void expr_Signal(ExpressionStack* expr_stack, ExpressionStack* node_stack){
     struct Token scannedToken;
     scannedToken.ID = 14; scannedToken.symbol = "$";
     printf("Ending expression with $\n");
-    expression(expr_stack, node_stack, scannedToken);
+    //expression(expr_stack, node_stack, scannedToken);
     //add to tree
 
 }
@@ -138,6 +138,12 @@ int parse(FILE* file){
                 inExpression = false;
                 //expressionType = -1;
                 exprcounter = 0;
+                for(int i = 0; i < 12; i++){
+                    ExpectedIDsList[i] = 0;
+                }
+                for(int i = 0; i < symbolListLen; i++){
+                    ExpectedSymbolList[i] = "";
+                }
                 free(exprList);
             }
             
@@ -159,7 +165,10 @@ int parse(FILE* file){
         //end of state reset
         if(goSwitch(inExpression)){
             switch(scannedToken.ID){
-                case 0: if(strcmp(scannedToken.symbol,":") == 0){
+                case 0: 
+                        break;
+                case 1: if(!inExpression){ if(strcmp(scannedToken.symbol,"=") == 0) {expressionReset = 1;} } 
+                        if(strcmp(scannedToken.symbol,":") == 0){
                             
                         }else if(strcmp(scannedToken.symbol,"=") == 0){
 
@@ -167,8 +176,9 @@ int parse(FILE* file){
                             printf("Toto by sa nemalo nikdy stat ak je toto na vypise tak opakujem IFJ!\n");
                             ThrowError(99);
                         };
+                        
+                        
                         break;
-                case 1: if(!inExpression){ if(strcmp(scannedToken.symbol,"=") == 0) {expressionReset = 1;} } break;
                 case 2: break;
                 case 3: if(!inExpression){expressionReset = 1;} break;
                 case 4: break;
@@ -270,7 +280,7 @@ int parse(FILE* file){
             exprList = realloc(exprList, sizeof(struct Token)*exprcounter);
             exprList[exprcounter-1] = scannedToken;
             printf("Sending %s %d to expression.\n",scannedToken.symbol,scannedToken.ID);
-            expression(&expr_stack, &node_stack, scannedToken);
+            //expression(&expr_stack, &node_stack, scannedToken);
         }
         
         printf("Scanning Token %d\n",counter);
