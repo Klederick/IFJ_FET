@@ -21,7 +21,24 @@
 6 - E -> i
 7 - E -> E ?? E
 */
+void inorderTraversal(eNode* node) {
+    if (node != NULL) {
+        if (node->left != NULL) {
+            inorderTraversal(node->left);
+        }
+        printf("%s ", node->token.symbol);
+        if (node->right != NULL) {
+            inorderTraversal(node->right);
+        }
+    }
+}
 
+
+void printTree(eNode* root) {
+    printf("Inorder průchod stromem: ");
+    inorderTraversal(root);
+    printf("\n");
+}
 char* p_table[10][10] = {
     {"x", "+", "-", "*", "/", "(", "i", ")", "$", "??"},
     {"+", "M", "M", "L", "L", "L", "L", "M", "M", "M"}, //"+", 
@@ -95,6 +112,7 @@ void add(ExpressionStack* expr_stack, struct Token token, expressionItem tmp) {
     pushE(expr_stack, less_than);
     
     if(tmp.type == NODE) {
+        printf("vratil jsem NODE na stack\n");  
         pushE(expr_stack, tmp);
         pushE(expr_stack, token_item);
     } else {
@@ -244,8 +262,9 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
     if(strcmp(token.symbol, "$") == 0 && strcmp(b.value.token.symbol, "$") == 0){
         pushE(expr_stack, tmp);
         eNode* root = expr_stack->data[expr_stack->top].value.e_node;
-        printf("Adresa kořene: %s\n", root->token.symbol); // Kontrola adresy kořene
+        printf("Adresa kořene: %p\n", (void*)root); // Kontrola adresy kořene
         printf("KONEC\n\n\n\n\n");
+        printTree(root);
         return expr_stack->data[expr_stack->top].value.e_node;
     }
     char* symbol = getStringFromCoordinates(positionx, positiony);

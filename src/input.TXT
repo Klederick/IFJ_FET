@@ -1,1 +1,1 @@
-var a : int = (a-b)+c+c+c
+var a : int = (a-b)+c
