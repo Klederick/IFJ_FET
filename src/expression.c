@@ -35,7 +35,7 @@ void inorderTraversal(eNode* node) {
 
 
 void printTree(eNode* root) {
-    printf("Inorder průchod stromem: ");
+    printf("Inorder pruchod stromem: ");
     inorderTraversal(root);
     printf("\n");
 }
@@ -61,14 +61,14 @@ int findStringInColumn(const char* a) {
     }
     for (i = 0; i < 10; i++) {
         if (strcmp(a, p_table[0][i]) == 0){ // Porovnání řetězce 'a' s hodnotou v tabulce
-            printf("příchozí je '%s' at position [%d][%d] in p_table\n", a, 0, i);
+            printf("prichozi je '%s' at position [%d][%d] in p_table\n", a, 0, i);
             found = 1;
             break;
         }
     }
 
     if (!found) {
-        printf("příchozí String '%s' not found in p_table\n", a);
+        printf("prichozi String '%s' not found in p_table\n", a);
     }
     return i;
 }
@@ -114,8 +114,10 @@ void add(ExpressionStack* expr_stack, struct Token token, expressionItem tmp) {
     if(tmp.type == NODE) {
         printf("vratil jsem NODE na stack\n");  
         pushE(expr_stack, tmp);
+        printf("\n%s\n\n",peekE(expr_stack).value.e_node->token.symbol);
         pushE(expr_stack, token_item);
     } else {
+        printf("vratil jsem TOKEN na stack\n");  
         pushE(expr_stack, token_item);
     }
 }
@@ -140,8 +142,8 @@ void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Tok
         }
         else{
             printf("toto je check NODE\n");
-            eNode* root = expr_stack->data[expr_stack->top].value.e_node;
-            printf("Adresa kořene: %p\n", (void*)root); // Kontrola adresy kořene
+            //eNode* root = expr_stack->data[expr_stack->top].value.e_node;
+            //printf("Adresa korene: %p\n", (void*)root); // Kontrola adresy kořene
         }
     }
     printf("toto je check za while: %s\n", check.value.token.symbol);
@@ -151,7 +153,7 @@ void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Tok
         peek = peekE(node_stack);
         eNode* e_node = malloc(sizeof(eNode));
         expressionItem node;
-        //printf("cokoliv\n");
+        printf("cokoliv\n");
         e_node->token= peek.value.token;
         e_node->right = NULL;
         e_node->left = NULL;
@@ -159,12 +161,12 @@ void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Tok
         node.type = NODE;
         popE(expr_stack);
         pushE(expr_stack, node);
-        /*if(peekE(expr_stack).type == TOKEN){
+        if(peekE(expr_stack).type == TOKEN){
             printf("dolar?? %s\n", peekE(expr_stack).value.token.symbol);
         }
         else{
             printf("dolar?? NODE\n");
-        }*/
+        }
     }
     else if(node_stack->top == 2){
         expressionItem E;
@@ -204,12 +206,12 @@ void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Tok
     while(node_stack->top != -1){
         popE(node_stack);
     }
-    /*if(peekE(expr_stack).type == TOKEN){
+    if(peekE(expr_stack).type == TOKEN){
             printf("toto je za reduce %s\n", peekE(expr_stack).value.token.symbol);
         }
         else{
             printf("´toto je za reduce NODE\n");
-        }*/
+        }
     printf("toto je top node_stacku: %d\n", node_stack->top);
 }
 
@@ -247,7 +249,8 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
         pushE(expr_stack, b);
     }
     b = peekE(expr_stack);
-    
+    tmp = peekE(expr_stack);
+
     if(b.type == NODE){
         tmp = peekE(expr_stack);
         popE(expr_stack);
@@ -261,10 +264,10 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
     int positiony = findStringInRow(b.value.token.symbol);
     if(strcmp(token.symbol, "$") == 0 && strcmp(b.value.token.symbol, "$") == 0){
         pushE(expr_stack, tmp);
-        eNode* root = expr_stack->data[expr_stack->top].value.e_node;
-        printf("Adresa kořene: %p\n", (void*)root); // Kontrola adresy kořene
+        //eNode* root = expr_stack->data[expr_stack->top].value.e_node;
+        //printf("Adresa korene: %p\n", (void*)root); // Kontrola adresy kořene
         printf("KONEC\n\n\n\n\n");
-        printTree(root);
+        //printTree(root);
         return expr_stack->data[expr_stack->top].value.e_node;
     }
     char* symbol = getStringFromCoordinates(positionx, positiony);
