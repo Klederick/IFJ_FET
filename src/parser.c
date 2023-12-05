@@ -9,6 +9,7 @@
 #include "symtable.c"
 #include "error.c"
 #include "stringstack.c"
+#define SYMBOL_LIMIT 100
 //simple state machine
 
 
@@ -28,13 +29,16 @@ bool goSwitch(bool arg1){
     }
 }
 //starts and ends an expression
-void expr_Signal(ExpressionStack* expr_stack, ExpressionStack* node_stack){
+void expr_Signal(ExpressionStack* expr_stack, ExpressionStack* node_stack, int expressionCounter, eNode** expressions){
     struct Token scannedToken;
     scannedToken.ID = 14; scannedToken.symbol = "$";
     printf("Ending expression with $\n");
-    expression(expr_stack, node_stack, scannedToken);
-    //add to tree
 
+    do{
+        //do atleast once
+    }while(expression(expr_stack, node_stack, scannedToken) == 0);
+    //add to tree
+    expressions[expressionCounter - 1] = expression(expr_stack, node_stack, scannedToken);
 }
 //check if it is term
 bool isterm(struct Token token){
@@ -49,17 +53,7 @@ bool isterm(struct Token token){
         }
 }
 
-//consume until, returns a stack of tokens -> build bt
-Stack* consumeUntil(FILE* file, int ID, char* symbol){
-	struct Token token = getToken(file);
-	Stack* stack;
-    initializeStack(stack);
-    while(token.ID != ID && strcmp(token.symbol,symbol) != 0){
-        push(stack, token.ID);
-		token = getToken(file);
-	}
-	return stack; 
-}
+
 //check if expected
 bool ExpectedID(int IDs[12], struct Token token){
     for(int i = 0; i < 12; i++){
@@ -111,14 +105,15 @@ int parse(FILE* file){
     bool finish = false;
     int expressionReset = 0;
     //expected tables
-    int symbolListLen = 0;
-    char* ExpectedSymbolList[10];
+    int* symbolListLen = malloc(sizeof(int));
+    *(symbolListLen) = 0;
+    char* ExpectedSymbolList[SYMBOL_LIMIT];
     int ExpectedIDsList[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
     //Tree for two expressions and a statement
     tNode_t statement = newNode("EMPTY",0);
     int* expressionCounter = malloc(sizeof(int));
     *(expressionCounter) = 0;
-    tNode_t* expressions;
+    eNode** expressions = NULL;
     //start parsing
     scannedToken = getToken(file);
     while(scannedToken.ID != 0 && finish == false){
@@ -137,14 +132,20 @@ int parse(FILE* file){
                 //all good
             }else{
                 //turn off expression
-                expr_Signal(&expr_stack, &node_stack);
+                (*expressionCounter)++;
+                expressions = realloc(expressions,sizeof(eNode*)*(*expressionCounter));
+                if(expressions == NULL){
+                    printf("REALLOC FAIL\n");
+                    ThrowError(99);
+                }
+                expr_Signal(&expr_stack, &node_stack, *expressionCounter, expressions);
                 inExpression = false;
                 //expressionType = -1;
                 exprcounter = 0;
                 for(int i = 0; i < 12; i++){
                     ExpectedIDsList[i] = 0;
                 }
-                for(int i = 0; i < symbolListLen; i++){
+                for(int i = 0; i < *symbolListLen; i++){
                     ExpectedSymbolList[i] = "";
                 }
                 free(exprList);
@@ -152,7 +153,7 @@ int parse(FILE* file){
             
         }
         //check if token is in expected
-        if(ExpectedID(ExpectedIDsList, scannedToken) || ExpectedSymbol(symbolListLen, ExpectedSymbolList, scannedToken)){
+        if(ExpectedID(ExpectedIDsList, scannedToken) || ExpectedSymbol(*symbolListLen, ExpectedSymbolList, scannedToken)){
             //all good token is expected
             //add token to list
             tokenList = realloc(tokenList, sizeof(struct Token)*counter);
@@ -161,6 +162,7 @@ int parse(FILE* file){
             //UNEXPECTED TOKEN
             //finish = true;
             //send to next function to construct tree (if possible)
+            //RESET EXPRESSION TREES, RESET EVERY LIST, RESET EVERYTHING
             parseConstruct(tokenList);
         }
         //Reset expected list, both symbol and id list 
@@ -295,7 +297,14 @@ int parse(FILE* file){
                 //all good
         }else{
                 //turn off expression
-                expr_Signal(&expr_stack, &node_stack);
+                (*expressionCounter)++;
+                expressions = realloc(expressions,sizeof(eNode*)*(*expressionCounter));
+                if(expressions == NULL){
+                    printf("REALLOC FAIL\n");
+                    ThrowError(99);
+                }
+                expr_Signal(&expr_stack, &node_stack, *expressionCounter, expressions);
+                printf("after expression: counter - %d, top - %s",*expressionCounter,expressions[*expressionCounter-1]->token.symbol);
                 inExpression = false;
                 //expressionType = -1;
                 exprcounter = 0;

@@ -526,7 +526,7 @@ struct Token getToken(FILE* src){
         //potrebujem vediet co to je predtym nez vlozim do symtable
         //symtabInsert(globaltree,token.symbol,)
     }
-    printf("Sending token ID: %d symbol: %s from scanner",token.ID,token.symbol);
+    printf("Sending token ID: %d symbol: %s from scanner\n",token.ID,token.symbol);
     return token;
     free(token.symbol);
 }
