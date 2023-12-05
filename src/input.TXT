@@ -1,1 +1,1 @@
-var a : int = i+i*(a/b)
+var a : int = d*(a-b)+c

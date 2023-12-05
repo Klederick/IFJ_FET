@@ -88,7 +88,6 @@ void parseConstruct(struct Token* tokenlist){
 int parse(FILE* file){
     //Stacks
     //Expression stack
-    printf("BEFORE INIT\n");
     ExpressionStack expr_stack;
     initializeExpressionStack(&expr_stack);
     //node stack
@@ -97,7 +96,6 @@ int parse(FILE* file){
     //temp stack
     ExpressionStack temp_stack;
     initializeExpressionStack(&temp_stack);
-    printf("AFTER INIT\n");
     bool inExpression = false;
     struct Token *tokenList = NULL;
     struct Token *exprList = NULL;
@@ -118,7 +116,8 @@ int parse(FILE* file){
     int ExpectedIDsList[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
     //Tree for two expressions and a statement
     tNode_t statement = newNode("EMPTY",0);
-    int expressionCounter = 0;
+    int* expressionCounter = malloc(sizeof(int));
+    *(expressionCounter) = 0;
     tNode_t* expressions;
     //start parsing
     scannedToken = getToken(file);
