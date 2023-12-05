@@ -110,13 +110,17 @@ int parse(FILE* file){
     int exprcounter = 0;
     //bools for different states
     bool operator = false;
-
+    bool finish = false;
+    int expressionReset = 0;
     //expected tables
     int symbolListLen = 0;
     char* ExpectedSymbolList[10];
     int ExpectedIDsList[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
-    bool finish = false;
-    int expressionReset = 0;
+    //Tree for two expressions and a statement
+    tNode_t statement = newNode("EMPTY",0);
+    int expressionCounter = 0;
+    tNode_t* expressions;
+    //start parsing
     scannedToken = getToken(file);
     while(scannedToken.ID != 0 && finish == false){
         if(expressionReset == 1){
