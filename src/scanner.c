@@ -260,7 +260,7 @@ struct Token getToken(FILE* src){
     int term = 0;
 
     char c = fgetc(src);
-    printf("First char of token: %d - %c\n",c,c);
+    //printf("First char of token: %d - %c\n",c,c);
     
     struct Token token;
     token.ID = 0;
@@ -278,7 +278,7 @@ struct Token getToken(FILE* src){
 
     //get operands, if no operands -> go default for a term
     char opening[3]; 
-    printf("Char in switch %d - %c\n",c,c);
+    //printf("Char in switch %d - %c\n",c,c);
     switch(c){
         case '\"':
                 opening[0] = '\"';
@@ -306,6 +306,8 @@ struct Token getToken(FILE* src){
                 token.symbol = ":";
                 break;
         case '*':
+                token.ID = 2;
+                token.symbol = "*";
                 break;
         case '+':
                 token.ID = 2;
@@ -473,7 +475,11 @@ struct Token getToken(FILE* src){
                             assignAndRealloc(&seekCounter,c,&token,&letterCounter);
                             getChar(&seekCounter,&c,src,&letterCounter);
                         }
+                        if(c != -1){
                         fseek(src,-2,SEEK_CUR);
+                        }else{
+                        fseek(src,-1,SEEK_CUR);
+                        }
                 }else{
                     if(c == EOF || c == -1){
                         token.ID = 0;
@@ -520,6 +526,7 @@ struct Token getToken(FILE* src){
         //potrebujem vediet co to je predtym nez vlozim do symtable
         //symtabInsert(globaltree,token.symbol,)
     }
+    printf("Sending token ID: %d symbol: %s from scanner",token.ID,token.symbol);
     return token;
     free(token.symbol);
 }
