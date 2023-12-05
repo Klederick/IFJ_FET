@@ -21,6 +21,29 @@
 6 - E -> i
 7 - E -> E ?? E
 */
+eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, struct Token token);
+
+void printExpressionStack(ExpressionStack* expr_stack, ExpressionStack* temp_stack){
+    // Uložení obsahu expr_stack do temp_stack
+    while (!isExpressionStackEmpty(expr_stack)) {
+        pushE(temp_stack, peekE(expr_stack));
+        popE(expr_stack);
+    }
+
+    // Vypíše obsah temp_stack a vrátí data zpět do expr_stack
+    printf("Obsah expr_stack na konci funkce expression:\n");
+    while (!isExpressionStackEmpty(temp_stack)) {
+        expressionItem item = peekE(temp_stack);
+        if (item.type == TOKEN) {
+            printf("Token na expr: %s\n", item.value.token.symbol);
+        } else if(item.type == NODE){
+            printf("Node: E\n");
+        }
+        pushE(expr_stack, item);
+        popE(temp_stack);
+    }
+    printf("\n\n\n");
+}
 void inorderTraversal(eNode* node) {
     if (node != NULL) {
         if (node->left != NULL) {
@@ -101,7 +124,7 @@ char* getStringFromCoordinates(int col, int row) {
         return NULL; // Neplatné souřadnice
     }
 }
-void add(ExpressionStack* expr_stack, struct Token token, expressionItem tmp) {
+void add(ExpressionStack* expr_stack, struct Token token, expressionItem tmp, ExpressionStack* temp_stack) {
     expressionItem less_than;
     less_than.type = TOKEN;
     less_than.value.token.symbol = "<";
@@ -110,17 +133,25 @@ void add(ExpressionStack* expr_stack, struct Token token, expressionItem tmp) {
     token_item.type = TOKEN;
     token_item.value.token = token;
     pushE(expr_stack, less_than);
+
+    // Kontrola, zda se prvky správně přidávají na zásobník
+    printf("Before adding to stack:\n");
+    printExpressionStack(expr_stack, temp_stack);
     
     if(tmp.type == NODE) {
         printf("vratil jsem NODE na stack\n");  
         pushE(expr_stack, tmp);
-        printf("\n%s\n\n",peekE(expr_stack).value.e_node->token.symbol);
+        printf("\n%s\n\n", peekE(expr_stack).value.e_node->token.symbol);
         pushE(expr_stack, token_item);
     } else {
-        printf("vratil jsem TOKEN na stack\n");  
         pushE(expr_stack, token_item);
     }
+
+    // Kontrola, zda se prvky správně přidávají na zásobník po operaci
+    printf("After adding to stack:\n");
+    printExpressionStack(expr_stack, temp_stack);
 }
+
 
 void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Token token) {
     expressionItem check;
@@ -213,6 +244,8 @@ void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Tok
             printf("´toto je za reduce NODE\n");
         }
     printf("toto je top node_stacku: %d\n", node_stack->top);
+    printf("rekurzivně volám expression\n");
+    expression(expr_stack, node_stack, token);
 }
 
 void equal(ExpressionStack* expr_stack, struct Token token) {
@@ -249,7 +282,6 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
         pushE(expr_stack, b);
     }
     b = peekE(expr_stack);
-    tmp = peekE(expr_stack);
 
     if(b.type == NODE){
         tmp = peekE(expr_stack);
@@ -274,14 +306,13 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
 
     printf("hledana operace je: %s\n", symbol);
     if(strcmp(symbol, "L") == 0){
-        add(expr_stack, token, tmp);
+        add(expr_stack, token, tmp, &temp_stack);
     }
     else if(strcmp(symbol, "M") == 0){
         if(tmp.type == NODE){
             pushE(expr_stack, tmp);
         }
         reduce(node_stack, expr_stack, token);
-        expression(expr_stack, node_stack, token);
     }
     else if(strcmp(symbol, "Q") == 0){
         if(tmp.type == NODE){
@@ -292,26 +323,7 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
     else{
         fprintf(stderr, "Nespravna kombinacia tokenov ktora vedie k errorovemu stavu\n");
     }
-
-    // Uložení obsahu expr_stack do temp_stack
-    while (!isExpressionStackEmpty(expr_stack)) {
-        pushE(&temp_stack, peekE(expr_stack));
-        popE(expr_stack);
-    }
-
-    // Vypíše obsah temp_stack a vrátí data zpět do expr_stack
-    printf("Obsah expr_stack na konci funkce expression:\n");
-    while (!isExpressionStackEmpty(&temp_stack)) {
-        expressionItem item = peekE(&temp_stack);
-        if (item.type == TOKEN) {
-            printf("Token na expr: %s\n", item.value.token.symbol);
-        } else {
-            printf("Node E\n");
-        }
-        pushE(expr_stack, item);
-        popE(&temp_stack);
-    }
-    printf("\n\n\n");
+    printExpressionStack(expr_stack, &temp_stack);
     return 0;
 }
 #endif
