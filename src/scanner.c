@@ -503,6 +503,7 @@ struct Token getToken(FILE* src){
                         term = 1;
                     }
                 }
+                printf("C BEFORE CHECK %c\n",c);
                 if(isValidTerm(c) || term == 1){
                         term = 1;
                         assignAndRealloc(&seekCounter,c,&token,&letterCounter);

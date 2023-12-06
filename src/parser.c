@@ -213,7 +213,8 @@ int parse(FILE* file){
                 addToExpectedIDList(ExpectedIDsList, 2, 3,4); 
                 addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,0); symbolListLen = 0;
                 (*expressionCounter)++;
-                expressions = realloc(expressions,sizeof(eNode*)*(*expressionCounter));
+                free(expressions);
+                expressions = malloc(sizeof(eNode*)*(*expressionCounter));
                 if(expressions == NULL){
                     printf("REALLOC FAIL\n");
                     ThrowError(99);
@@ -291,7 +292,7 @@ int parse(FILE* file){
                         break;
                 case 1: if(!inExpression){ if(strcmp(scannedToken.symbol,"=") == 0) {expressionReset = 1;} } 
                             if(strcmp(scannedToken.symbol,"=") == 0){
-                                addToExpectedIDList(ExpectedIDsList, 4, 13,8,11,12);
+                                addToExpectedIDList(ExpectedIDsList, 5, 13,8,11,12, 9);
                             }else{
                                 addToExpectedIDList(ExpectedIDsList, 5, 13,8,11,12,9);
                             }
@@ -359,6 +360,7 @@ int parse(FILE* file){
                         }else if(strcmp(tempToken.symbol,"let") == 0){
                             ungetToken(file, strlen(tempToken.symbol), tempToken.spacesBehind);
                         }else{ 
+                            ungetToken(file, strlen(tempToken.symbol), tempToken.spacesBehind);
                         if(!inExpression){
                             expressionReset = 1;
                         }
@@ -487,6 +489,7 @@ int parse(FILE* file){
             exprList[exprcounter-1] = scannedToken;
             printf("Sending %s %d to expression.\n",scannedToken.symbol,scannedToken.ID);
             expression(&expr_stack, &node_stack, scannedToken);
+            printf("ENDING\n");
         }
         
         printf("Scanning Token %d\n",counter);
