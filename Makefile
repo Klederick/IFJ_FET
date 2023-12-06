@@ -19,7 +19,7 @@ remove_st:
 	rm -f stack
 
 main: src/main.c
-	$(CC) $@ $<
+	gcc main.c -o main
 
 remove_ma:
 	rm -f main
