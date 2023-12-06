@@ -288,6 +288,9 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
         tmp = peekE(expr_stack);
         popE(expr_stack);
         b = peekE(expr_stack);
+        if((strcmp(tmp.value.e_node->token.symbol, "+") != 0 || strcmp(tmp.value.e_node->token.symbol, "-") != 0 || strcmp(tmp.value.e_node->token.symbol, "*") != 0 || strcmp(tmp.value.e_node->token.symbol, "/") != 0 || strcmp(tmp.value.e_node->token.symbol, "??") != 0) && strcmp(token.symbol, "(") == 0){
+            ThrowError(2);
+        }
     }
     else{
         b.type = TOKEN;
@@ -300,7 +303,7 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
         eNode* root = expr_stack->data[expr_stack->top].value.e_node;
         printf("Adresa korene: %p\n", (void*)root); // Kontrola adresy kořene
         printf("KONEC expression\n\n\n\n\n");
-        printTree(root);
+        //printTree(root);
         return expr_stack->data[expr_stack->top].value.e_node;
     }
     char* symbol = getStringFromCoordinates(positionx, positiony);
