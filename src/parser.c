@@ -36,10 +36,9 @@ void expr_Signal(ExpressionStack* expr_stack, ExpressionStack* node_stack, int e
     scannedToken.ID = 14; scannedToken.symbol = "$";
     printf("Ending expression with $\n");
     //add to tree
-    do{
-
-    }while(expression(expr_stack, node_stack, scannedToken) == 0);
+    
     expressions[expressionCounter - 1] = expression(expr_stack, node_stack, scannedToken);
+    printf("End expression with $\n");
 }
 //check if it is term
 bool isterm(struct Token token){
@@ -75,12 +74,16 @@ void addToExpectedSymbolList(char*** ExpectedSymbolList, int SymbolListLen, int 
     va_list valist;
     va_start(valist, argnum);
     //RESET LIST
-
-    *ExpectedSymbolList = realloc(*ExpectedSymbolList,sizeof(char*) * argnum);
+    free(*ExpectedSymbolList);
+    *ExpectedSymbolList = malloc(sizeof(char*) * argnum);
     
     for(int i = 0; i < argnum; i++){
         printf("FUNCLOG\n");
-        (*ExpectedSymbolList)[i] = realloc((*ExpectedSymbolList)[i],SYMBOL_LIMIT);
+        if ((*ExpectedSymbolList)[i] == NULL) {
+            free((*ExpectedSymbolList)[i]);
+        }
+        printf("FUNCLOG2\n");
+        (*ExpectedSymbolList)[i] = malloc(SYMBOL_LIMIT);
         printf("FUNCLOG\n");
         (*ExpectedSymbolList)[i] = va_arg(valist, char*);
         printf("FUNCLOG\n");
@@ -181,10 +184,15 @@ int parse(FILE* file){
     scannedToken = getToken(file);
     while(scannedToken.ID != 0 && finish == false){
         if(expressionReset == 1){
-            inExpression = true;
-            expressionReset = 0;
-            initializeExpressionStack(&expr_stack);
-            initializeExpressionStack(&node_stack);
+            if (scannedToken.ID != 9) {
+                inExpression = true;
+                expressionReset = 0;
+                initializeExpressionStack(&expr_stack);
+                initializeExpressionStack(&node_stack);
+            }
+            else {
+                expressionReset = 0;
+            }
         }
         printf("Token %d: (%d) %s (spaces behind: %d)\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind);
        

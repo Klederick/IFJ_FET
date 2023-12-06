@@ -327,7 +327,7 @@ struct Token getToken(FILE* src){
         case '-':
             //-> case
             c = fgetc(src);
-                if(c == '='){
+                if(c == '>'){
                 token.symbol = "->";
                 token.ID = 7;
             }else{
