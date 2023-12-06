@@ -1,3 +1,6 @@
-let af = 1.0 + 2.0
-let bf = 4.0 * 3.0
-let cf = 20.1 - 1.1
+let ac = 1 + 2.0
+let bc = 4 * 3.0
+let cc = 20 - 1.0
+let acc = 1.0 + 2
+let bcc = 4.0 * 3
+let ccc = 20.0 - 1

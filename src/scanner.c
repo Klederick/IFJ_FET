@@ -445,8 +445,6 @@ struct Token getToken(FILE* src){
                                 getChar(&seekCounter,&c, src, &letterCounter);
                                 
                             }
-                            token.ID = 11;
-                            return token;
                             
                     }
                     if(c == 'e' || c == 'E'){
@@ -462,12 +460,14 @@ struct Token getToken(FILE* src){
                             }
                     }
                 token.ID = 11;
+                return token;
                 }else if(c == '_') {
                     getChar(&seekCounter,&c,src,&letterCounter);
                     if(isWhiteSpace(c)){
                     //_ used in functions to skip argument name 
                         token.ID = 7;
                         token.symbol = "_";
+                        return token;
                     break;
                     }else{
                         token.ID = 13;
