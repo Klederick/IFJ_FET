@@ -1,1 +1,1 @@
-let a:int = a*(c-b)
+let a:int = a+a
