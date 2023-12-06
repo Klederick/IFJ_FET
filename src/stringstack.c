@@ -3,6 +3,8 @@
 #include "structs.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+/* The provided code defines an expression stack that handles tokens and nodes, using an array-based structure for storage. */
 void resize(ExpressionStack *stack) {
     stack->size += 8;
     expressionItem *temp_arr = malloc(stack->size * sizeof(expressionItem));

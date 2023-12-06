@@ -11,7 +11,11 @@
 
 #define TABLE_SIZE 10
 #define MAX_STRING_LENGTH 100
-
+/*
+*This code defines a table, handling operations based on the coordinates of elements within the table. 
+*It includes functions to find strings in rows and columns, retrieve strings based on coordinates, 
+*perform addition, reduction, and equality operations, utilizing stacks for expression handling.
+*/
 char* p_table[10][10] = {
     {"x", "+", "-", "*", "/", "(", "i", ")", "$", "??"},
     {"+", "M", "M", "L", "L", "L", "L", "M", "M", "M"}, 
