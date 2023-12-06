@@ -95,3 +95,18 @@ write(b, "\n")
 let c = 20 - 5 - 4
 write(c, "\n")
 write(d, "\n")
+let a = 1 + 2
+let b = 4 * 3
+let c = 20 - 1
+
+write(a, "\n", b, "\n", c, "\n")
+
+let af = 1.0 + 2.0
+let bf = 4.0 * 3.0
+let cf = 20.1 - 1.1
+
+write(af, "\n", bf, "\n", cf, "\n")
+
+let da = 25.0 / 5.0
+
+write(da, "\n")

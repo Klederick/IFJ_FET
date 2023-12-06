@@ -113,8 +113,10 @@ bool ExpectedSymbol(int length,char** symbols, struct Token token){
 //END OF HELPING FUNCS
 
 void parseConstruct(int counter,struct Token* tokenlist, int expressionCounter, eNode** expressions){
+
     tNode_t command = newNode(tokenlist[0].symbol,tokenlist[0].ID);
     for(int i = 0; i < counter; i++){
+
         //Semantic controls
         printf("FOR LOOP %d out of %d: ",i,counter-1);
         switch(tokenlist[i].ID){
@@ -272,10 +274,12 @@ int parse(FILE* file){
             expressionReset = 0;
             //expected tables
             
-            ExpectedSymbolList = realloc(ExpectedSymbolList,sizeof(char*));
+            
             for (int i = 0; i < symbolListLen; i++) {
                 free(ExpectedSymbolList[i]);
             }
+            ExpectedSymbolList = realloc(ExpectedSymbolList, sizeof(char*));
+
             free(ExpectedSymbolList);
             for(int i = 0; i < ID_NUM; i++){
                 ExpectedIDsList[i] = 1;
@@ -286,7 +290,7 @@ int parse(FILE* file){
             *(expressionCounter) = 0;
             expressions = realloc(expressions,0);
 
-        }
+            }
             switch(scannedToken.ID){
                 case 0: 
                         break;
