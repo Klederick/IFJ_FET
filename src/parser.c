@@ -34,11 +34,11 @@ bool goSwitch(bool arg1){
 void expr_Signal(ExpressionStack* expr_stack, ExpressionStack* node_stack, int expressionCounter, eNode** expressions){
     struct Token scannedToken;
     scannedToken.ID = 14; scannedToken.symbol = "$";
-    printf("Ending expression with $\n");
+    //printf("Ending expression with $\n");
     //add to tree
     
     expressions[expressionCounter - 1] = expression(expr_stack, node_stack, scannedToken);
-    printf("End expression with $\n");
+    //printf("End expression with $\n");
 }
 //check if it is term
 bool isterm(struct Token token){
@@ -78,15 +78,15 @@ void addToExpectedSymbolList(char*** ExpectedSymbolList, int SymbolListLen, int 
     *ExpectedSymbolList = malloc(sizeof(char*) * argnum);
     
     for(int i = 0; i < argnum; i++){
-        printf("FUNCLOG\n");
+        //printf("FUNCLOG\n");
         if ((*ExpectedSymbolList)[i] == NULL) {
             free((*ExpectedSymbolList)[i]);
         }
-        printf("FUNCLOG2\n");
+        //printf("FUNCLOG2\n");
         (*ExpectedSymbolList)[i] = malloc(SYMBOL_LIMIT);
-        printf("FUNCLOG\n");
+        //printf("FUNCLOG\n");
         (*ExpectedSymbolList)[i] = va_arg(valist, char*);
-        printf("FUNCLOG\n");
+        //printf("FUNCLOG\n");
     }
 
     va_end(valist);
@@ -137,7 +137,7 @@ void parseConstruct(int counter,struct Token* tokenlist, int expressionCounter, 
             }
         }
         //Semantic controls
-        printf("FOR LOOP %d out of %d: ",i,counter-1);
+        //printf("FOR LOOP %d out of %d: ",i,counter-1);
         switch(tokenlist[i].ID){
             case 1: break;
             case 2: break;
@@ -154,10 +154,10 @@ void parseConstruct(int counter,struct Token* tokenlist, int expressionCounter, 
             case 13: break;
             default: break;
         }
-        printf("ADDING (%d) - %s to tree\n",tokenlist[i].ID,tokenlist[i].symbol);
+        //printf("ADDING (%d) - %s to tree\n",tokenlist[i].ID,tokenlist[i].symbol);
         insert(command, tokenlist[i].symbol,tokenlist[i].ID );
     }
-    //zavolat generaciu
+    //zavolat generaciu so stromom
     //construct a tree from a list of tokens, send avh to generace.c
 
 }
@@ -215,7 +215,7 @@ int parse(FILE* file){
                 expressionReset = 0;
             }
         }
-        printf("Token %d: (%d) %s (spaces behind: %d)\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind);
+        //printf("Token %d: (%d) %s (spaces behind: %d)\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind);
        
         //reset states if wrong ID
         if(inExpression){
@@ -266,7 +266,7 @@ int parse(FILE* file){
         if((ExpectedID(ExpectedIDsList, scannedToken) || ExpectedSymbol(symbolListLen, ExpectedSymbolList, scannedToken))){
             //all good token is expected
             //add token to list
-            printf("Token %d: (%d) %s (spaces behind: %d), ADDING TO LIST ON POSITION %d\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind,counter-1);
+            //printf("Token %d: (%d) %s (spaces behind: %d), ADDING TO LIST ON POSITION %d\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind,counter-1);
             tokenList = realloc(tokenList, sizeof(struct Token)*counter);
             tokenList[counter - 1] = scannedToken;
         }else{
@@ -274,11 +274,11 @@ int parse(FILE* file){
             //finish = true;
             //send to next function to construct tree (if possible)
             //RESET EXPRESSION TREES, RESET EVERY LIST, RESET EVERYTHING
-            printf("----SENDING TO CONSTRUCT-----\n");
+            //printf("----SENDING TO CONSTRUCT-----\n");
             parseConstruct(counter-1,tokenList,*expressionCounter,expressions);
             //RESET
             tokenList = realloc(tokenList,sizeof(struct Token));
-            printf("%s is first token in new statement.\n",scannedToken.symbol);
+            //printf("%s is first token in new statement.\n",scannedToken.symbol);
             tokenList[0] = scannedToken;
             exprList = realloc(exprList,0);
             //counters
@@ -370,13 +370,13 @@ int parse(FILE* file){
                 case 10:
                     //expression set
                     if(strcmp(scannedToken.symbol,"while") == 0 || strcmp(scannedToken.symbol,"if") == 0 ){   
-                        printf("IN WHILE/IF\n");    
+                        //printf("IN WHILE/IF\n");    
                         tempToken = getToken(file);
                         if(strcmp(tempToken.symbol,"(") == 0){
                             counter++;
                             tokenList = realloc(tokenList, sizeof(struct Token)*counter);
                             tokenList[counter - 1] = scannedToken;
-                            printf("Token %d: (%d) %s (spaces behind: %d), ADDING TO LIST ON POSITION %d\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind,counter);
+                            //printf("Token %d: (%d) %s (spaces behind: %d), ADDING TO LIST ON POSITION %d\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind,counter);
                             if(!inExpression){
                                 expressionReset = 1;
                             } 
@@ -389,7 +389,7 @@ int parse(FILE* file){
                         }
                         }
                     }else if(strcmp(scannedToken.symbol,"return") == 0){
-                        printf("IN RETURN\n");
+                        //printf("IN RETURN\n");
                         if(!inExpression){
                             expressionReset = 1;
                         }
@@ -434,11 +434,11 @@ int parse(FILE* file){
                     addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,0);  symbolListLen = 0;
                     break;
                 case 17:
-                    printf("LOG1");
+                    //printf("LOG1");
                     addToExpectedIDList(ExpectedIDsList, 3, 13,12,11);
-                    printf("LOG2");
+                    //printf("LOG2");
                     addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,1,"(");  symbolListLen = 1;
-                    printf("LOG3");
+                    //printf("LOG3");
                     break;
                 default: break;
                     if(scannedToken.ID < 0){
@@ -467,7 +467,7 @@ int parse(FILE* file){
                             bracket++;
                         }
                         if(exprList[exprcounter - 2 - bracket].ID != 11 && exprList[exprcounter - 2 - bracket].ID != 12 && exprList[exprcounter - 2 - bracket].ID != 13){
-                            printf("exprlist-2: %d, %s",exprList[exprcounter-2-bracket].ID,exprList[exprcounter-2-bracket].symbol);
+                            //printf("exprlist-2: %d, %s",exprList[exprcounter-2-bracket].ID,exprList[exprcounter-2-bracket].symbol);
                             fprintf(stderr,"pred binarnym operatorom nie je cislo\n");
                             ThrowError(1);
                             //TODO: GO INTO SYMTABLE AND CHECK IF USING STRING OPERATOR WHEN USING STRING
@@ -478,11 +478,11 @@ int parse(FILE* file){
                 case 11:
                 case 12:
                 case 13:
-                    printf("LOG\n");
+                    //printf("LOG\n");
                     addToExpectedIDList(ExpectedIDsList, 1, 2);
-                    printf("LOG1\n");
+                    //printf("LOG1\n");
                     addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,1,")");  symbolListLen = 1;
-                    printf("LOG\n");
+                    //printf("LOG\n");
                     if(operator == true){
                         if(exprcounter >= 2){
                             
@@ -510,12 +510,12 @@ int parse(FILE* file){
             //TODO EXPRESSION END, ADD IT TO TREE
             exprList = realloc(exprList, sizeof(struct Token)*exprcounter);
             exprList[exprcounter-1] = scannedToken;
-            printf("Sending %s %d to expression.\n",scannedToken.symbol,scannedToken.ID);
+            //printf("Sending %s %d to expression.\n",scannedToken.symbol,scannedToken.ID);
             expression(&expr_stack, &node_stack, scannedToken);
-            printf("ENDING\n");
+            //printf("ENDING\n");
         }
         
-        printf("Scanning Token %d\n",counter);
+        //printf("Scanning Token %d\n",counter);
         scannedToken = getToken(file);
     }
     //expression end
@@ -536,7 +536,7 @@ int parse(FILE* file){
                 exprToken.ID = 16; exprToken.symbol = "E";
                 tokenList = realloc(tokenList, sizeof(struct Token)*counter);
                 tokenList[counter - 1] = exprToken;
-                printf("after expression: counter - %d, top - %s\n",*expressionCounter,expressions[*expressionCounter-1]->token.symbol);
+                //printf("after expression: counter - %d, top - %s\n",*expressionCounter,expressions[*expressionCounter-1]->token.symbol);
                 inExpression = false;
                 //expressionType = -1;
                 exprcounter = 0;
@@ -546,10 +546,10 @@ int parse(FILE* file){
     }
     //last statement
     if(counter != 0){
-            printf("--------SENDING TO CONSTRUCT----------\n");
+            //printf("--------SENDING TO CONSTRUCT----------\n");
             parseConstruct(counter,tokenList,*expressionCounter,expressions);
     }
-    printf("Closing parser.\n");
+    //printf("Closing parser.\n");
     fclose(file);
     return 0;
 }
