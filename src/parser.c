@@ -115,6 +115,23 @@ bool ExpectedSymbol(int length,char** symbols, struct Token token){
 void parseConstruct(int counter,struct Token* tokenlist, int expressionCounter, eNode** expressions){
     tNode_t command = newNode(tokenlist[0].symbol,tokenlist[0].ID);
     for(int i = 0; i < counter; i++){
+        //Semantic controls
+        switch(tokenlist[i].ID){
+            case 1: break;
+            case 2: break;
+            case 3: break;
+            case 4: break;
+            case 5: break;
+            case 6: break;
+            case 7: break;
+            case 8: break;
+            case 9: break;
+            case 10: break;
+            case 11: break;
+            case 12: break;
+            case 13: break;
+            default: break;
+        }
         insert(command, tokenlist[i].symbol,tokenlist[i].ID );
     }
     //zavolat generaciu
