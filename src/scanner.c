@@ -280,6 +280,7 @@ struct Token getToken(FILE* src){
     //get operands, if no operands -> go default for a term
     char opening[3]; 
     //printf("Char in switch %d - %c\n",c,c);
+    printf("FIRSTCHAR: %c, %d\n",c,c);
     switch(c){
         case '\"':
                 opening[0] = '\"';
@@ -427,6 +428,7 @@ struct Token getToken(FILE* src){
             //strom key nodetype
                 if(c >= '0' && c <= '9'){
                     //int / double
+                    
                     assignAndRealloc(&seekCounter,c,&token, &letterCounter);
 
                     getChar(&seekCounter,&c, src, &letterCounter);
@@ -435,12 +437,17 @@ struct Token getToken(FILE* src){
                             getChar(&seekCounter,&c, src, &letterCounter);
                     }
                     if(c == '.'){
+                        
                             assignAndRealloc(&seekCounter,c, &token, &letterCounter);
                             getChar(&seekCounter,&c, src, &letterCounter);
                             while(c >= '0' && c <= '9'){
                                 assignAndRealloc(&seekCounter,c,&token, &letterCounter);
                                 getChar(&seekCounter,&c, src, &letterCounter);
+                                
                             }
+                            token.ID = 11;
+                            return token;
+                            
                     }
                     if(c == 'e' || c == 'E'){
                             assignAndRealloc(&seekCounter,c,&token, &letterCounter);
