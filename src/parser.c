@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #include "structs.h"
 #include "stack.c"
 #include "scanner.c"
@@ -10,6 +11,7 @@
 #include "error.c"
 #include "stringstack.c"
 #define SYMBOL_LIMIT 100
+#define ID_NUM 12
 //simple state machine
 
 
@@ -33,11 +35,10 @@ void expr_Signal(ExpressionStack* expr_stack, ExpressionStack* node_stack, int e
     struct Token scannedToken;
     scannedToken.ID = 14; scannedToken.symbol = "$";
     printf("Ending expression with $\n");
-
-    do{
-        //do atleast once
-    }while(expression(expr_stack, node_stack, scannedToken) == 0);
     //add to tree
+    do{
+
+    }while(expression(expr_stack, node_stack, scannedToken) == 0);
     expressions[expressionCounter - 1] = expression(expr_stack, node_stack, scannedToken);
 }
 //check if it is term
@@ -55,8 +56,37 @@ bool isterm(struct Token token){
 
 
 //check if expected
-bool ExpectedID(int IDs[12], struct Token token){
-    for(int i = 0; i < 12; i++){
+void addToExpectedIDList(int* tokenIDs, int argnum,...) {
+    va_list valist;
+    va_start(valist, argnum);
+    //RESET LIST
+    for(int i = 0; i < ID_NUM; i++){
+        tokenIDs[i] = 0;
+    }
+    //SET NEW COMMENTS
+    for (int i = 0; i < argnum; i++) {
+        tokenIDs[va_arg(valist, int)] = 1;
+    }
+    va_end(valist);
+}
+
+
+void addToExpectedSymbolList(char** ExpectedSymbolList, int SymbolListLen, int argnum,...) {
+    va_list valist;
+    va_start(valist, argnum);
+    //RESET LIST
+    for(int i = 0; i < SymbolListLen; i++){
+        strncpy(ExpectedSymbolList[i],"",SYMBOL_LIMIT-1);
+    }
+    ExpectedSymbolList = realloc(ExpectedSymbolList,SYMBOL_LIMIT*argnum);
+    for (int i = 0; i < argnum; i++) {
+        strncpy(ExpectedSymbolList[i],va_arg(valist, char*),SYMBOL_LIMIT-1);
+    }
+    va_end(valist);
+}
+//check if expected
+bool ExpectedID(int* IDs, struct Token token){
+    for(int i = 0; i < ID_NUM; i++){
         if(IDs[i] == 1){
             if(token.ID == i){
                 return true;
@@ -65,14 +95,15 @@ bool ExpectedID(int IDs[12], struct Token token){
     }
     return false;
 }
-bool ExpectedSymbol(int length,char* symbols[length], struct Token token){
+bool ExpectedSymbol(int length,char** symbols, struct Token token){
     for(int i = 0; i < length; i++){
-        if(strcmp(symbols[i],token.symbol) == 0){
+        if(strcmp(symbols[i],token.symbol)){
             return true;
         }
     }
     return false;
 }
+//END OF HELPING FUNCS
 
 void parseConstruct(struct Token* tokenlist){
     //construct a tree from a list of tokens, send avh to generace.c
@@ -107,11 +138,19 @@ int parse(FILE* file){
     //expected tables
     int* symbolListLen = malloc(sizeof(int));
     *(symbolListLen) = 0;
-    char* ExpectedSymbolList[SYMBOL_LIMIT];
-    int ExpectedIDsList[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
+    char** ExpectedSymbolList = NULL;
+    int* ExpectedIDsList = malloc(sizeof(int)*ID_NUM);
+    for(int i = 0; i < ID_NUM; i++){
+        ExpectedIDsList[i] = 0;
+    }
+    //TEST
+    //addToExpectedIDList(ExpectedIDsList, 4, 2,3,4,5);
+    //*(symbolListLen) = 4;
+    //addToExpectedSymbolList(ExpectedSymbolList, *symbolListLen, 4, "(",")","{","}");
     //Tree for two expressions and a statement
     tNode_t statement = newNode("EMPTY",0);
     int* expressionCounter = malloc(sizeof(int));
+
     *(expressionCounter) = 0;
     eNode** expressions = NULL;
     //start parsing
@@ -156,15 +195,18 @@ int parse(FILE* file){
         if(ExpectedID(ExpectedIDsList, scannedToken) || ExpectedSymbol(*symbolListLen, ExpectedSymbolList, scannedToken)){
             //all good token is expected
             //add token to list
-            tokenList = realloc(tokenList, sizeof(struct Token)*counter);
-            tokenList[counter - 1] = scannedToken;
+            printf("Token %d: (%d) %s (spaces behind: %d), ADDING TO LIST ON POSITION %d\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind,counter);
+
         }else{
             //UNEXPECTED TOKEN
             //finish = true;
             //send to next function to construct tree (if possible)
             //RESET EXPRESSION TREES, RESET EVERY LIST, RESET EVERYTHING
+            //printf("SENDING TO CONSTRUCT");
             parseConstruct(tokenList);
         }
+            tokenList = realloc(tokenList, sizeof(struct Token)*counter);
+            tokenList[counter - 1] = scannedToken;
         //Reset expected list, both symbol and id list 
         
         //end of state reset
@@ -304,7 +346,7 @@ int parse(FILE* file){
                     ThrowError(99);
                 }
                 expr_Signal(&expr_stack, &node_stack, *expressionCounter, expressions);
-                printf("after expression: counter - %d, top - %s",*expressionCounter,expressions[*expressionCounter-1]->token.symbol);
+                printf("after expression: counter - %d, top - %s\n",*expressionCounter,expressions[*expressionCounter-1]->token.symbol);
                 inExpression = false;
                 //expressionType = -1;
                 exprcounter = 0;

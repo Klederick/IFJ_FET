@@ -66,7 +66,7 @@ char* p_table[10][10] = {
     {"x", "+", "-", "*", "/", "(", "i", ")", "$", "??"},
     {"+", "M", "M", "L", "L", "L", "L", "M", "M", "M"}, //"+", 
     {"-", "M", "M", "L", "L", "L", "L", "M", "M", "M"}, //"-", 
-    {"*", "M", "M", "M", "M", "L", "L", "M", "M", "M"}, //"*", 
+    {"", "M", "M", "M", "M", "L", "L", "M", "M", "M"}, //"", 
     {"/", "M", "M", "M", "M", "L", "L", "M", "M", "M"}, //"/", 
     {"(", "L", "L", "L", "L", "L", "L", "Q", "R", "L"}, //"(", 
     {"i", "M", "M", "M", "M", "R", "R", "M", "M", "M"}, //"i", 
@@ -296,10 +296,10 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
     int positiony = findStringInRow(b.value.token.symbol);
     if(strcmp(token.symbol, "$") == 0 && strcmp(b.value.token.symbol, "$") == 0){
         pushE(expr_stack, tmp);
-        //eNode* root = expr_stack->data[expr_stack->top].value.e_node;
-        //printf("Adresa korene: %p\n", (void*)root); // Kontrola adresy kořene
+        eNode* root = expr_stack->data[expr_stack->top].value.e_node;
+        printf("Adresa korene: %p\n", (void*)root); // Kontrola adresy kořene
         printf("KONEC\n\n\n\n\n");
-        //printTree(root);
+        printTree(root);
         return expr_stack->data[expr_stack->top].value.e_node;
     }
     char* symbol = getStringFromCoordinates(positionx, positiony);
