@@ -1,6 +1,5 @@
 #ifndef DYNAMIC_C
 #define DYNAMIC_C
-//  include
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>

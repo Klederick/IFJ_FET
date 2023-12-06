@@ -42,27 +42,4 @@ void freestack(Stack* stack){
         pop(stack);
     }
 }
-/*
-int main() {
-    Stack stack;
-    initializeStack(&stack);
-
-    push(&stack, 1);
-    push(&stack, 2);
-    push(&stack, 3);
-
-    printf("Top element: %d\n", peek(&stack));
-
-    printf("Popped element: %d\n", pop(&stack));
-    printf("Popped element: %d\n", pop(&stack));
-
-    printf("Is stack empty? %s\n", isEmpty(&stack) ? "Yes" : "No");
-
-    printf("Top element: %d\n", peek(&stack));
-    push(&stack, 5);
-    printf("Top element: %d\n", peek(&stack));
-
-    return 0;
-}
-*/
 #endif
