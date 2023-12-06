@@ -34,6 +34,7 @@ char isWhiteSpace(char c){
 char nextChar(int* seekcounter, char* c,struct Token *token, int *letterCounter, FILE *src, char condition, int condID) {
     if((*c) != EOF){
     (*c) = fgetc(src);
+    printf("nextchar: %c\n",(*c));
     (*letterCounter)++;
     (*seekcounter)++;
     if (*c == condition) {
@@ -281,6 +282,7 @@ struct Token getToken(FILE* src){
     //get operands, if no operands -> go default for a term
     char opening[3]; 
     //printf("Char in switch %d - %c\n",c,c);
+    
     printf("FIRSTCHAR: %c, %d\n",c,c);
     switch(c){
         case '\"':
@@ -296,12 +298,17 @@ struct Token getToken(FILE* src){
         //'='
         case '=':
                 //== case
-                if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3) == 1){
-                    token.ID = 1;
+                printf("pred ifom\n");
+                c = fgetc(src);
+                printf(" %c", c);
+                if(c == '='){
+                    printf("po ife\n");
+                    token.ID = 3;
                     token.symbol = "==";
                 }else{
                     token.ID = 1;
                     token.symbol = "=";
+                    fseek(src, -1, SEEK_CUR);
                 };
                 
                 break;
@@ -319,12 +326,14 @@ struct Token getToken(FILE* src){
                 break;
         case '-':
             //-> case
-            if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'>',7) == 1){
+            c = fgetc(src);
+                if(c == '='){
                 token.symbol = "->";
-                token.symbol = "->";
+                token.ID = 7;
             }else{
                 token.ID = 2;
                 token.symbol = "-";
+                fseek(src, -1, SEEK_CUR);
             };
                 break;
         case ',':
@@ -397,41 +406,50 @@ struct Token getToken(FILE* src){
                 token.symbol = "}"; 
            break;
         case '<':
-            if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3) == 1){
+            c = fgetc(src);
+                if(c == '='){
                 token.symbol = "<=";
+                token.ID = 3;
             }else{
                 token.ID = 3;
                 token.symbol = "<";
+                fseek(src, -1, SEEK_CUR);
             }
             break;
         case '>':
-            if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3) == 1){
+            c = fgetc(src);
+                if(c == '='){
                 token.ID = 3;
                 token.symbol = ">=";
             }else{
                 token.ID = 3;
                 token.symbol = ">";
+                fseek(src, -1, SEEK_CUR);
             }
             break;
 
         case '!':
             //!= case
-            if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3) == 1){
+            c = fgetc(src);
+                if(c == '='){
                 token.ID = 3;
                 token.symbol = "!=";
             }else{
                 token.ID = 6;
                 token.symbol = "!";
+                fseek(src, -1, SEEK_CUR);
             }
                break;
         case '?':
             //?? CASE
-            if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'?',2) == 1){
+             c = fgetc(src);
+                if(c == '?'){
                 token.ID = 2;
                 token.symbol = "??";
             }else{
                 token.ID = 6;
                 token.symbol = "?";
+                fseek(src, -1, SEEK_CUR);
             }
                break;
         default: 
@@ -440,7 +458,7 @@ struct Token getToken(FILE* src){
                     //int / double
                     
                     assignAndRealloc(&seekCounter,c,&token, &letterCounter);
-
+                    
                     getChar(&seekCounter,&c, src, &letterCounter);
                     while(c >= '0' && c <= '9'){
                             assignAndRealloc(&seekCounter,c,&token, &letterCounter);
@@ -470,15 +488,15 @@ struct Token getToken(FILE* src){
                             }
                     }
                 token.ID = 11;
-                return token;
+                fseek(src, -1, SEEK_CUR); c = 3;
                 }else if(c == '_') {
                     getChar(&seekCounter,&c,src,&letterCounter);
                     if(isWhiteSpace(c)){
                     //_ used in functions to skip argument name 
                         token.ID = 7;
                         token.symbol = "_";
-                        return token;
-                    break;
+
+                        break;
                     }else{
                         token.ID = 13;
                         assignAndRealloc(&seekCounter, '_', &token,&letterCounter);
@@ -510,6 +528,7 @@ struct Token getToken(FILE* src){
     if (token.ID == 13) {
         seekCounter--;
     }
+
     if(seek == 1){
     fseek(src,-seekCounter,SEEK_CUR);
     }else{
