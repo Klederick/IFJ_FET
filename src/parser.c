@@ -443,7 +443,7 @@ int parse(FILE* file){
                 case 11:
                 case 12:
                 case 13:
-                    printf("LOG\n");
+                    printf("LOG %s\n",scannedToken.symbol);
                     addToExpectedIDList(ExpectedIDsList, 1, 2);
                     printf("LOG1\n");
                     addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,1,")");  symbolListLen = 1;
