@@ -3,6 +3,18 @@
 #include "structs.h"
 #include <stdio.h>
 #include <stdlib.h>
+/**
+ * @file stringstack.c
+ * @brief token stack
+ * 
+ * IFJ a IAL projekt: Implementácia prekladača imperatívneho jazyka IFJ23
+ * 
+ * @author Frederick Tóth <xtothf00>
+ * @author Andrej Mikuš <xmikus19>
+ * @author Tom Široký <xsirok10>
+ * @author Michael Babušík <xbabus01>
+ */
+/* The provided code defines an expression stack that handles tokens and nodes, using an array-based structure for storage. */
 void resize(ExpressionStack *stack) {
     stack->size += 8;
     expressionItem *temp_arr = malloc(stack->size * sizeof(expressionItem));

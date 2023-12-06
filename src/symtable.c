@@ -1,7 +1,24 @@
 #ifndef SYMTABLE_C
 #define SYMTABLE_C
 #include <string.h>
-
+/**
+ * @file symtable.c
+ * @brief symtable
+ * 
+ * IFJ a IAL projekt: Implementácia prekladača imperatívneho jazyka IFJ23
+ * 
+ * @author Frederick Tóth <xtothf00>
+ * @author Andrej Mikuš <xmikus19>
+ * @author Tom Široký <xsirok10>
+ * @author Michael Babušík <xbabus01>
+ */
+/*
+* This code defines functions to manipulate an AVL tree that stores keys and node types. 
+* It includes operations like right and left rotations, insertion into the tree, 
+* searching, tree traversals (inorder, postorder, preorder), and a function to destroy the tree. 
+* Additionally, it contains the tNode structure representing a node in the AVL tree, 
+* containing a key, node type, height, and pointers to the left and right child nodes.
+*/
 int max(int a, int b) {
     return (a > b) ? a : b;
 }

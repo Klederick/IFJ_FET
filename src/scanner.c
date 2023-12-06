@@ -1,6 +1,17 @@
 #ifndef SCANNER_C
 #define SCANNER_C
 #include "error.c"
+/**
+ * @file scanner.c
+ * @brief scan token
+ * 
+ * IFJ a IAL projekt: Implementácia prekladača imperatívneho jazyka IFJ23
+ * 
+ * @author Frederick Tóth <xtothf00>
+ * @author Andrej Mikuš <xmikus19>
+ * @author Tom Široký <xsirok10>
+ * @author Michael Babušík <xbabus01>
+ */
 // 
 //	Dear maintainer: 
 //  

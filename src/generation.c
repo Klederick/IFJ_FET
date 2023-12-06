@@ -1,5 +1,18 @@
 #ifndef GENERATION_C //definition of generation
 #define GENERATION_C
+
+/**
+ * @file generation.c
+ * @brief code generation
+ * 
+ * IFJ a IAL projekt: Implementácia prekladača imperatívneho jazyka IFJ23
+ * 
+ * @author Frederick Tóth <xtothf00>
+ * @author Andrej Mikuš <xmikus19>
+ * @author Tom Široký <xsirok10>
+ * @author Michael Babušík <xbabus01>
+ */
+
 //  include
 #include <stdio.h>
 #include <stdlib.h>

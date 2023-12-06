@@ -1,10 +1,17 @@
 
+/**
+ * @file structs.h
+ * @brief structs
+ * 
+ * IFJ a IAL projekt: Implementácia prekladača imperatívneho jazyka IFJ23
+ * 
+ * @author Frederick Tóth <xtothf00>
+ * @author Andrej Mikuš <xmikus19>
+ * @author Tom Široký <xsirok10>
+ * @author Michael Babušík <xbabus01>
+ */
+
 /*STACK.C*/
-/* 
-
-
-
-*/
 #ifndef STRUCTS_H
 #define STRUCTS_H
 #define MAX_SIZE 100

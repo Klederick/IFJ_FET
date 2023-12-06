@@ -12,6 +12,17 @@
 #include "stringstack.c"
 #define SYMBOL_LIMIT 100
 #define ID_NUM 18
+/**
+ * @file parser.c
+ * @brief parser
+ * 
+ * IFJ a IAL projekt: Implementácia prekladača imperatívneho jazyka IFJ23
+ * 
+ * @author Frederick Tóth <xtothf00>
+ * @author Andrej Mikuš <xmikus19>
+ * @author Tom Široký <xsirok10>
+ * @author Michael Babušík <xbabus01>
+ */
 //simple state machine
 
 
