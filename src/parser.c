@@ -113,10 +113,29 @@ bool ExpectedSymbol(int length,char** symbols, struct Token token){
 //END OF HELPING FUNCS
 
 void parseConstruct(int counter,struct Token* tokenlist, int expressionCounter, eNode** expressions){
-
+    tNode_t symtable = newNode("EMPTY",-1);
+    tNode_t temp = newNode("EMPTY", -1);;
+    bool assigment = false; char identif[SYMBOL_LIMIT];
     tNode_t command = newNode(tokenlist[0].symbol,tokenlist[0].ID);
     for(int i = 0; i < counter; i++){
-
+        if (strcmp(tokenlist[i].symbol, "func") == 0 || strcmp(tokenlist[i].symbol, "var") == 0 || strcmp(tokenlist[i].symbol, "let") == 0) {
+            assigment = true; 
+        }
+        if (assigment) {
+            for (int a = i; a < counter; a++) {
+                if (tokenlist[a].ID == 13) {
+                    //identif
+                    strcpy(identif,tokenlist[a].symbol);
+                }
+            }
+            if ((strcmp(tokenlist[i].symbol, "var") == 0 || strcmp(tokenlist[i].symbol, "var") == 0)) {
+                for (int a = i; a < counter; a++) {
+                    if (tokenlist[a].ID == 13 || tokenlist[a].ID == 12 || tokenlist[a].ID == 11 || tokenlist[a].ID == 9 ) {
+                       //symtable
+                    }
+                }
+            }
+        }
         //Semantic controls
         printf("FOR LOOP %d out of %d: ",i,counter-1);
         switch(tokenlist[i].ID){
