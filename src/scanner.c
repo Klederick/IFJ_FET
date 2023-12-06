@@ -1,6 +1,6 @@
 #ifndef SCANNER_C
 #define SCANNER_C
-
+#include "error.c"
 // 
 //	Dear maintainer: 
 //  
@@ -34,7 +34,7 @@ char isWhiteSpace(char c){
 char nextChar(int* seekcounter, char* c,struct Token *token, int *letterCounter, FILE *src, char condition, int condID) {
     if((*c) != EOF){
     (*c) = fgetc(src);
-    printf("nextchar: %c\n",(*c));
+    //printf("nextchar: %c\n",(*c));
     (*letterCounter)++;
     (*seekcounter)++;
     if (*c == condition) {
@@ -90,7 +90,7 @@ unsigned int hexToDec(const char *hex) {
             hexInt = c - 'A' + 10;
         } else {
             fprintf(stderr, "Invalid hex character '%c'\n", c);
-                    exit(1);
+                    ThrowError(1);
             return 0;
         }
 
@@ -107,8 +107,8 @@ void readEmptyLine(FILE* src){
     }else if(isWhiteSpace(c)){
         readEmptyLine(src);
     }else{
-        fprintf(stderr,"Invalid character used after \"\"\", The line should be empty because we are waiting for a String!");
-        exit(1);
+        fprintf(stderr,"Invalid character used after \"\"\", The line should be empty because we are waiting for a String!\n");
+        ThrowError(1);
     }
 }
 //parse through string, resolve special cases 
@@ -166,11 +166,11 @@ char* stringanoff(FILE* src, int condition){
                             hex[i] = c; numbers++;
                         }
                         c = fgetc(src);
-                        printf("GOT HERE %c, HEX = ",c);
+                        //printf("GOT HERE %c, HEX = ",c);
                         for(int i = 0; i < numbers+1; i++){
-                            printf("%d, ",hex[i]);
+                            //printf("%d, ",hex[i]);
                         }
-                        printf("\n");
+                        //printf("\n");
                         if(c == '}'){
                             //sprav cislo
                             char decnumber = hexToDec(hex);
@@ -283,7 +283,7 @@ struct Token getToken(FILE* src){
     char opening[3]; 
     //printf("Char in switch %d - %c\n",c,c);
     
-    printf("FIRSTCHAR: %c, %d\n",c,c);
+    //printf("FIRSTCHAR: %c, %d\n",c,c);
     switch(c){
         case '\"':
                 opening[0] = '\"';
@@ -293,16 +293,17 @@ struct Token getToken(FILE* src){
                     readEmptyLine(src); token.symbol = stringanoff(src, 1); token.ID = 12;
                 }else{
                     fprintf(stderr,"Wrong string declaration, use \"string\" or \"\"\"\nstring\n\"\"\"\n");
+                    ThrowError(1);
                 }
                 break;
         //'='
         case '=':
                 //== case
-                printf("pred ifom\n");
+                //printf("pred ifom\n");
                 c = fgetc(src);
-                printf(" %c", c);
+                //printf(" %c", c);
                 if(c == '='){
-                    printf("po ife\n");
+                    //printf("po ife\n");
                     token.ID = 3;
                     token.symbol = "==";
                 }else{
@@ -378,7 +379,7 @@ struct Token getToken(FILE* src){
                     
                     else {
                         fprintf(stderr, "Unterminated multi-line comment\n");
-                        exit(1);
+                        ThrowError(1);
                     }
                     seekCounter++;
                 }
@@ -503,7 +504,7 @@ struct Token getToken(FILE* src){
                         term = 1;
                     }
                 }
-                printf("C BEFORE CHECK %c\n",c);
+                //printf("C BEFORE CHECK %c\n",c);
                 if(isValidTerm(c) || term == 1){
                         term = 1;
                         assignAndRealloc(&seekCounter,c,&token,&letterCounter);
@@ -565,7 +566,7 @@ struct Token getToken(FILE* src){
         //potrebujem vediet co to je predtym nez vlozim do symtable
         //symtabInsert(globaltree,token.symbol,)
     }
-    printf("Sending token ID: %d symbol: %s from scanner\n",token.ID,token.symbol);
+    //printf("Sending token ID: %d symbol: %s from scanner\n",token.ID,token.symbol);
     return token;
 }
 void ungetToken(FILE* src, int tokenLen, int tokenWspace){
