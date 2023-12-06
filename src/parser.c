@@ -10,7 +10,6 @@
 #include "symtable.c"
 #include "error.c"
 #include "stringstack.c"
-#include "generation.c"
 #define SYMBOL_LIMIT 100
 #define ID_NUM 18
 //simple state machine
@@ -75,13 +74,12 @@ void addToExpectedSymbolList(ExpressionStack* symbols, int argnum,...) {
     va_start(valist, argnum);
     //RESET LIST
 
-    dispozeStackE(symbols);
+    initializeExpressionStack(symbols);
     
     for(int i = 0; i < argnum; i++){
-        printf("FUNCLOG %d\n",argnum);
+        printf("FUNCLOG\n");
         expressionItem item;
-        item.value.token.symbol = va_arg(valist, char*); 
-        printf("FUNCLOG %d\n",argnum);
+        item.value.token.symbol = va_arg(valist, char*);
         pushE(symbols,item);
         printf("FUNCLOG\n");
     }
@@ -153,7 +151,8 @@ void parseConstruct(int counter,struct Token* tokenlist, int expressionCounter, 
         insert(command, tokenlist[i].symbol,tokenlist[i].ID );
     }
     //zavolat generaciu
-    gen(command, expressionCounter, expressions);
+    //gen(command);
+
 }
 //parse function (tokens -> tokens List to form AVH)
 int parse(FILE* file){
@@ -183,7 +182,7 @@ int parse(FILE* file){
     //expected tables
     int symbolListLen = 0;
     ExpressionStack ExpectedSymbolList;
-    initializeExpressionStack(&ExpectedSymbolList);
+    initializeExpressionStack(&expr_stack);
     int* ExpectedIDsList = malloc(sizeof(int)*ID_NUM);
     for(int i = 0; i < ID_NUM; i++){
         ExpectedIDsList[i] = 1;
