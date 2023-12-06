@@ -69,18 +69,18 @@ void addToExpectedIDList(int* tokenIDs, int argnum,...) {
 }
 
 
-void addToExpectedSymbolList(char*** ExpectedSymbolList, int SymbolListLen, int argnum,...) {
+void addToExpectedSymbolList(ExpressionStack* symbols, int argnum,...) {
     va_list valist;
     va_start(valist, argnum);
     //RESET LIST
 
-    *ExpectedSymbolList = realloc(*ExpectedSymbolList,sizeof(char*) * argnum);
+    initializeExpressionStack(symbols);
     
     for(int i = 0; i < argnum; i++){
         printf("FUNCLOG\n");
-        (*ExpectedSymbolList)[i] = realloc((*ExpectedSymbolList)[i],SYMBOL_LIMIT);
-        printf("FUNCLOG\n");
-        (*ExpectedSymbolList)[i] = va_arg(valist, char*);
+        expressionItem item;
+        item.value.token.symbol = va_arg(valist, char*);
+        pushE(symbols,item);
         printf("FUNCLOG\n");
     }
 
@@ -97,11 +97,17 @@ bool ExpectedID(int* IDs, struct Token token){
     }
     return false;
 }
-bool ExpectedSymbol(int length,char** symbols, struct Token token){
+bool ExpectedSymbol(int length,ExpressionStack symbols, struct Token token){
     for(int i = 0; i < length; i++){
-        if(strcmp(symbols[i],token.symbol) == 0){
+        printf("TEST\n");
+        expressionItem item;
+        item = peekE(&symbols);
+        popE(&symbols);
+         printf("TEST\n");
+        if(strcmp(item.value.token.symbol,token.symbol) == 0){
             return true;
         }
+        printf("TEST\n");
     }
     return false;
 }
@@ -109,9 +115,19 @@ bool ExpectedSymbol(int length,char** symbols, struct Token token){
 
 void parseConstruct(int counter,struct Token* tokenlist, int expressionCounter, eNode** expressions){
     tNode_t command = newNode(tokenlist[0].symbol,tokenlist[0].ID);
+    int signal = 0; //0 = normal, 1 = func stack, 2 = stringstack, 3 = int stack, 4 = double stack
+    tNode_t symtable;
+    symtable = newNode("NEW",0);
     for(int i = 0; i < counter; i++){
         //Semantic controls
         printf("FOR LOOP %d out of %d: ",i,counter-1);
+        if(strcmp(tokenlist[i].symbol,"func") == 0){
+            signal = 1;
+        }else if(strcmp(tokenlist[i].symbol,"var") == 0){
+            signal = 234;
+        }else if(strcmp(tokenlist[i].symbol,"let") == 0){
+            signal = 234;
+        }
         switch(tokenlist[i].ID){
             case 1: break;
             case 2: break;
@@ -125,14 +141,17 @@ void parseConstruct(int counter,struct Token* tokenlist, int expressionCounter, 
             case 10: break;
             case 11: break;
             case 12: break;
-            case 13: break;
+            case 13: if(signal != 0){
+                        insert(symtable,tokenlist[i].symbol,tokenlist[i].ID);
+                    }
+                        break;
             default: break;
         }
         printf("ADDING (%d) - %s to tree\n",tokenlist[i].ID,tokenlist[i].symbol);
         insert(command, tokenlist[i].symbol,tokenlist[i].ID );
     }
     //zavolat generaciu
-    //construct a tree from a list of tokens, send avh to generace.c
+    //gen(command);
 
 }
 //parse function (tokens -> tokens List to form AVH)
@@ -162,9 +181,8 @@ int parse(FILE* file){
     int expressionReset = 0;
     //expected tables
     int symbolListLen = 0;
-    char** ExpectedSymbolList = malloc(sizeof(char*));
-    ExpectedSymbolList[0] = malloc(SYMBOL_LIMIT);
-    ExpectedSymbolList[0] = "Hello";
+    ExpressionStack ExpectedSymbolList;
+    initializeExpressionStack(&expr_stack);
     int* ExpectedIDsList = malloc(sizeof(int)*ID_NUM);
     for(int i = 0; i < ID_NUM; i++){
         ExpectedIDsList[i] = 1;
@@ -188,8 +206,9 @@ int parse(FILE* file){
        
         //reset states if wrong ID
         if(inExpression){
+            printf("IN EXP\n");
             if((scannedToken.ID == 2 || scannedToken.ID == 11 || scannedToken.ID == 13 || scannedToken.ID == 12) && (ExpectedID(ExpectedIDsList, scannedToken) || ExpectedSymbol(symbolListLen, ExpectedSymbolList, scannedToken))){
-                
+                printf("IN if\n");
                 
             }else if((scannedToken.ID == 4 && (exprbracket != 0 || strcmp(scannedToken.symbol,"(") == 0)) && (ExpectedID(ExpectedIDsList, scannedToken) || ExpectedSymbol(symbolListLen, ExpectedSymbolList, scannedToken))){
                 if(strcmp(scannedToken.symbol,"(") == 0){
@@ -197,9 +216,10 @@ int parse(FILE* file){
                 }else{
                     exprbracket--;
                 }
-
+                printf("IN elif\n");
             }else{
                 //turn off expression
+                printf("HM\n");
                 addToExpectedIDList(ExpectedIDsList, 2, 3,4); 
                 addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,0); symbolListLen = 0;
                 (*expressionCounter)++;
@@ -208,6 +228,7 @@ int parse(FILE* file){
                     printf("REALLOC FAIL\n");
                     ThrowError(99);
                 }
+                printf("HM\n");
                 exprbracket = 0;
                 expr_Signal(&expr_stack, &node_stack, *expressionCounter, expressions);
                 counter++;
@@ -261,11 +282,7 @@ int parse(FILE* file){
             expressionReset = 0;
             //expected tables
             
-            ExpectedSymbolList = realloc(ExpectedSymbolList,sizeof(char*));
-            for (int i = 0; i < symbolListLen; i++) {
-                free(ExpectedSymbolList[i]);
-            }
-            free(ExpectedSymbolList);
+            initializeExpressionStack(&ExpectedSymbolList);
             for(int i = 0; i < ID_NUM; i++){
                 ExpectedIDsList[i] = 1;
             }
