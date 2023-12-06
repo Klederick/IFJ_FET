@@ -306,11 +306,15 @@ int parse(FILE* file){
             
             
             for (int i = 0; i < symbolListLen; i++) {
-                free(ExpectedSymbolList[i]);
+                if (ExpectedSymbolList[i]) {
+                    free(ExpectedSymbolList[i]);
+                }
             }
-            ExpectedSymbolList = realloc(ExpectedSymbolList, sizeof(char*));
-
-            free(ExpectedSymbolList);
+            
+            if (ExpectedSymbolList != NULL) {
+                free(ExpectedSymbolList);
+            }
+            ExpectedSymbolList = malloc(sizeof(char*));
             for(int i = 0; i < ID_NUM; i++){
                 ExpectedIDsList[i] = 1;
             }
