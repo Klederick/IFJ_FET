@@ -168,7 +168,7 @@ int parse(FILE* file){
     //expected tables
     int* symbolListLen = malloc(sizeof(int));
     *(symbolListLen) = 0;
-    char** ExpectedSymbolList = malloc(SYMBOL_LIMIT);
+    char** ExpectedSymbolList = malloc(sizeof(char*));
     int* ExpectedIDsList = malloc(sizeof(int)*ID_NUM);
     for(int i = 0; i < ID_NUM; i++){
         ExpectedIDsList[i] = 1;
@@ -267,6 +267,7 @@ int parse(FILE* file){
             expressionReset = 0;
             //expected tables
             *(symbolListLen) = 0;
+            ExpectedSymbolList = malloc(sizeof(char*));
             for(int i = 0; i < ID_NUM; i++){
                 ExpectedIDsList[i] = 1;
             }
