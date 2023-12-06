@@ -288,7 +288,7 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
         tmp = peekE(expr_stack);
         popE(expr_stack);
         b = peekE(expr_stack);
-        if((strcmp(tmp.value.e_node->token.symbol, "+") != 0 || strcmp(tmp.value.e_node->token.symbol, "-") != 0 || strcmp(tmp.value.e_node->token.symbol, "*") != 0 || strcmp(tmp.value.e_node->token.symbol, "/") != 0 || strcmp(tmp.value.e_node->token.symbol, "??") != 0) && strcmp(token.symbol, "(")){
+        if((strcmp(tmp.value.e_node->token.symbol, "+") != 0 || strcmp(tmp.value.e_node->token.symbol, "-") != 0 || strcmp(tmp.value.e_node->token.symbol, "*") != 0 || strcmp(tmp.value.e_node->token.symbol, "/") != 0 || strcmp(tmp.value.e_node->token.symbol, "??") != 0) && strcmp(token.symbol, "(") == 0){
             ThrowError(2);
         }
     }
