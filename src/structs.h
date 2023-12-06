@@ -87,12 +87,6 @@ typedef struct expressionItem{
     } value;
 } expressionItem;
 
-typedef struct {
-    expressionItem *data;
-    int top;
-    int size;
-} ExpressionStack;
-
 eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, struct Token token);
 
 int findStringInColumn(const char* a);
@@ -108,6 +102,29 @@ void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Tok
 void equal(ExpressionStack* expr_stack, struct Token token);
 
 eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, struct Token token);
+
+/*STRINGSTACK.C*/
+typedef struct {
+    expressionItem *data;
+    int top;
+    int size;
+} ExpressionStack;
+
+void resize(ExpressionStack *stack);
+
+void initializeExpressionStack(ExpressionStack *stack);
+
+int isExpressionStackFull(ExpressionStack *stack);
+
+int isExpressionStackEmpty(ExpressionStack *stack);
+
+void pushE(ExpressionStack *stack, expressionItem item);
+
+void popE(ExpressionStack *stack);
+
+expressionItem peekE(ExpressionStack *stack);
+
+void dispozeStackE(ExpressionStack *stack);
 
 /*dynamic.c*/
 // Define the structure for a node
