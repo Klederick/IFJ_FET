@@ -75,7 +75,9 @@ void addToExpectedSymbolList(ExpressionStack* symbols, int argnum,...) {
     va_start(valist, argnum);
     //RESET LIST
 
-    dispozeStackE(symbols);
+    while(symbols->top != -1){
+        popE(symbols);
+    }
     
     for(int i = 0; i < argnum; i++){
         printf("FUNCLOG %d\n",argnum);
@@ -105,7 +107,7 @@ bool ExpectedSymbol(int length,ExpressionStack symbols, struct Token token){
         expressionItem item;
         item = peekE(&symbols);
         popE(&symbols);
-         printf("TEST\n");
+        printf("TEST\n");
         if(strcmp(item.value.token.symbol,token.symbol) == 0){
             return true;
         }
