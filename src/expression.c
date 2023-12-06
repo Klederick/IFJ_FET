@@ -1,6 +1,5 @@
 #ifndef EXPRESSION_C
 #define EXPRESSION_C
-//  include
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -12,16 +11,7 @@
 
 #define TABLE_SIZE 10
 #define MAX_STRING_LENGTH 100
-// pravidla 
-/*
-1 - E -> E + E
-2 - E -> E - E
-3 - E -> E * E
-4 - E -> E / E
-5 - E -> (E)
-6 - E -> i
-7 - E -> E ?? E
-*/
+
 eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, struct Token token);
 
 void printExpressionStack(ExpressionStack* expr_stack, ExpressionStack* temp_stack) {
@@ -86,14 +76,14 @@ int findStringInColumn(const char* a) {
     }
     for (i = 0; i < 10; i++) {
         if (strcmp(a, p_table[0][i]) == 0) { // Porovnání řetězce 'a' s hodnotou v tabulce
-            printf("prichozi je '%s' at position [%d][%d] in p_table\n", a, 0, i);
+            //printf("prichozi je '%s' at position [%d][%d] in p_table\n", a, 0, i);
             found = 1;
             break;
         }
     }
 
     if (!found) {
-        printf("prichozi String '%s' not found in p_table\n", a);
+        //printf("prichozi String '%s' not found in p_table\n", a);
     }
     return i;
 }
@@ -107,14 +97,14 @@ int findStringInRow(const char* b) {
     }
     for (i = 0; i < 10; i++) {
         if (strcmp(b, p_table[i][0]) == 0) { // Porovnání řetězce 'a' s hodnotou v tabulce
-            printf("na expr je '%s' at position [%d][%d] in p_table\n", b, i, 0);
+            //printf("na expr je '%s' at position [%d][%d] in p_table\n", b, i, 0);
             found = 1;
             break;
         }
     }
 
     if (!found) {
-        printf("String '%s' not found in row of p_table\n", b);
+        //printf("String '%s' not found in row of p_table\n", b);
     }
     return i;
 }
@@ -236,7 +226,8 @@ void reduce(ExpressionStack* node_stack, ExpressionStack* expr_stack, struct Tok
         }
     }
     else {
-        printf("CHYBA");
+        //printf("CHYBA");
+        ThrowError(2);
     }
     while (node_stack->top != -1) {
         popE(node_stack);
@@ -295,20 +286,20 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
     else {
         b.type = TOKEN;
     }
-    printf("%s toto je na expr vrchol\n", b.value.token.symbol);
+    //printf("%s toto je na expr vrchol\n", b.value.token.symbol);
     int positionx = findStringInColumn(token.symbol);
     int positiony = findStringInRow(b.value.token.symbol);
     if (strcmp(token.symbol, "$") == 0 && strcmp(b.value.token.symbol, "$") == 0) {
         pushE(expr_stack, tmp);
         eNode* root = expr_stack->data[expr_stack->top].value.e_node;
-        printf("Adresa korene: %p\n", (void*)root); // Kontrola adresy kořene
-        printf("KONEC expression\n\n\n\n\n");
+        //printf("Adresa korene: %p\n", (void*)root); // Kontrola adresy kořene
+        printf("KONEC expression\n\n");
         printTree(root);
         return expr_stack->data[expr_stack->top].value.e_node;
     }
     char* symbol = getStringFromCoordinates(positionx, positiony);
 
-    printf("hledana operace je: %s\n", symbol);
+    //printf("hledana operace je: %s\n", symbol);
     if (strcmp(symbol, "L") == 0) {
         add(expr_stack, token, tmp, &temp_stack);
     }
@@ -325,7 +316,7 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
         equal(expr_stack, token);
     }
     else {
-        fprintf(stderr, "Nespravna kombinacia tokenov ktora vedie k errorovemu stavu\n");
+        ThrowError(2);
     }
     printExpressionStack(expr_stack, &temp_stack);
     return 0;
