@@ -145,5 +145,16 @@ bool ExpectedSymbol(int length, char** symbols, struct Token token);
 void parseConstruct(int counter, struct Token* tokenlist, int expressionCounter, eNode** expressions);
 int parse(FILE* file);
 
+//SCANNER FUNCS
+char isWhiteSpace(char c);
+char nextChar(int* seekcounter, char* c, struct Token* token, int* letterCounter, FILE* src, char condition, int condID);
+char getChar(int* seekcounter, char* c, FILE* src, int* letterCounter);
+char isValidTerm(char c);
+void assignAndRealloc(int* seekcounter, char c, struct Token* token, int* letterCounter);
+unsigned int hexToDec(const char* hex);
+void readEmptyLine(FILE* src);
+char* stringanoff(FILE* src, int condition);
+struct Token getToken(FILE* src);
+void ungetToken(FILE* src, int tokenLen, int tokenWspace);
 
 #endif // STRUCTS_H
