@@ -179,11 +179,7 @@ int parse(FILE* file){
     scannedToken = getToken(file);
     while(scannedToken.ID != 0 && finish == false){
         if(expressionReset == 1){
-            if(inExpression == true){
-                inExpression = false;
-            }else{
-                inExpression = true;
-            }
+            inExpression = true;
             expressionReset = 0;
             initializeExpressionStack(&expr_stack);
             initializeExpressionStack(&node_stack);
@@ -206,9 +202,6 @@ int parse(FILE* file){
                 //turn off expression
                 addToExpectedIDList(ExpectedIDsList, 2, 3,4); 
                 addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,0); symbolListLen = 0;
-                if(scannedToken.ID == 2 || scannedToken.ID == 11 || scannedToken.ID == 13 || scannedToken.ID == 12){
-                    ThrowError(2);
-                }
                 (*expressionCounter)++;
                 expressions = realloc(expressions,sizeof(eNode*)*(*expressionCounter));
                 if(expressions == NULL){
@@ -225,7 +218,6 @@ int parse(FILE* file){
                 inExpression = false;
                 //expressionType = -1;
                 exprcounter = 0;
-                
                 exprList = malloc(sizeof(struct Token));
             }
             
@@ -505,13 +497,10 @@ int parse(FILE* file){
                 expr_Signal(&expr_stack, &node_stack, *expressionCounter, expressions);
                 counter++;
                 struct Token exprToken; 
-                printf("LOG\n");
                 exprToken.ID = 16; exprToken.symbol = "E";
                 tokenList = realloc(tokenList, sizeof(struct Token)*counter);
                 tokenList[counter - 1] = exprToken;
-                printf("LOG\n");
-                //printf("after expression: counter - %d, top - %s\n",*expressionCounter,expressions[*expressionCounter-1]->token.symbol);
-                printf("LOG\n");
+                printf("after expression: counter - %d, top - %s\n",*expressionCounter,expressions[*expressionCounter-1]->token.symbol);
                 inExpression = false;
                 //expressionType = -1;
                 exprcounter = 0;
