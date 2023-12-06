@@ -365,6 +365,7 @@ struct Token getToken(FILE* src){
                 }
                 token.ID = -2;        
             }else{
+                fseek(src, -1, SEEK_CUR);
                 token.ID = 2;
                 token.symbol = "/";
             }
