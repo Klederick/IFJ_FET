@@ -1,6 +1,8 @@
 #ifndef STACK_C
 #define STACK_C
-
+#include "structs.h"
+#include "stdbool.c"
+#include "stdio.c"
 /**
  * @file stack.c
  * @brief int stack
