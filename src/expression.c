@@ -11,6 +11,17 @@
 
 #define TABLE_SIZE 10
 #define MAX_STRING_LENGTH 100
+/**
+ * @file expression.c
+ * @brief expressions
+ * 
+ * IFJ a IAL projekt: Implementácia prekladača imperatívneho jazyka IFJ23
+ * 
+ * @author Frederick Tóth <xtothf00>
+ * @author Andrej Mikuš <xmikus19>
+ * @author Tom Široký <xsirok10>
+ * @author Michael Babušík <xbabus01>
+ */
 /*
 *This code defines a table, handling operations based on the coordinates of elements within the table. 
 *It includes functions to find strings in rows and columns, retrieve strings based on coordinates, 

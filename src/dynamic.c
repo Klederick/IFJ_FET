@@ -7,7 +7,17 @@
 #include "stack.c"
 #include "symtable.c"
 #include <string.h>
-
+/**
+ * @file dynamic.c
+ * @brief dynamic structure
+ * 
+ * IFJ a IAL projekt: Implementácia prekladača imperatívneho jazyka IFJ23
+ * 
+ * @author Frederick Tóth <xtothf00>
+ * @author Andrej Mikuš <xmikus19>
+ * @author Tom Široký <xsirok10>
+ * @author Michael Babušík <xbabus01>
+ */
 /*
 * This file contains implementation of linked list modified for storing information about allocated dynamic structures.
 * Dynamic structures needs to be initialized and deleted via this functions. Other operations with dynamic structures are completely free.
