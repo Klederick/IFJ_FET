@@ -8,7 +8,6 @@
 #include <stdbool.h>
 #include "structs.h"
 #include <ctype.h>
-#include "error.c"
 
 #define TABLE_SIZE 10
 #define MAX_STRING_LENGTH 100
@@ -85,14 +84,14 @@ int findStringInColumn(const char* a) {
     }
     for (i = 0; i < 10; i++) {
         if (strcmp(a, p_table[0][i]) == 0){ // Porovnání řetězce 'a' s hodnotou v tabulce
-            printf("prichozi je '%s' at position [%d][%d] in p_table\n", a, 0, i);
+            //printf("prichozi je '%s' at position [%d][%d] in p_table\n", a, 0, i);
             found = 1;
             break;
         }
     }
 
     if (!found) {
-        printf("prichozi String '%s' not found in p_table\n", a);
+        //printf("prichozi String '%s' not found in p_table\n", a);
     }
     return i;
 }
@@ -106,14 +105,14 @@ int findStringInRow(const char* b) {
     }
     for (i = 0; i < 10; i++) {
         if (strcmp(b, p_table[i][0]) == 0) { // Porovnání řetězce 'a' s hodnotou v tabulce
-            printf("na expr je '%s' at position [%d][%d] in p_table\n", b, i, 0);
+            //printf("na expr je '%s' at position [%d][%d] in p_table\n", b, i, 0);
             found = 1;
             break;
         }
     }
 
     if (!found) {
-        printf("String '%s' not found in row of p_table\n", b);
+        //printf("String '%s' not found in row of p_table\n", b);
     }
     return i;
 }
@@ -288,27 +287,24 @@ eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, stru
         tmp = peekE(expr_stack);
         popE(expr_stack);
         b = peekE(expr_stack);
-        if((strcmp(tmp.value.e_node->token.symbol, "+") != 0 || strcmp(tmp.value.e_node->token.symbol, "-") != 0 || strcmp(tmp.value.e_node->token.symbol, "*") != 0 || strcmp(tmp.value.e_node->token.symbol, "/") != 0 || strcmp(tmp.value.e_node->token.symbol, "??") != 0) && strcmp(token.symbol, "(")){
-            ThrowError(2);
-        }
     }
     else{
         b.type = TOKEN;
     }
-    printf("%s toto je na expr vrchol\n", b.value.token.symbol);
+    //printf("%s toto je na expr vrchol\n", b.value.token.symbol);
     int positionx = findStringInColumn(token.symbol);
     int positiony = findStringInRow(b.value.token.symbol);
     if(strcmp(token.symbol, "$") == 0 && strcmp(b.value.token.symbol, "$") == 0){
         pushE(expr_stack, tmp);
         eNode* root = expr_stack->data[expr_stack->top].value.e_node;
-        printf("Adresa korene: %p\n", (void*)root); // Kontrola adresy kořene
-        printf("KONEC expression\n\n\n\n\n");
-        //printTree(root);
+        //printf("Adresa korene: %p\n", (void*)root); // Kontrola adresy kořene
+        //printf("KONEC\n\n\n\n\n");
+        printTree(root);
         return expr_stack->data[expr_stack->top].value.e_node;
     }
     char* symbol = getStringFromCoordinates(positionx, positiony);
 
-    printf("hledana operace je: %s\n", symbol);
+    //printf("hledana operace je: %s\n", symbol);
     if(strcmp(symbol, "L") == 0){
         add(expr_stack, token, tmp, &temp_stack);
     }

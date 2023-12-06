@@ -36,7 +36,9 @@ void expr_Signal(ExpressionStack* expr_stack, ExpressionStack* node_stack, int e
     scannedToken.ID = 14; scannedToken.symbol = "$";
     printf("Ending expression with $\n");
     //add to tree
-    
+    do{
+
+    }while(expression(expr_stack, node_stack, scannedToken) == 0);
     expressions[expressionCounter - 1] = expression(expr_stack, node_stack, scannedToken);
 }
 //check if it is term
