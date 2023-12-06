@@ -87,6 +87,12 @@ typedef struct expressionItem{
     } value;
 } expressionItem;
 
+typedef struct {
+    expressionItem *data;
+    int top;
+    int size;
+} ExpressionStack;
+
 eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, struct Token token);
 
 int findStringInColumn(const char* a);
@@ -104,11 +110,6 @@ void equal(ExpressionStack* expr_stack, struct Token token);
 eNode* expression(ExpressionStack* expr_stack, ExpressionStack* node_stack, struct Token token);
 
 /*STRINGSTACK.C*/
-typedef struct {
-    expressionItem *data;
-    int top;
-    int size;
-} ExpressionStack;
 
 void resize(ExpressionStack *stack);
 
