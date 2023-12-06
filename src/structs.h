@@ -161,4 +161,11 @@ char* stringanoff(FILE* src, int condition);
 struct Token getToken(FILE* src);
 void ungetToken(FILE* src, int tokenLen, int tokenWspace);
 
+//GEN FUNCS
+void printStrings(char* strings[]);
+void outputLogic(int flag, char* value1, char* value2, char* value3);
+int generator(int* depth, int* tmpstr, char* command[]);
+void restoreCommandStructure(tNode_t root);
+int gen();
+
 #endif // STRUCTS_H

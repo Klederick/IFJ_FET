@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
     //Stack stack;
     //initializeStack(&stack);
     printf(".IFJcode23\n");
-    if (argc != 2) {
+    /*if (argc != 2) {
         fprintf(stderr,"Pouzitie: %s <filename>\n", argv[0]);
         return -1;
     }
@@ -29,8 +29,9 @@ int main(int argc, char* argv[]) {
             fprintf(stderr,"Error \n");
             ThrowError(1);
         }
-    printf("starting parsing\n");
-    parse(file);
+    //printf("starting parsing\n");
+    */
+    parse(stdin);
 
     return 0;
 }
