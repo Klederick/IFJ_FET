@@ -1,0 +1,641 @@
+let a = 1 + 2
+let b = 4 * 3
+let c = 20 - 1
+
+write(a, "\n", b, "\n", c, "\n")
+
+let af = 1.0 + 2.0
+let bf = 4.0 * 3.0
+let cf = 20.1 - 1.1
+
+write(af, "\n", bf, "\n", cf, "\n")
+
+let da = 25.0 / 5.0
+
+write(da, "\n")
+
+// automatic conversion
+let ac = 1 + 2.0
+let bc = 4 * 3.0
+let cc = 20 - 1.0
+let acc = 1.0 + 2
+let bcc = 4.0 * 3
+let ccc = 20.0 - 1
+
+write(ac, "\n", bc, "\n", cc, "\n")
+write(acc, "\n", bcc, "\n", ccc, "\n")
+
+// concat
+let str = "Hello "
+let str2 = str + "world\n"
+
+write(str2)
+
+// coalescence
+let nil_val : Int? = nil
+let non_nil : Int? = 3
+let res1 = nil_val ?? 1
+let res2 = non_nil ?? 1
+write(res1, "\n", res2, "\n")
+
+// force unwrap
+let unwrapped = non_nil!
+write(unwrapped, "\n")
+var a = 5
+a = 6
+write(a)
+var a : Int = 4
+var b : String = a
+let a = 4
+a = 3
+let a = "hello" + 12
+let a = 72
+let b = chr(a)
+write(b)
+let dbl = Int2Double(8)
+write(dbl)
+write("\n")
+let int = Double2Int(4.4)
+write(int)
+let a = "Hello"
+let l = length(a)
+write(l)
+length(5)
+let a = "Hello"
+let b = ord(a)
+write(b)
+let a : Int = 43
+let b = a ?? 54
+let a : Int? = 4
+let b = a ?? "hello"
+//write("hello")
+
+/*
+write("hello")
+/*
+write("hello")
+// helloooo
+*/
+write("hello")
+this should be ignored
+*/
+var a : Int?
+
+if let a {
+    write("not nil!")
+} else {
+    write("nil!")
+}
+Double2Int("Hello")
+func factorial(_ number : Int) -> Int{
+    if number == 0{
+       return 1
+    } else {
+        let prev = number - 1
+        var f : Int
+        f = factorial(prev)
+        f = f * number
+        return f
+    }
+}
+
+let value = 4
+var output : Int
+output = factorial(value)
+write(output)
+// Program 1: Vypocet faktorialu (iterativne)
+/* Hlavni telo programu */
+write("Zadejte cislo pro vypocet faktorialu\n")
+let a : Int? = readInt()
+if let a {
+    if (a < 0) {write("Faktorial nelze spocitat\n")
+    } else {
+        var a : Double = Int2Double(a)
+        var vysl : Double = 1.0
+        while (a > 0.0) {
+            vysl = vysl * a
+            a = a - 1
+        }
+        write("Vysledek je: ", vysl, "\n")
+    }
+} else {
+    write("Chyba pri nacitani celeho cisla!\n")
+}
+func foo() {
+    write("foo")
+}
+
+foo()
+func foo(a b : String) {
+    write(b)
+}
+
+foo(a: "hello")
+foo()
+
+func foo() {
+    write("foo")
+}
+func foo() {
+
+}
+
+func foo() {
+
+}
+func foo(a b : String)
+{
+    write(c)
+}
+
+foo(a : "hello")
+func foo() -> Int
+{
+    return 3
+}
+
+foo()
+func foo(a b : Int)
+{
+    b = 4
+}
+func foo() -> Int
+{
+    return 3
+}
+
+var a : String
+a = foo()
+func foo() -> Int
+{
+    return 3
+}
+
+let a : String = foo()
+func foo(a b : Int, c d : String)
+{
+}
+
+foo(a : 1, c : "hello", 3.2)
+func foo(a b : String)
+{
+    write(b)
+}
+
+foo(a : 3)
+func foo(_ b : String)
+{
+    write(b)
+}
+
+foo("hello")
+func foo(a b : String)
+{
+    write(b)
+}
+
+foo("hello")
+func foo(a b : String)
+{
+    write(b)
+}
+
+foo(c : "hello")
+func foo() -> Int
+{
+    return
+}
+func foo() -> Int
+{
+    return "hello"
+}
+var a : Int? = 4
+var b : Int? = nil
+
+if let a {
+    write(a)
+} else {
+    write("0")
+}
+
+if let b {
+    write("0")
+} else {
+    write("2")
+}
+var a : Int? = 4
+
+if let a {
+    a = 3
+    write(a)
+} else {
+    write("a")
+}
+var a : Int = 0
+
+if let a {
+    write("foo")
+} else {
+    write("bar")
+}
+let a = 5
+
+if (a == 5) {
+    write("1")
+} else {
+    write("0")
+}
+
+if (a > 5) {
+    write("0")
+} else {
+    write("1")
+}
+
+if (a < 7) {
+    write("1")
+} else {
+    write("0")
+}
+
+if (a >= 5) {
+    write("1")
+} else {
+    write("0")
+}
+
+if (a <= 5) {
+    write("1")
+} else {
+    write("0")
+}
+
+if (a != 5) {
+    write("0")
+} else {
+    write("1")
+}
+let a : Int = 5
+
+if (a)
+{
+    write("a")
+}
+else
+{
+    write("b")
+}
+let a : Int
+a = 4
+write(a)
+var a
+var a : Int
+var b = 3
+
+if b == 3 {
+    a = 4
+    b = a
+}
+else
+{
+}
+Int2Double("Hello")
+let foo = 32
+foo = 34
+var foo : Int? = nil
+var a : Int = nil
+var a = nil
+let a = 3 + 4 - 5
+write(a, "\n")
+let b = 3 - 4 * 5
+write(b, "\n")
+let c = 20 - 5 - 4
+write(c, "\n")
+let d = 2 * (1 + 3)
+write(d, "\n")
+
+if (10 - 9 < 12)
+{
+    write("true\n")
+}
+else
+{
+    write("false\n")
+}
+
+if (2 == 1 + 1)
+{
+    write("true\n")
+}
+else
+{
+    write("false\n")
+}
+
+let opt : Int? = nil
+let val = opt ?? 1 + 4
+write(val, "\n")
+let opt2 : Int? = 5
+let val2 = (opt2 ?? 1) + 6
+write(val2, "\n")
+func foo()
+{
+}
+
+var a : Int
+a = foo()
+func foo()
+{
+}
+
+let a = foo()
+func foo()
+{
+    return
+    write("hello")
+}
+
+foo()
+func foo()
+{
+    return 3
+}
+let a = readDouble()
+let b = a! * 2
+write(b)
+let a = readInt()
+let b = a! + 4
+write(b)
+let a = readString()
+let str = "hello, " + a + "!\n"
+write(str)
+let a = 5
+let b = 6
+
+if a < b
+{
+    write("true a < b\n")
+}
+else
+{
+    write("false a < b\n")
+}
+
+if a > b
+{
+    write("false a > b\n")
+}
+else
+{
+    write("true a > b\n")
+}
+
+if a <= b
+{
+    write("true a <= b\n")
+}
+else
+{
+    write("false a <= b\n")
+}
+
+if b <= a
+{
+    write("false b <= a\n")
+}
+else
+{
+    write("true b <= a\n")
+}
+
+if a <= a
+{
+    write("true a <= a\n")
+}
+else
+{
+    write("false a <= a\n")
+}
+
+if a >= b
+{
+    write("false a >= b\n")
+}
+else
+{
+    write("true a >= b\n")
+}
+
+if b >= a
+{
+    write("true b >= a\n")
+}
+else
+{
+    write("false b >= a\n")
+}
+
+if a >= a
+{
+    write("true a >= a\n")
+}
+else
+{
+    write("false a >= a\n")
+}
+
+if a == a
+{
+    write("true a == a\n")
+}
+else
+{
+    write("false a == a\n")
+}
+
+if a == b
+{
+    write("false a == b\n")
+}
+else
+{
+    write("true a == b\n")
+}
+
+if a != a
+{
+    write("false a != a\n")
+}
+else
+{
+    write("true a != a\n")
+}
+
+if a != b
+{
+    write("true a != b\n")
+}
+else
+{
+    write("false a != b\n")
+}
+let a = "abc"
+let b = "def"
+
+if a < b
+{
+    write("TRUE")
+}
+else
+{
+    write("FALSE")
+}
+if 3 < 4.5
+{
+}
+else
+{
+}
+let a : Int? = 3
+let b : Int = 4
+
+if a == b
+{
+}
+else
+{
+}
+return
+return nil
+let a = "abcdefghijk"
+let minus1 = 0 - 1
+
+let b1 = substring(of : a, startingAt: 0, endingBefore: 11)
+let b2 = substring(of : a, startingAt: 2, endingBefore: 5)
+let b3 = substring(of : a, startingAt: minus1, endingBefore: 5)
+let b4 = substring(of : a, startingAt: 0, endingBefore: minus1)
+let b5 = substring(of : a, startingAt: 5, endingBefore: 5)
+let b6 = substring(of : a, startingAt: 5, endingBefore: 4)
+let b7 = substring(of : a, startingAt: 11, endingBefore: 12)
+
+if let b3
+{
+    write("WRONG3!\n")
+}
+else { }
+
+if let b4
+{
+    write("WRONG4!\n")
+}
+else { }
+
+if let b5
+{
+    write("WRONG5!\n")
+}
+else { }
+
+if let b6
+{
+    write("WRONG6!\n")
+}
+else { }
+
+if let b7
+{
+    write("WRONG6!\n")
+}
+else { }
+
+write(b1, "\n")
+write(b2, "\n")
+write(b3, "\n")
+write(b4, "\n")
+write(b5, "\n")
+write(b6, "\n")
+write(b7, "\n")
+write("done")
+var a = 32
+var b = a
+var c : Int = a
+foo()
+write(a)
+var a : Int
+write(a)
+var a : Int
+var b = 3
+
+if b == 3 {
+    a = 4
+}
+else
+{
+}
+
+write(a)
+let a : Int = 43
+let b = a!
+var abcdABCD1234 : Int
+var _abcdsdf : Int
+var Double : Int
+var else : Int
+var func : Int
+var if : Int
+var Int : Int
+var let : Int
+var nil : Int
+var return : Int
+var String : Int
+var var : Int
+var while : Int
+var 234abc : Int
+var _ : Int
+var a : Int
+a = 4
+var a = 3
+
+if a == 3 {
+    var b = 43
+}
+else
+{
+}
+
+a = b
+var a = 32
+var a = 4
+var a = 2
+
+if a == 2 {
+    var a = 4
+    write(a)
+}
+else
+{
+}
+
+write(a)
+var i : Int = 0
+
+while (i < 5)
+{
+    write("hello\n")
+    i = i + 1
+}
+
+var a : Int = 10
+
+while (a > 5)
+{
+    write("foo\n")
+    a = a - 2
+}
+var i : String = "test"
+
+while (i > 3)
+{
+
+}
+var a : Int = "hello"
+

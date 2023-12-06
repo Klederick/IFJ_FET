@@ -11,7 +11,7 @@
 #include "error.c"
 #include "stringstack.c"
 #define SYMBOL_LIMIT 100
-#define ID_NUM 12
+#define ID_NUM 14
 //simple state machine
 
 
@@ -75,13 +75,20 @@ void addToExpectedSymbolList(char** ExpectedSymbolList, int SymbolListLen, int a
     va_list valist;
     va_start(valist, argnum);
     //RESET LIST
-    for(int i = 0; i < SymbolListLen; i++){
-        strncpy(ExpectedSymbolList[i],"",SYMBOL_LIMIT-1);
-    }
-    ExpectedSymbolList = realloc(ExpectedSymbolList,SYMBOL_LIMIT*argnum);
-    for (int i = 0; i < argnum; i++) {
+    printf("FUNCLOG\n");
+    ExpectedSymbolList = realloc(ExpectedSymbolList,sizeof(char*)*argnum);
+    printf("FUNCLOG\n");
+    for(int i = 0; i < argnum; i++){
+        //free(ExpectedSymbolList[i]);
+        printf("FUNCLOG1 %d\n",i);
+        ExpectedSymbolList[i] = malloc(SYMBOL_LIMIT);
+        printf("FUNCLOG2 %d\n",i);
         strncpy(ExpectedSymbolList[i],va_arg(valist, char*),SYMBOL_LIMIT-1);
+
     }
+    
+    
+    printf("FUNCLOG\n");
     va_end(valist);
 }
 //check if expected
@@ -105,7 +112,12 @@ bool ExpectedSymbol(int length,char** symbols, struct Token token){
 }
 //END OF HELPING FUNCS
 
-void parseConstruct(struct Token* tokenlist){
+void parseConstruct(int counter,struct Token* tokenlist, int expressionCounter, eNode** expressions){
+    tNode_t command = newNode(tokenlist[0].symbol,tokenlist[0].ID);
+    for(int i = 0; i < counter; i++){
+        insert(command, tokenlist[i].symbol,tokenlist[i].ID );
+    }
+    //zavolat generaciu
     //construct a tree from a list of tokens, send avh to generace.c
 
 }
@@ -118,12 +130,9 @@ int parse(FILE* file){
     //node stack
     ExpressionStack node_stack;
     initializeExpressionStack(&node_stack);
-    //temp stack
-    ExpressionStack temp_stack;
-    initializeExpressionStack(&temp_stack);
     bool inExpression = false;
-    struct Token *tokenList = NULL;
-    struct Token *exprList = NULL;
+    struct Token *tokenList = malloc(sizeof(struct Token));
+    struct Token *exprList = malloc(sizeof(struct Token));
     //parsing
     //tokens
     struct Token scannedToken;
@@ -131,6 +140,8 @@ int parse(FILE* file){
     //counters
     int counter = 0;
     int exprcounter = 0;
+    //expression bracket counters
+    int exprbracket = 0;
     //bools for different states
     bool operator = false;
     bool finish = false;
@@ -138,131 +149,234 @@ int parse(FILE* file){
     //expected tables
     int* symbolListLen = malloc(sizeof(int));
     *(symbolListLen) = 0;
-    char** ExpectedSymbolList = NULL;
+    char** ExpectedSymbolList = malloc(SYMBOL_LIMIT);
     int* ExpectedIDsList = malloc(sizeof(int)*ID_NUM);
     for(int i = 0; i < ID_NUM; i++){
-        ExpectedIDsList[i] = 0;
+        ExpectedIDsList[i] = 1;
     }
-    //TEST
-    //addToExpectedIDList(ExpectedIDsList, 4, 2,3,4,5);
-    //*(symbolListLen) = 4;
-    //addToExpectedSymbolList(ExpectedSymbolList, *symbolListLen, 4, "(",")","{","}");
-    //Tree for two expressions and a statement
+    //Tree for n expressions and a statement
     tNode_t statement = newNode("EMPTY",0);
     int* expressionCounter = malloc(sizeof(int));
 
     *(expressionCounter) = 0;
-    eNode** expressions = NULL;
+    eNode** expressions = malloc(sizeof(eNode*));
     //start parsing
     scannedToken = getToken(file);
     while(scannedToken.ID != 0 && finish == false){
         if(expressionReset == 1){
             inExpression = true;
             expressionReset = 0;
-            //dispozeStackE(expr_stack);
-            //dispozeStackE(node_stack);
-
+            dispozeStackE(&expr_stack);
+            initializeExpressionStack(&expr_stack);
+            dispozeStackE(&node_stack);
+            initializeExpressionStack(&node_stack);
         }
         printf("Token %d: (%d) %s (spaces behind: %d)\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind);
-        counter++;
+       
         //reset states if wrong ID
         if(inExpression){
-            if(scannedToken.ID == 2 || scannedToken.ID == 4 || scannedToken.ID == 11 || scannedToken.ID == 13 || scannedToken.ID == 12){
+            if(scannedToken.ID == 2 || scannedToken.ID == 11 || scannedToken.ID == 13 || scannedToken.ID == 12){
                 //all good
+                
+            }else if(scannedToken.ID == 4 && (exprbracket != 0 || strcmp(scannedToken.symbol,"(") == 0)){
+                if(strcmp(scannedToken.symbol,"(") == 0){
+                    exprbracket++;
+                }else{
+                    exprbracket--;
+                }
+
             }else{
                 //turn off expression
+                addToExpectedIDList(ExpectedIDsList, 2, 3,4); 
+                addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
                 (*expressionCounter)++;
                 expressions = realloc(expressions,sizeof(eNode*)*(*expressionCounter));
                 if(expressions == NULL){
                     printf("REALLOC FAIL\n");
                     ThrowError(99);
                 }
+                exprbracket = 0;
                 expr_Signal(&expr_stack, &node_stack, *expressionCounter, expressions);
+                counter++;
+                struct Token exprToken; 
+                exprToken.ID = 16; 
+                tokenList = realloc(tokenList, sizeof(struct Token)*counter);
+                tokenList[counter - 1] = exprToken;
                 inExpression = false;
                 //expressionType = -1;
                 exprcounter = 0;
-                for(int i = 0; i < 12; i++){
-                    ExpectedIDsList[i] = 0;
-                }
-                for(int i = 0; i < *symbolListLen; i++){
-                    ExpectedSymbolList[i] = "";
-                }
-                free(exprList);
+                exprList = malloc(sizeof(struct Token));
             }
             
         }
-        //check if token is in expected
-        if(ExpectedID(ExpectedIDsList, scannedToken) || ExpectedSymbol(*symbolListLen, ExpectedSymbolList, scannedToken)){
+        
+
+        //Reset expected list, both symbol and id list 
+        //SET EXPECTED VALUES WHEN TURNING OFF EXPRESSION!!!!!!!!!!!!!!!
+        //end of state reset
+        if(goSwitch(inExpression)){
+            
+             counter++;
+            //check if token is in expected
+        if((ExpectedID(ExpectedIDsList, scannedToken) || ExpectedSymbol(*symbolListLen, ExpectedSymbolList, scannedToken))){
             //all good token is expected
             //add token to list
-            printf("Token %d: (%d) %s (spaces behind: %d), ADDING TO LIST ON POSITION %d\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind,counter);
-
+            printf("Token %d: (%d) %s (spaces behind: %d), ADDING TO LIST ON POSITION %d\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind,counter-1);
+            tokenList = realloc(tokenList, sizeof(struct Token)*counter);
+            tokenList[counter - 1] = scannedToken;
         }else{
             //UNEXPECTED TOKEN
             //finish = true;
             //send to next function to construct tree (if possible)
             //RESET EXPRESSION TREES, RESET EVERY LIST, RESET EVERYTHING
-            //printf("SENDING TO CONSTRUCT");
-            parseConstruct(tokenList);
+            printf("----SENDING TO CONSTRUCT-----\n");
+            parseConstruct(counter,tokenList,*expressionCounter,expressions);
+            //RESET
+            tokenList = realloc(tokenList,sizeof(struct Token));
+            printf("%s is first token in new statement.\n",scannedToken.symbol);
+            tokenList[0] = scannedToken;
+            exprList = realloc(exprList,0);
+            //counters
+            counter = 1;
+            exprcounter = 0;
+            //expression bracket counters
+            exprbracket = 0;
+            //bools for different states
+            operator = false;
+            inExpression = false;
+            finish = false;
+            expressionReset = 0;
+            //expected tables
+            *(symbolListLen) = 0;
+            for(int i = 0; i < ID_NUM; i++){
+                ExpectedIDsList[i] = 1;
+            }
+            //Tree for n expressions and a statement
+            statement = newNode("EMPTY",0);
+            *(expressionCounter) = 0;
+            expressions = realloc(expressions,0);
+
         }
-            tokenList = realloc(tokenList, sizeof(struct Token)*counter);
-            tokenList[counter - 1] = scannedToken;
-        //Reset expected list, both symbol and id list 
-        
-        //end of state reset
-        if(goSwitch(inExpression)){
             switch(scannedToken.ID){
                 case 0: 
                         break;
                 case 1: if(!inExpression){ if(strcmp(scannedToken.symbol,"=") == 0) {expressionReset = 1;} } 
-                        if(strcmp(scannedToken.symbol,":") == 0){
-                            
-                        }else if(strcmp(scannedToken.symbol,"=") == 0){
-
-                        }else{
-                            printf("Toto by sa nemalo nikdy stat ak je toto na vypise tak opakujem IFJ!\n");
-                            ThrowError(99);
-                        };
-                        
-                        
+                            if(strcmp(scannedToken.symbol,"=") == 0){
+                                addToExpectedIDList(ExpectedIDsList, 4, 13,8,11,12);
+                            }else{
+                                addToExpectedIDList(ExpectedIDsList, 5, 13,8,11,12,9);
+                            }
+                            addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0);
                         break;
-                case 2: break;
-                case 3: if(!inExpression){expressionReset = 1;} break;
-                case 4: break;
-                case 5: break;
+                case 2: 
+                        if(strcmp(scannedToken.symbol,"+") == 0 || strcmp(scannedToken.symbol,"??") == 0){
+                            addToExpectedIDList(ExpectedIDsList, 3, 13,11,12);
+                        }else{
+                            addToExpectedIDList(ExpectedIDsList, 2, 13,11); 
+                        }
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,1,"(");
+                        break;
+                case 3: if(!inExpression){expressionReset = 1;}
+                        addToExpectedIDList(ExpectedIDsList, 3, 13,11,12); 
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,1,"("); 
+                        break;
+                case 4: 
+                        addToExpectedIDList(ExpectedIDsList, 4, 13,4,11,12);
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
+                        break;
+                case 5: 
+                        addToExpectedIDList(ExpectedIDsList, 0);
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
+                        break;
                 case 6: 
-                case 7: break;
-                case 8: break;
-                case 9: break;
+                        addToExpectedIDList(ExpectedIDsList, 0);
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,1,"="); 
+                        break;
+                case 7: 
+                        if(strcmp(scannedToken.symbol,"->") == 0){
+                            addToExpectedIDList(ExpectedIDsList, 1, 8);
+                            addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
+                        }else{
+                            addToExpectedIDList(ExpectedIDsList, 1, 13);
+                            addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
+                        }
+                        break;
+                case 8: 
+                        addToExpectedIDList(ExpectedIDsList, 1, 6);
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,1,")"); 
+                        break;
+                case 9: 
+                        addToExpectedIDList(ExpectedIDsList, 0);
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
+                        break;
                 case 10:
+                    //expression set
                     if(strcmp(scannedToken.symbol,"while") == 0 || strcmp(scannedToken.symbol,"if") == 0 ){   
-                        printf("IN WHILE/IF\n");      
-                        if(!inExpression){
-                            expressionReset = 1;
-                            tempToken = getToken(file);
+                        printf("IN WHILE/IF\n");    
+                        tempToken = getToken(file);
                         if(strcmp(tempToken.symbol,"(") == 0){
                             counter++;
-                            tokenList = realloc(tokenList ,sizeof(struct Token)*counter);
-                            tokenList[counter - 1] = tempToken;
-                        }else{
-                            //TODO ERROR TO ERROR.C
-                            fprintf(stderr,"No brackets after while/if statement\n");
-                            fprintf(stderr,"Correct usage if/while( expression op expression ){...\n");
-                            ThrowError(1); //lexical analysis error
-                            return 0;
+                            tokenList = realloc(tokenList, sizeof(struct Token)*counter);
+                            tokenList[counter - 1] = scannedToken;
+                            printf("Token %d: (%d) %s (spaces behind: %d), ADDING TO LIST ON POSITION %d\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind,counter);
+                            if(!inExpression){
+                                expressionReset = 1;
+                            } 
+                        }else if(strcmp(tempToken.symbol,"let") == 0){
+                            ungetToken(file, strlen(tempToken.symbol), tempToken.spacesBehind);
+                        }else{ 
+                        if(!inExpression){
+                            expressionReset = 1;
                         }
                         }
-                    } 
-                    if(strcmp(scannedToken.symbol,"return") == 0){
+                    }else if(strcmp(scannedToken.symbol,"return") == 0){
                         printf("IN RETURN\n");
                         if(!inExpression){
                             expressionReset = 1;
                         }
                     }
+                    //else, func, if, let, return, var, while expected
+                    if(strcmp(scannedToken.symbol,"else")==0){
+                        addToExpectedIDList(ExpectedIDsList, 0);
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
+                    }else if(strcmp(scannedToken.symbol,"func")==0){
+                        addToExpectedIDList(ExpectedIDsList, 1, 13);
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
+                    }else if(strcmp(scannedToken.symbol,"if")==0){
+                        addToExpectedIDList(ExpectedIDsList, 3, 13,12,11);
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,1, "let"); 
+                    }else if(strcmp(scannedToken.symbol,"let")==0){
+                        addToExpectedIDList(ExpectedIDsList, 3, 13,12,11);
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
+                    }else if(strcmp(scannedToken.symbol,"return")==0){
+                        addToExpectedIDList(ExpectedIDsList, 3, 13,12,11);
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
+                    }else if(strcmp(scannedToken.symbol,"var")==0){
+                        addToExpectedIDList(ExpectedIDsList, 1, 13);
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
+                    }else if(strcmp(scannedToken.symbol,"while")==0){
+                        addToExpectedIDList(ExpectedIDsList, 3, 13,12,11);
+                        addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,1,"let"); 
+                    }else{
+                        printf("UNEXPECTED KEYWORD %s\n",scannedToken.symbol);
+                        ThrowError(1);
+                    }
                     break;
-                case 11: break;
-                case 12: break;
-                case 13: break;
+                case 11: 
+                    addToExpectedIDList(ExpectedIDsList, 2, 2,3);
+                    addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
+                    break;
+                case 12: 
+                    addToExpectedIDList(ExpectedIDsList, 1, 3);
+                    addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,2,"+","??"); 
+                    break;
+                case 13: 
+                    printf("LOG\n");
+                    addToExpectedIDList(ExpectedIDsList, 2, 1,2);
+                    printf("LOG\n");
+                    addToExpectedSymbolList(ExpectedSymbolList,*symbolListLen,0); 
+                    printf("LOG\n");
+                    break;
                 default: break;
                     if(scannedToken.ID < 0){
                         //komentar, runni while again
@@ -353,6 +467,11 @@ int parse(FILE* file){
                 free(exprList);
             }
             
+    }
+    //last statement
+    if(counter != 0){
+            printf("--------SENDING TO CONSTRUCT----------\n");
+            parseConstruct(counter,tokenList,*expressionCounter,expressions);
     }
     printf("Closing parser.\n");
     fclose(file);

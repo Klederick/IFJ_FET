@@ -249,6 +249,7 @@ termstring				                        12
 identif                                         13
 $                                               14
 true, false                                     15
+E (nahrada za expression)                       16
 */
 
 struct Token getToken(FILE* src){
@@ -530,6 +531,9 @@ struct Token getToken(FILE* src){
     printf("Sending token ID: %d symbol: %s from scanner\n",token.ID,token.symbol);
     return token;
     free(token.symbol);
+}
+void ungetToken(FILE* src, int tokenLen, int tokenWspace){
+    fseek(src,-(tokenLen + tokenWspace),SEEK_CUR);
 }
 /*
 int main(int argc, char* argv[]){
