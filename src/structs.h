@@ -1,6 +1,10 @@
 
 /*STACK.C*/
+/* 
 
+
+
+*/
 #ifndef STRUCTS_H
 #define STRUCTS_H
 #define MAX_SIZE 100
