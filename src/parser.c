@@ -11,7 +11,7 @@
 #include "error.c"
 #include "stringstack.c"
 #define SYMBOL_LIMIT 100
-#define ID_NUM 14
+#define ID_NUM 18
 //simple state machine
 
 
@@ -76,24 +76,16 @@ void addToExpectedSymbolList(char*** ExpectedSymbolList, int SymbolListLen, int 
     va_start(valist, argnum);
     //RESET LIST
 
-    printf("FUNCLOG\n");
-    
     *ExpectedSymbolList = realloc(*ExpectedSymbolList,sizeof(char*) * argnum);
     
     for(int i = 0; i < argnum; i++){
-        printf("FUNCLOG0.5 %d\n",i);
-        
-        printf("FUNCLOG1 %d\n",i);
+        printf("FUNCLOG\n");
         (*ExpectedSymbolList)[i] = realloc((*ExpectedSymbolList)[i],SYMBOL_LIMIT);
-        printf("FUNCLOG2 %d\n",i);
-
-        printf("FUNCLOG2.5 %d\n",i);
+        printf("FUNCLOG\n");
         (*ExpectedSymbolList)[i] = va_arg(valist, char*);
-        printf("FUNCLOG3 %d\n",i);
+        printf("FUNCLOG\n");
     }
-    
-    
-    printf("FUNCLOG\n");
+
     va_end(valist);
 }
 //check if expected
@@ -121,7 +113,7 @@ void parseConstruct(int counter,struct Token* tokenlist, int expressionCounter, 
     tNode_t command = newNode(tokenlist[0].symbol,tokenlist[0].ID);
     for(int i = 0; i < counter; i++){
         //Semantic controls
-        printf("FOR LOOP %d out of %d",i,counter-1);
+        printf("FOR LOOP %d out of %d: ",i,counter-1);
         switch(tokenlist[i].ID){
             case 1: break;
             case 2: break;
@@ -175,7 +167,6 @@ int parse(FILE* file){
     char** ExpectedSymbolList = malloc(sizeof(char*));
     ExpectedSymbolList[0] = malloc(SYMBOL_LIMIT);
     ExpectedSymbolList[0] = "Hello";
-    printf("VYPIS????: %s\n",ExpectedSymbolList[0]);
     int* ExpectedIDsList = malloc(sizeof(int)*ID_NUM);
     for(int i = 0; i < ID_NUM; i++){
         ExpectedIDsList[i] = 1;
@@ -199,10 +190,10 @@ int parse(FILE* file){
        
         //reset states if wrong ID
         if(inExpression){
-            if(scannedToken.ID == 2 || scannedToken.ID == 11 || scannedToken.ID == 13 || scannedToken.ID == 12){
-                //all good
+            if((scannedToken.ID == 2 || scannedToken.ID == 11 || scannedToken.ID == 13 || scannedToken.ID == 12) && (ExpectedID(ExpectedIDsList, scannedToken) || ExpectedSymbol(symbolListLen, ExpectedSymbolList, scannedToken))){
                 
-            }else if(scannedToken.ID == 4 && (exprbracket != 0 || strcmp(scannedToken.symbol,"(") == 0)){
+                
+            }else if((scannedToken.ID == 4 && (exprbracket != 0 || strcmp(scannedToken.symbol,"(") == 0)) && (ExpectedID(ExpectedIDsList, scannedToken) || ExpectedSymbol(symbolListLen, ExpectedSymbolList, scannedToken))){
                 if(strcmp(scannedToken.symbol,"(") == 0){
                     exprbracket++;
                 }else{
@@ -311,8 +302,13 @@ int parse(FILE* file){
                         addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,1,"(");  symbolListLen = 1;
                         break;
                 case 4: 
-                        addToExpectedIDList(ExpectedIDsList, 4, 13,4,11,12);
-                        addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,0);  symbolListLen = 0;
+                        if(strcmp(scannedToken.symbol,"(") == 0){
+                            addToExpectedIDList(ExpectedIDsList, 4, 13,4,11,12);
+                            addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,1,"_");  symbolListLen = 1;
+                        }else{
+                            addToExpectedIDList(ExpectedIDsList, 1,2);
+                            addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,2,",","->");  symbolListLen = 2;
+                        }
                         break;
                 case 5: 
                         addToExpectedIDList(ExpectedIDsList, 0);
@@ -393,19 +389,23 @@ int parse(FILE* file){
                     }
                     break;
                 case 11: 
-                    addToExpectedIDList(ExpectedIDsList, 2, 2,3);
+                    addToExpectedIDList(ExpectedIDsList, 3, 2,3,17);
                     addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,0);  symbolListLen = 0;
                     break;
                 case 12: 
-                    addToExpectedIDList(ExpectedIDsList, 1, 3);
-                    addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,2,"+","??");  symbolListLen = 2;
+                    addToExpectedIDList(ExpectedIDsList, 2, 3, 17);
+                    addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,3,"+","??",")");  symbolListLen = 3;
                     break;
                 case 13: 
-                    printf("LOG\n");
-                    addToExpectedIDList(ExpectedIDsList, 2, 1,2);
-                    printf("LOG\n");
+                    addToExpectedIDList(ExpectedIDsList, 4, 1,2,4,17);
                     addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,0);  symbolListLen = 0;
-                    printf("LOG\n");
+                    break;
+                case 17:
+                    printf("LOG1");
+                    addToExpectedIDList(ExpectedIDsList, 3, 13,12,11);
+                    printf("LOG2");
+                    addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,1,"(");  symbolListLen = 1;
+                    printf("LOG3");
                     break;
                 default: break;
                     if(scannedToken.ID < 0){
@@ -422,6 +422,8 @@ int parse(FILE* file){
             int bracket = 0;
             switch(scannedToken.ID){
                 case 2:
+                    addToExpectedIDList(ExpectedIDsList, 3, 13,12,11);
+                    addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,1,"(");  symbolListLen = 1;
                     if(exprcounter >= 2 && !isterm(exprList[exprcounter-2])){
                         //TODO ERROR.C
                         fprintf(stderr,"Operand before operator is not a term\n");
@@ -443,6 +445,11 @@ int parse(FILE* file){
                 case 11:
                 case 12:
                 case 13:
+                    printf("LOG\n");
+                    addToExpectedIDList(ExpectedIDsList, 1, 2);
+                    printf("LOG1\n");
+                    addToExpectedSymbolList(&ExpectedSymbolList,symbolListLen,1,")");  symbolListLen = 1;
+                    printf("LOG\n");
                     if(operator == true){
                         if(exprcounter >= 2){
                             

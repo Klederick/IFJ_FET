@@ -250,6 +250,7 @@ identif                                         13
 $                                               14
 true, false                                     15
 E (nahrada za expression)                       16
+,                                               17
 */
 
 struct Token getToken(FILE* src){
@@ -296,7 +297,8 @@ struct Token getToken(FILE* src){
         case '=':
                 //== case
                 if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3) == 1){
-                    //token je ==
+                    token.ID = 1;
+                    token.symbol = "==";
                 }else{
                     token.ID = 1;
                     token.symbol = "=";
@@ -318,11 +320,17 @@ struct Token getToken(FILE* src){
         case '-':
             //-> case
             if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'>',7) == 1){
-                //is -> token
+                token.symbol = "->";
+                token.symbol = "->";
             }else{
                 token.ID = 2;
                 token.symbol = "-";
             };
+                break;
+        case ',':
+            //, case
+                token.ID = 17;
+                token.symbol = ",";
                 break;
         case '/':
             if ((c = fgetc(src)) == '/') {
@@ -398,18 +406,19 @@ struct Token getToken(FILE* src){
             break;
         case '>':
             if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3) == 1){
+                token.ID = 3;
                 token.symbol = ">=";
             }else{
                 token.ID = 3;
                 token.symbol = ">";
             }
             break;
-        case '_':
 
         case '!':
             //!= case
             if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'=',3) == 1){
-                //token is !=
+                token.ID = 3;
+                token.symbol = "!=";
             }else{
                 token.ID = 6;
                 token.symbol = "!";
@@ -418,7 +427,8 @@ struct Token getToken(FILE* src){
         case '?':
             //?? CASE
             if(nextChar(&seekCounter,&c,&token,&letterCounter,src,'?',2) == 1){
-                //token is ??
+                token.ID = 2;
+                token.symbol = "??";
             }else{
                 token.ID = 6;
                 token.symbol = "?";
@@ -537,7 +547,6 @@ struct Token getToken(FILE* src){
     }
     printf("Sending token ID: %d symbol: %s from scanner\n",token.ID,token.symbol);
     return token;
-    free(token.symbol);
 }
 void ungetToken(FILE* src, int tokenLen, int tokenWspace){
     fseek(src,-(tokenLen + tokenWspace),SEEK_CUR);
