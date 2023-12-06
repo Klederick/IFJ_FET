@@ -134,5 +134,16 @@ struct Dynamic {
     void* genericPtr;
     struct Dynamic* next;
 };
+//PARSER FUNCS
+bool goSwitch(bool arg1);
+void expr_Signal(ExpressionStack* expr_stack, ExpressionStack* node_stack, int expressionCounter, eNode** expressions);
+bool isterm(struct Token token);
+void addToExpectedIDList(int* tokenIDs, int argnum, ...);
+void addToExpectedSymbolList(char*** ExpectedSymbolList, int SymbolListLen, int argnum, ...);
+bool ExpectedID(int* IDs, struct Token token);
+bool ExpectedSymbol(int length, char** symbols, struct Token token);
+void parseConstruct(int counter, struct Token* tokenlist, int expressionCounter, eNode** expressions);
+int parse(FILE* file);
+
 
 #endif // STRUCTS_H
