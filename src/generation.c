@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "structs.h"
 
 void printStrings(char *strings[]) {
     int length = 0;
@@ -676,7 +677,8 @@ int generator(int *depth, int *tmpstr) {
     }  
     return 0;
 }
-int main(){
+int gen(tNode_t command, int ExpressionCounter, eNode** expressions){
+    
     int depth = 1;
     int tmpstr = 20;
     int ret = generator(&depth,&tmpstr);
