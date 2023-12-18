@@ -570,7 +570,8 @@ int parse(FILE* file){
             parseConstruct(counter,tokenList,*expressionCounter,expressions);
     }
     //printf("Closing parser.\n");
-    fclose(file);
+    //NO CLOSING STDIN FIX
+    //fclose(file);
     return 0;
 }
 
