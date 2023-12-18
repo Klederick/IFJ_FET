@@ -1,0 +1,112 @@
+func foo(a b : String)
+{
+    write(b)
+}
+
+foo("hello")
+var a = nil
+var a = 32
+var b = a
+var c : Int = a
+let a : Int = 5
+
+if (a)
+{
+    write("a")
+}
+else
+{
+    write("b")
+}
+var a : Int = nil
+let a = readInt()
+let b = a! + 4
+write(b)
+let a = 4
+a = 3
+func foo() -> Int
+{
+    return "hello"
+}
+// Program 1: Vypocet faktorialu (iterativne)
+/* Hlavni telo programu */
+write("Zadejte cislo pro vypocet faktorialu\n")
+let a : Int? = readInt()
+if let a {
+    if (a < 0) {write("Faktorial nelze spocitat\n")
+    } else {
+        var a : Double = Int2Double(a)
+        var vysl : Double = 1.0
+        while (a > 0.0) {
+            vysl = vysl * a
+            a = a - 1
+        }
+        write("Vysledek je: ", vysl, "\n")
+    }
+} else {
+    write("Chyba pri nacitani celeho cisla!\n")
+}
+func foo()
+{
+}
+
+var a : Int
+a = foo()
+func foo()
+{
+    return 3
+}
+var a : Int? = 4
+var b : Int? = nil
+
+if let a {
+    write(a)
+} else {
+    write("0")
+}
+
+if let b {
+    write("0")
+} else {
+    write("2")
+}
+var a = 32
+var a = 4
+func foo()
+{
+    return
+    write("hello")
+}
+
+foo()
+var a = 3
+
+if a == 3 {
+    var b = 43
+}
+else
+{
+}
+
+a = b
+let a = 3 + 4 - 5
+write(a, "\n")
+write(b, "\n")
+let c = 20 - 5 - 4
+write(c, "\n")
+write(d, "\n")
+let a = 1 + 2
+let b = 4 * 3
+let c = 20 - 1
+
+write(a, "\n", b, "\n", c, "\n")
+
+let af = 1.0 + 2.0
+let bf = 4.0 * 3.0
+let cf = 20.1 - 1.1
+
+write(af, "\n", bf, "\n", cf, "\n")
+
+let da = 25.0 / 5.0
+
+write(da, "\n")
