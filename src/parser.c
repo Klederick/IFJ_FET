@@ -278,6 +278,7 @@ int parse(FILE* file){
             //all good token is expected
             //add token to list
             //printf("Token %d: (%d) %s (spaces behind: %d), ADDING TO LIST ON POSITION %d\n",counter,scannedToken.ID,scannedToken.symbol,scannedToken.spacesBehind,counter-1);
+            //printf("Adding token %s to list\n",scannedToken.symbol);
             tokenList = realloc(tokenList, sizeof(struct Token)*counter);
             tokenList[counter - 1] = scannedToken;
         }else{
@@ -286,7 +287,9 @@ int parse(FILE* file){
             //send to next function to construct tree (if possible)
             //RESET EXPRESSION TREES, RESET EVERY LIST, RESET EVERYTHING
             //printf("----SENDING TO CONSTRUCT-----\n");
+            //printf("Adding token %s to list\n",scannedToken.symbol);
             parseConstruct(counter-1,tokenList,*expressionCounter,expressions);
+            //printf("Flushing to construct\n");
             //RESET
             tokenList = realloc(tokenList,sizeof(struct Token));
             //printf("%s is first token in new statement.\n",scannedToken.symbol);
@@ -303,14 +306,14 @@ int parse(FILE* file){
             finish = false;
             expressionReset = 0;
             //expected tables
-            
-            
-            for (int i = 0; i < symbolListLen; i++) {
-                if (ExpectedSymbolList[i]) {
-                    free(ExpectedSymbolList[i]);
-                }
-            }
-            
+            //printf("END\n");
+            //MEMORY ALLOC PROBLEM FIX
+            //for (int i = 0; i < symbolListLen; i++) {
+            //    if (ExpectedSymbolList[i] != NULL) {
+            //        free(ExpectedSymbolList[i]);
+            //    }
+            //}
+            //printf("END\n");
             if (ExpectedSymbolList != NULL) {
                 free(ExpectedSymbolList);
             }
@@ -323,8 +326,9 @@ int parse(FILE* file){
             statement = newNode("EMPTY",0);
             *(expressionCounter) = 0;
             expressions = realloc(expressions,0);
-
+            //printf("END\n");
             }
+           
             switch(scannedToken.ID){
                 case 0: 
                         break;
@@ -559,6 +563,7 @@ int parse(FILE* file){
             }
             
     }
+        
     //last statement
     if(counter != 0){
             //printf("--------SENDING TO CONSTRUCT----------\n");

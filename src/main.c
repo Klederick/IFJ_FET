@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
         fprintf(stderr,"Pouzitie: %s <filename>\n", argv[0]);
         return -1;
     }
-        FILE *file = fopen(argv[1], "r");
+        FILE *file = fopen(argv[1], "r");/Users/frederiktoth/documents/github/ifj_fet/src
         // check if file exists
         if (file == NULL) {
             fprintf(stderr,"Error \n");
